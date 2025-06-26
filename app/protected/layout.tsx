@@ -19,7 +19,7 @@ export default function ProtectedLayout({
             height={40}
             priority
           />
-          <Link href="/protected">
+          <Link href="/">
             <span className="text-xl font-semibold tracking-tight text-primary">
               Estrella del Alba
             </span>
