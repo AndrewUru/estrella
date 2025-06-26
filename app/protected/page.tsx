@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 import Link from "next/link";
+import { SparklesIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
 
 type ProgresoItem = {
   dia: number;
@@ -61,40 +63,61 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 mt-10">
-      <div className="mb-6 text-center">
-        <h1 className="text-3xl font-bold">¡Bienvenido, {usuario}!</h1>
-        <p className="text-gray-500">Aquí está tu camino diario</p>
+    <div className="max-w-5xl mx-auto px-4 mt-10">
+      <div className="mb-10 text-center">
+        <h1 className="text-3xl font-bold text-primary">
+          ¡Bienvenida, {usuario}!
+        </h1>
+        <p className="text-muted-foreground text-lg mt-2">
+          Este es tu portal vibracional. Avanza un día a la vez, con presencia y
+          escucha interna ✨
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {progreso.map((p) => (
           <div
             key={p.dia}
-            className={`border rounded-xl p-4 shadow-sm ${
-              p.desbloqueado ? "bg-white" : "bg-gray-100 opacity-50"
+            className={`relative border rounded-2xl p-5 shadow-md transition-all duration-300 hover:shadow-lg overflow-hidden group ${
+              p.desbloqueado
+                ? "bg-background text-foreground"
+                : "bg-muted text-muted"
             }`}
           >
-            <h2 className="text-lg font-semibold">Día {p.dia}</h2>
-            <p className="text-sm mb-2">
-              Estado:{" "}
-              {p.completado ? (
-                <span className="text-green-600">✅ Completado</span>
-              ) : (
-                <span className="text-red-600">❌ Incompleto</span>
-              )}
-            </p>
+            <Image
+              src="/ef3dae12-3964-4133-b82b-95d73de7bf05.png"
+              alt={`Día ${p.dia}`}
+              layout="fill"
+              objectFit="cover"
+              className="absolute top-0 left-0 w-full h-full opacity-20 group-hover:opacity-30 transition duration-300"
+            />
+            <div className="relative z-10">
+              <h2 className="text-xl font-semibold mb-2">Día {p.dia}</h2>
+              <p className="text-sm mb-4">
+                Estado:{" "}
+                {p.completado ? (
+                  <span className="text-green-500 font-medium">
+                    ✅ Completado
+                  </span>
+                ) : (
+                  <span className="text-red-400 font-medium">
+                    ❌ Incompleto
+                  </span>
+                )}
+              </p>
 
-            {p.desbloqueado ? (
-              <Link
-                href={`/protected/dia/${p.dia}`}
-                className="inline-block mt-2 bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-              >
-                Ir al contenido
-              </Link>
-            ) : (
-              <p className="text-sm text-gray-500">Disponible próximamente</p>
-            )}
+              {p.desbloqueado ? (
+                <Link
+                  href={`/protected/dia/${p.dia}`}
+                  className="inline-flex items-center gap-2 text-secondary bg-primary px-4 py-2 rounded-full text-sm font-medium hover:bg-primary/90 transition"
+                >
+                  Acceder al Día
+                  <SparklesIcon className="w-4 h-4" />
+                </Link>
+              ) : (
+                <p className="text-sm text-gray-400">Disponible próximamente</p>
+              )}
+            </div>
           </div>
         ))}
       </div>

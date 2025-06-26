@@ -1,8 +1,7 @@
 import { EnvVarWarning } from "@/components/env-var-warning";
 import { AuthButton } from "@/components/auth-button";
 import { ThemeSwitcher } from "@/components/theme-switcher";
-import { ConnectSupabaseSteps } from "@/components/tutorial/connect-supabase-steps";
-import { SignUpUserSteps } from "@/components/tutorial/sign-up-user-steps";
+
 import { hasEnvVars } from "@/lib/utils";
 import Link from "next/link";
 import { Hero } from "@/components/hero";
@@ -170,14 +169,25 @@ export default function Home() {
         </section>
 
         {/* PASOS INICIALES */}
+
         <section className="w-full max-w-4xl px-6 mt-16">
-          <div className="bg-card/30 p-8 rounded-3xl border border-border/50 backdrop-blur-sm">
-            <h2 className="font-semibold text-2xl mb-6 text-foreground text-center">
-              Primeros pasos para comenzar tu transformación
+          <div className="bg-card/30 p-8 rounded-3xl border border-border/50 backdrop-blur-sm text-center">
+            <h2 className="font-semibold text-2xl mb-4 text-foreground">
+              Comienza tu viaje de transformación
             </h2>
-            <div className="max-w-3xl mx-auto">
-              {hasEnvVars ? <SignUpUserSteps /> : <ConnectSupabaseSteps />}
-            </div>
+            <p className="text-muted-foreground text-base mb-6 max-w-2xl mx-auto">
+              Para acceder a los 7 días de reconexión energética y desbloquear
+              el contenido exclusivo, primero necesitas activar tu suscripción.
+              Es un paso simple, pero esencial para sostener este espacio
+              sagrado y tu compromiso contigo.
+            </p>
+
+            <Link
+              href="/auth/sign-up"
+              className="inline-block bg-primary text-background px-6 py-3 rounded-full text-sm font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300"
+            >
+              Suscribirme y Comenzar ✨
+            </Link>
           </div>
         </section>
 
@@ -202,28 +212,44 @@ export default function Home() {
         </section>
 
         {/* FOOTER */}
-        <footer className="w-full flex flex-col sm:flex-row items-center justify-center border-t border-border/50 bg-card/30 backdrop-blur-sm mx-auto text-center text-xs gap-8 py-12 text-muted-foreground mt-20">
-          <p className="flex flex-wrap items-center justify-center gap-1">
-            <span>Con amor creado por</span>
+        <footer className="w-full flex flex-col sm:flex-row items-center justify-between border-t border-border/50 bg-card/30 backdrop-blur-sm px-6 py-10 text-xs text-muted-foreground gap-4 sm:gap-8 mt-20">
+          <p className="text-center sm:text-left">
+            Con amor creado por{" "}
             <a
               href="https://elsaltoweb.es/"
               target="_blank"
-              className="font-bold hover:underline text-primary transition-colors"
+              className="font-semibold text-primary hover:underline transition-colors"
               rel="noreferrer"
             >
               ElSaltoweb.es
-            </a>
-            <span>&</span>
+            </a>{" "}
+            y{" "}
             <a
               href="https://samariluz.com"
               target="_blank"
-              className="font-bold hover:underline text-primary transition-colors"
+              className="font-semibold text-primary hover:underline transition-colors"
               rel="noreferrer"
             >
               Samari Luz
             </a>
+            . Todos los derechos reservados © {new Date().getFullYear()}
           </p>
-          <ThemeSwitcher />
+
+          <div className="flex items-center gap-4">
+            <Link
+              href="/privacidad"
+              className="hover:underline hover:text-foreground"
+            >
+              Privacidad
+            </Link>
+            <Link
+              href="/contacto"
+              className="hover:underline hover:text-foreground"
+            >
+              Contacto
+            </Link>
+            <ThemeSwitcher />
+          </div>
         </footer>
       </div>
     </main>

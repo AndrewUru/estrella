@@ -14,7 +14,7 @@ export default function LogoutButton() {
 
   return (
     <Button onClick={handleLogout} variant="outline">
-      Logout
+      Cerrar sesión
     </Button>
   );
 }

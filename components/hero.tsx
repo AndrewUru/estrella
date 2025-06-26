@@ -1,4 +1,5 @@
 "use client";
+
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -18,64 +19,42 @@ export function Hero() {
 
   return (
     <div className="relative w-screen h-screen flex flex-col justify-center items-center overflow-hidden bg-gradient-to-br from-indigo-950 via-purple-900 to-pink-900">
-      {/* Animated background elements */}
       <div className="absolute inset-0 w-full h-full">
         <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 180, 360],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear",
-          }}
+          animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
           className="absolute -top-20 -left-20 w-40 h-40 md:w-80 md:h-80 md:-top-40 md:-left-40 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-full blur-3xl"
         />
         <motion.div
-          animate={{
-            scale: [1.2, 1, 1.2],
-            rotate: [360, 180, 0],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "linear",
-          }}
+          animate={{ scale: [1.2, 1, 1.2], rotate: [360, 180, 0] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
           className="absolute -bottom-20 -right-20 w-48 h-48 md:w-96 md:h-96 md:-bottom-40 md:-right-40 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-3xl"
         />
       </div>
 
-      {/* Interactive cursor glow */}
       <motion.div
         className="absolute pointer-events-none z-10 hidden md:block"
-        animate={{
-          x: mousePosition.x - 250,
-          y: mousePosition.y - 250,
-        }}
+        animate={{ x: mousePosition.x - 250, y: mousePosition.y - 250 }}
         transition={{ type: "spring", stiffness: 500, damping: 30 }}
       >
         <div className="w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-gradient-to-r from-cyan-400/10 to-purple-400/10 rounded-full blur-3xl" />
       </motion.div>
 
-      {/* Main content */}
       <div className="relative z-20 flex flex-col gap-8 md:gap-12 items-center px-4 md:px-6 text-center max-w-6xl mx-auto">
         <h1 className="sr-only">
           Estrella del Alba - Plataforma energética diaria
         </h1>
 
-        {/* Animated badge */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: isVisible ? 1 : 0, scale: isVisible ? 1 : 0.8 }}
           transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 text-white/90 text-sm font-medium"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 text-white text-sm font-medium"
         >
           <span className="w-2 h-2 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full animate-pulse" />
-          Transformación Energética
+          7 días de reconexión energética
         </motion.div>
 
-        {/* Main title with enhanced animations */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
@@ -83,14 +62,14 @@ export function Hero() {
           className="space-y-2 md:space-y-4"
         >
           <motion.h2
-            className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold bg-gradient-to-r from-white via-cyan-100 to-purple-100 bg-clip-text text-transparent leading-tight"
+            className="text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-white via-cyan-100 to-purple-100 bg-clip-text text-transparent leading-tight"
             whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
             Reconecta con tu
           </motion.h2>
           <motion.h2
-            className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent leading-tight"
+            className="text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent leading-tight"
             whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
@@ -102,29 +81,23 @@ export function Hero() {
             animate={{ opacity: isVisible ? 1 : 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
           >
-            en Solo{" "}
+            en sólo{" "}
             <span className="inline-block bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent font-bold">
               7 Días
             </span>
           </motion.div>
         </motion.div>
 
-        {/* Enhanced description */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
           transition={{ duration: 0.8, delay: 0.6 }}
           className="text-base md:text-lg lg:text-xl text-white/70 max-w-2xl lg:max-w-3xl leading-relaxed"
         >
-          Un recorrido vibracional y ceremonial para regresar a la conexión con
-          tu alma. No como un ideal abstracto, sino como una{" "}
-          <span className="text-cyan-300 font-semibold">
-            experiencia encarnada
-          </span>
-          , diaria y accesible.
+          Una experiencia ceremonial, diaria y tangible para volver a sentir tu
+          conexión interior. Tu alma recuerda el camino.
         </motion.p>
 
-        {/* CTA Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
@@ -150,12 +123,11 @@ export function Hero() {
               whileTap={{ scale: 0.95 }}
               className="px-6 py-3 md:px-8 md:py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-full border border-white/20 hover:bg-white/20 transition-all duration-300 text-sm md:text-base"
             >
-              Saber Más
+              Más Información
             </motion.button>
           </Link>
         </motion.div>
 
-        {/* Trust indicators */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: isVisible ? 1 : 0 }}
@@ -171,7 +143,7 @@ export function Hero() {
                 />
               ))}
             </div>
-            <span>+1,000 almas transformadas</span>
+            <span>+1,000 almas acompañadas</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex gap-1">
@@ -185,12 +157,11 @@ export function Hero() {
                 />
               ))}
             </div>
-            <span>Valoración 4.9/5</span>
+            <span>Valoración 4.9 / 5</span>
           </div>
         </motion.div>
       </div>
 
-      {/* Animated separator */}
       <motion.div
         initial={{ scaleX: 0 }}
         animate={{ scaleX: isVisible ? 1 : 0 }}
