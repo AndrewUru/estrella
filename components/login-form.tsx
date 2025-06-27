@@ -41,6 +41,7 @@ export function LoginForm({
       });
       if (error) throw error;
       router.push("/protected");
+      router.refresh(); // importante si usas layouts SSR
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "Ha ocurrido un error");
     } finally {
