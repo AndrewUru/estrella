@@ -10,6 +10,7 @@ type ProgresoItem = {
   dia: number;
   completado: boolean;
   desbloqueado: boolean;
+  imagen_url?: string | null;
 };
 
 export default function DashboardPage() {
@@ -40,7 +41,7 @@ export default function DashboardPage() {
 
       const { data: entregas } = await supabase
         .from("entregas")
-        .select("dia")
+        .select("dia, imagen_url")
         .order("dia");
 
       const { data: completados } = await supabase
@@ -54,6 +55,7 @@ export default function DashboardPage() {
         dia: e.dia,
         completado: completadosSet.has(e.dia),
         desbloqueado: e.dia <= diasDesdeInicio + 1,
+        imagen_url: e.imagen_url || null,
       }));
 
       setProgreso(progresoFormateado);
@@ -85,7 +87,7 @@ export default function DashboardPage() {
             }`}
           >
             <Image
-              src="/ef3dae12-3964-4133-b82b-95d73de7bf05.png"
+              src={p.imagen_url || "/fallback.jpg"} // fallback opcional si no hay imagen
               alt={`Día ${p.dia}`}
               layout="fill"
               objectFit="cover"

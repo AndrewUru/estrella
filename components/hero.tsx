@@ -95,7 +95,7 @@ export function Hero() {
           className="text-base md:text-lg lg:text-xl text-white/70 max-w-2xl lg:max-w-3xl leading-relaxed"
         >
           Una experiencia ceremonial, diaria y tangible para volver a sentir tu
-          conexión interior. Tu alma recuerda el camino.
+          conexión interior.
         </motion.p>
 
         <motion.div
