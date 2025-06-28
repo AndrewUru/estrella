@@ -20,9 +20,13 @@ export const Navbar = () => (
             width={32}
             height={32}
           />
+          <span className="text-base hidden sm:inline">Estrella del Alba</span>
         </Link>
       </div>
       <div className="hidden md:flex gap-6 items-center text-muted-foreground text-sm">
+        <Link href="/" className="hover:text-primary transition-colors">
+          Inicio
+        </Link>
         <Link
           href="/informacion"
           className="hover:text-primary transition-colors"
@@ -36,7 +40,7 @@ export const Navbar = () => (
           Mi Transformación
         </Link>
       </div>
-      <div className="flex items-center">
+      <div className="flex items-center gap-4">
         {!hasEnvVars ? <EnvVarWarning /> : <AuthButton />}
         <ThemeSwitcher />
       </div>
