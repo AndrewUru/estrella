@@ -11,10 +11,14 @@ import {
 } from "@heroicons/react/24/outline";
 
 export default function DiaPage() {
-  const { dia } = useParams();
+  const params = useParams();
   const router = useRouter();
+  const dia = parseInt(params.dia as string);
 
   const [accesoPermitido, setAccesoPermitido] = useState(false);
+  const [entrega, setEntrega] = useState<Entrega | null>(null);
+  const [loading, setLoading] = useState(true);
+
   interface Entrega {
     dia: number;
     titulo: string;
@@ -23,24 +27,47 @@ export default function DiaPage() {
     audio_url: string;
   }
 
-  const [entrega, setEntrega] = useState<Entrega | null>(null);
-  const [loading, setLoading] = useState(true);
-
   const avanzarDia = async () => {
     const {
-      data: { session },
-    } = await supabase.auth.getSession();
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
 
-    if (!session?.user) return;
+    if (userError || !user) {
+      alert("No se pudo obtener el usuario.");
+      return;
+    }
 
-    const { error } = await supabase.rpc("avanzar_dia_usuario", {
-      uid: session.user.id,
+    const { data: existente, error: fetchError } = await supabase
+      .from("progresos")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("dia", dia)
+      .maybeSingle();
+
+    if (fetchError) {
+      console.error("Error verificando progreso:", fetchError);
+      alert("Error verificando si ya completaste este día.");
+      return;
+    }
+
+    if (existente) {
+      alert("Ya has completado este día ✨");
+      return router.push("/protected");
+      window.location.reload();
+    }
+
+    const { error } = await supabase.from("progresos").insert({
+      user_id: user.id,
+      dia: dia,
     });
 
     if (error) {
-      console.error("Error al avanzar de día:", error.message);
+      console.error("Error al insertar progreso:", error);
+      alert("Hubo un problema al guardar tu avance.");
     } else {
-      router.push(`/protected/dia/${Number(dia) + 1}`);
+      router.push("/protected");
+      router.refresh();
     }
   };
 
@@ -51,6 +78,7 @@ export default function DiaPage() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
+
       if (!user) return router.push("/auth/login");
 
       const { data: perfil } = await supabase
@@ -66,8 +94,7 @@ export default function DiaPage() {
           (1000 * 60 * 60 * 24)
       );
 
-      const diaActual = parseInt(dia as string);
-      const acceso = diaActual <= diasDesdeInicio + 1;
+      const acceso = dia <= diasDesdeInicio + 1;
       setAccesoPermitido(acceso);
 
       if (!acceso) {
@@ -78,7 +105,7 @@ export default function DiaPage() {
       const { data } = await supabase
         .from("entregas")
         .select("*")
-        .eq("dia", diaActual)
+        .eq("dia", dia)
         .single();
 
       setEntrega(data);

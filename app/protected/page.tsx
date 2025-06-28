@@ -66,11 +66,15 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 mt-10">
-      <div className="mb-10 text-center">
-        <h1 className="text-3xl font-bold text-primary">
-          ¡Bienvenida, {usuario}!
+      <div className="mb-10 text-center space-y-2">
+        <h1 className="text-2xl sm:text-3xl font-bold text-primary truncate max-w-full">
+          ¡Bienvenida,
+          <span className="ml-1 inline-block max-w-[300px] align-middle truncate text-foreground">
+            {usuario}
+          </span>
+          !
         </h1>
-        <p className="text-muted-foreground text-lg mt-2">
+        <p className="text-muted-foreground text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
           Este es tu portal vibracional. Avanza un día a la vez, con presencia y
           escucha interna ✨
         </p>
@@ -80,25 +84,28 @@ export default function DashboardPage() {
         {progreso.map((p) => (
           <div
             key={p.dia}
-            className={`relative border rounded-2xl p-5 shadow-md transition-all duration-300 hover:shadow-lg overflow-hidden group ${
+            className={`relative border rounded-2xl shadow-md overflow-hidden group ${
               p.desbloqueado
                 ? "bg-background text-foreground"
                 : "bg-muted text-muted"
             }`}
           >
             <Image
-              src={p.imagen_url || "/fallback.jpg"} // fallback opcional si no hay imagen
+              src={p.imagen_url || "/fallback.png"}
               alt={`Día ${p.dia}`}
               layout="fill"
               objectFit="cover"
-              className="absolute top-0 left-0 w-full h-full opacity-20 group-hover:opacity-30 transition duration-300"
+              className="absolute inset-0 w-full h-full opacity-20 group-hover:opacity-30 transition duration-300"
             />
-            <div className="relative z-10">
-              <h2 className="text-xl font-semibold mb-2">Día {p.dia}</h2>
-              <p className="text-sm mb-4">
+
+            <div className="relative z-10 space-y-2 bg-black/50 dark:bg-white/10 backdrop-blur-md p-4 rounded-xl">
+              <h2 className="text-lg font-semibold text-white dark:text-white">
+                Día {p.dia}
+              </h2>
+              <p className="text-sm text-white dark:text-white">
                 Estado:{" "}
                 {p.completado ? (
-                  <span className="text-green-500 font-medium">
+                  <span className="text-green-400 font-medium">
                     ✅ Completado
                   </span>
                 ) : (
@@ -111,13 +118,15 @@ export default function DashboardPage() {
               {p.desbloqueado ? (
                 <Link
                   href={`/protected/dia/${p.dia}`}
-                  className="inline-flex items-center gap-2 text-secondary bg-primary px-4 py-2 rounded-full text-sm font-medium hover:bg-primary/90 transition"
+                  className="inline-flex items-center gap-2 bg-white dark:bg-primary text-black dark:text-background px-4 py-2 rounded-full text-sm font-medium hover:opacity-90 transition"
                 >
                   Acceder al Día
                   <SparklesIcon className="w-4 h-4" />
                 </Link>
               ) : (
-                <p className="text-sm text-gray-400">Disponible próximamente</p>
+                <p className="text-sm italic text-white/80 dark:text-white/60">
+                  Disponible próximamente
+                </p>
               )}
             </div>
           </div>
