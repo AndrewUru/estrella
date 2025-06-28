@@ -1,58 +1,14 @@
-import { EnvVarWarning } from "@/components/env-var-warning";
-import { AuthButton } from "@/components/auth-button";
 import { ThemeSwitcher } from "@/components/theme-switcher";
-
-import { hasEnvVars } from "@/lib/utils";
+import { Navbar } from "@/components/Navbar";
 import Link from "next/link";
 import { Hero } from "@/components/hero";
-import Image from "next/image";
 
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center bg-gradient-to-br from-background via-background to-primary/5 text-foreground overflow-hidden">
       <div className="flex-1 w-full flex flex-col items-center">
         {/* NAVBAR */}
-        <nav className="w-full flex justify-center border-b border-border/50 h-16 bg-card/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
-          <div className="w-full max-w-6xl flex justify-between items-center p-3 px-5 text-sm">
-            {/* Logo */}
-            <div className="flex gap-5 items-center font-semibold text-primary">
-              <Link
-                href="/"
-                className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-              >
-                <Image
-                  src="/logo-estrella.png"
-                  alt="Logo Estrella del Alba"
-                  width={32}
-                  height={32}
-                />
-              </Link>
-            </div>
-
-            {/* Enlaces */}
-            <div className="hidden md:flex gap-6 items-center text-muted-foreground text-sm">
-              <Link
-                href="/informacion"
-                className="hover:text-primary transition-colors"
-              >
-                Información
-              </Link>
-              <Link
-                href="/protected"
-                className="hover:text-primary transition-colors"
-              >
-                Mi Transformación
-              </Link>
-            </div>
-
-            {/* Auth / Warn */}
-            <div className="flex items-center">
-              {!hasEnvVars ? <EnvVarWarning /> : <AuthButton />}
-              <ThemeSwitcher />
-            </div>
-          </div>
-        </nav>
-
+        <Navbar />
         {/* HERO SECTION */}
         <Hero />
 
@@ -165,29 +121,6 @@ export default function Home() {
                 )}
               </div>
             ))}
-          </div>
-        </section>
-
-        {/* PASOS INICIALES */}
-
-        <section className="w-full max-w-4xl px-6 mt-16">
-          <div className="bg-card/30 p-8 rounded-3xl border border-border/50 backdrop-blur-sm text-center">
-            <h2 className="font-semibold text-2xl mb-4 text-foreground">
-              Comienza tu viaje de transformación
-            </h2>
-            <p className="text-muted-foreground text-base mb-6 max-w-2xl mx-auto">
-              Para acceder a los 7 días de reconexión energética y desbloquear
-              el contenido exclusivo, primero necesitas activar tu suscripción.
-              Es un paso simple, pero esencial para sostener este espacio
-              sagrado y tu compromiso contigo.
-            </p>
-
-            <Link
-              href="/auth/sign-up"
-              className="inline-block bg-primary text-background px-6 py-3 rounded-full text-sm font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300"
-            >
-              Suscribirme y Comenzar ✨
-            </Link>
           </div>
         </section>
 
