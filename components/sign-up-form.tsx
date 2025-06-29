@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase/client";
-
+import { registerUser } from "@/lib/supabase/register-user"; // importa tu función
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -36,23 +36,18 @@ export function SignUpForm({
     setError(null);
 
     if (password !== repeatPassword) {
-      setError("Passwords do not match");
+      setError("Las contraseñas no coinciden");
       setIsLoading(false);
       return;
     }
 
     try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/protected`,
-        },
-      });
-      if (error) throw error;
+      await registerUser({ email, password }); // 👈 llamada integrada
       router.push("/auth/sign-up-success");
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
+      setError(
+        error instanceof Error ? error.message : "Error al crear la cuenta"
+      );
     } finally {
       setIsLoading(false);
     }
