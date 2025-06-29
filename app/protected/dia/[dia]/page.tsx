@@ -1,14 +1,12 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import {
   ArrowLeftIcon,
   DocumentTextIcon,
   SparklesIcon,
-  PlayIcon,
-  PauseIcon,
 } from "@heroicons/react/24/solid";
 
 type Entrega = {
@@ -18,44 +16,6 @@ type Entrega = {
   archivo_pdf?: string;
   audio_url?: string;
 };
-
-function AudioPlayer({ src }: { src: string }) {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  useEffect(() => {
-    if (!audioRef.current) return;
-    const handleEnded = () => setIsPlaying(false);
-    audioRef.current.addEventListener("ended", handleEnded);
-    return () => {
-      audioRef.current?.removeEventListener("ended", handleEnded);
-    };
-  }, []);
-
-  const togglePlay = () => {
-    if (!audioRef.current) return;
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play();
-    }
-    setIsPlaying(!isPlaying);
-  };
-
-  return (
-    <div className="bg-white p-4 rounded-xl shadow-lg flex items-center gap-4">
-      <button onClick={togglePlay} className="text-purple-600" type="button">
-        {isPlaying ? (
-          <PauseIcon className="w-6 h-6" />
-        ) : (
-          <PlayIcon className="w-6 h-6" />
-        )}
-      </button>
-      <audio ref={audioRef} src={src} preload="auto" />
-      <span className="text-sm text-gray-700">Meditación del día</span>
-    </div>
-  );
-}
 
 export default function DiaPage() {
   const params = useParams();
@@ -245,7 +205,21 @@ export default function DiaPage() {
           </div>
         )}
 
-        {entrega.audio_url && <AudioPlayer src={entrega.audio_url} />}
+        {entrega.audio_url && (
+          <div className="bg-white p-4 rounded-xl shadow-lg">
+            <audio
+              controls
+              src={entrega.audio_url}
+              className="w-full"
+              preload="auto"
+            >
+              Tu navegador no soporta la reproducción de audio.
+            </audio>
+            <span className="text-sm text-gray-700 block mt-2">
+              Meditación del día
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="mt-10 border-t pt-6 text-center">
