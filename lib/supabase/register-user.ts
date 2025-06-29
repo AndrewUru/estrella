@@ -12,6 +12,9 @@ export async function registerUser({
   const { data, error: signUpError } = await supabase.auth.signUp({
     email,
     password,
+    options: {
+      emailRedirectTo: `${window.location.origin}/auth/callback`, // ✅ redirección tras confirmar
+    },
   });
 
   if (signUpError) throw signUpError;
