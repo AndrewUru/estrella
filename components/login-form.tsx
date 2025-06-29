@@ -29,7 +29,7 @@ export function LoginForm({
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    supabase.auth.signOut();
+    await supabase.auth.signOut();
 
     setIsLoading(true);
     setError(null);
@@ -40,8 +40,10 @@ export function LoginForm({
         password,
       });
       if (error) throw error;
-      router.push("/protected");
-      router.refresh(); // importante si usas layouts SSR
+      // Espera breve para asegurar que la sesión se establezca
+      setTimeout(() => {
+        router.push("/protected");
+      }, 200);
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "Ha ocurrido un error");
     } finally {
