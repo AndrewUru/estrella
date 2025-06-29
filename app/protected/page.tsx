@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase/client";
 import Link from "next/link";
 import { SparklesIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import Footer from "@/components/Footer";
 
 type ProgresoItem = {
   dia: number;
@@ -232,12 +233,8 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* Footer motivacional */}
-        <div className="text-center mt-16 p-8 bg-white/50 dark:bg-black/20 backdrop-blur-sm rounded-3xl border border-white/20 dark:border-gray-700/30">
-          <p className="text-gray-600 dark:text-gray-300 text-lg font-light italic">
-            Cada día es una nueva oportunidad para crecer y vibrar más alto ✨
-          </p>
-        </div>
+        {/* Al final del contenido */}
+        <Footer />
       </div>
 
       <style jsx>{`

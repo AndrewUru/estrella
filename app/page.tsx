@@ -1,7 +1,7 @@
-import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Navbar } from "@/components/Navbar";
 import Link from "next/link";
 import { Hero } from "@/components/hero";
+import Footer from "@/components/footer"; // <--- Corrige aquí
 
 export default function Home() {
   return (
@@ -11,7 +11,6 @@ export default function Home() {
         <Navbar />
         {/* HERO SECTION */}
         <Hero />
-
         {/* STATS/SOCIAL PROOF */}
         <section className="w-full max-w-5xl px-6 grid grid-cols-1 sm:grid-cols-3 gap-8 mt-8">
           <div className="text-center p-6 bg-card/50 rounded-2xl border border-border/50 backdrop-blur-sm">
@@ -27,7 +26,6 @@ export default function Home() {
             <div className="text-muted-foreground">Conexión Interior</div>
           </div>
         </section>
-
         {/* BENEFICIOS */}
         <section className="w-full max-w-6xl px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 mt-16">
           <div className="bg-card/30 p-8 rounded-3xl border border-border/50 backdrop-blur-sm hover:shadow-lg transition-shadow duration-300">
@@ -78,7 +76,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
         {/* PROCESO */}
         <section className="w-full max-w-5xl px-6 mt-16">
           <div className="text-center mb-12">
@@ -123,7 +120,6 @@ export default function Home() {
             ))}
           </div>
         </section>
-
         {/* CTA FINAL */}
         <section className="w-full max-w-4xl px-6 text-center mt-16">
           <div className="bg-gradient-to-r from-primary/10 to-primary/5 p-12 rounded-3xl border border-primary/20">
@@ -143,47 +139,7 @@ export default function Home() {
             </Link>
           </div>
         </section>
-
-        {/* FOOTER */}
-        <footer className="w-full flex flex-col sm:flex-row items-center justify-between border-t border-border/50 bg-card/30 backdrop-blur-sm px-6 py-10 text-xs text-muted-foreground gap-4 sm:gap-8 mt-20">
-          <p className="text-center sm:text-left">
-            Con amor creado por{" "}
-            <a
-              href="https://elsaltoweb.es/"
-              target="_blank"
-              className="font-semibold text-primary hover:underline transition-colors"
-              rel="noreferrer"
-            >
-              ElSaltoweb.es
-            </a>{" "}
-            y{" "}
-            <a
-              href="https://samariluz.com"
-              target="_blank"
-              className="font-semibold text-primary hover:underline transition-colors"
-              rel="noreferrer"
-            >
-              Samari Luz
-            </a>
-            . Todos los derechos reservados © {new Date().getFullYear()}
-          </p>
-
-          <div className="flex items-center gap-4">
-            <Link
-              href="/privacidad"
-              className="hover:underline hover:text-foreground"
-            >
-              Privacidad
-            </Link>
-            <Link
-              href="/contacto"
-              className="hover:underline hover:text-foreground"
-            >
-              Contacto
-            </Link>
-            <ThemeSwitcher />
-          </div>
-        </footer>
+        <Footer /> {/* <--- Usa el componente aquí */}
       </div>
     </main>
   );
