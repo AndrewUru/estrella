@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import Link from "next/link";
 import { SparklesIcon } from "@heroicons/react/24/outline";
@@ -16,6 +17,7 @@ type ProgresoItem = {
 export default function DashboardPage() {
   const [progreso, setProgreso] = useState<ProgresoItem[]>([]);
   const [usuario, setUsuario] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchProgreso = async () => {
@@ -45,7 +47,7 @@ export default function DashboardPage() {
         .order("dia");
 
       const { data: completados } = await supabase
-        .from("progreso")
+        .from("progresos") // Asegúrate que el nombre de la tabla es "progresos"
         .select("dia")
         .eq("user_id", user.id);
 
@@ -62,76 +64,194 @@ export default function DashboardPage() {
     };
 
     fetchProgreso();
-  }, []);
+  }, [router]); // Se vuelve a ejecutar cuando cambia la ruta
 
   return (
-    <div className="max-w-5xl mx-auto px-4 mt-10">
-      <div className="mb-10 text-center space-y-2">
-        <h1 className="text-2xl sm:text-3xl font-bold text-primary truncate max-w-full">
-          ¡Bienvenida,
-          <span className="ml-1 inline-block max-w-[300px] align-middle truncate text-foreground">
-            {usuario}
-          </span>
-          !
-        </h1>
-        <p className="text-muted-foreground text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
-          Este es tu portal vibracional. Avanza un día a la vez, con presencia y
-          escucha interna ✨
-        </p>
-      </div>
+    <div className="min-h-screen w-full bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900">
+      <div className="w-full px-4 py-12">
+        {/* Header mejorado con gradiente */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mb-6 shadow-lg">
+            <SparklesIcon className="w-10 h-10 text-white" />
+          </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {progreso.map((p) => (
-          <div
-            key={p.dia}
-            className={`relative border rounded-2xl shadow-md overflow-hidden group ${
-              p.desbloqueado
-                ? "bg-background text-foreground"
-                : "bg-muted text-muted"
-            }`}
-          >
-            <Image
-              src={p.imagen_url || "/fallback.png"}
-              alt={`Día ${p.dia}`}
-              layout="fill"
-              objectFit="cover"
-              className="absolute inset-0 w-full h-full opacity-20 group-hover:opacity-30 transition duration-300"
-            />
+          <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent mb-4">
+            ¡Bienvenida,
+            <span className="ml-2 inline-block max-w-[300px] align-middle truncate">
+              {usuario}
+            </span>
+            !
+          </h1>
 
-            <div className="relative z-10 space-y-2 bg-black/50 dark:bg-white/10 backdrop-blur-md p-4 rounded-xl">
-              <h2 className="text-lg font-semibold text-white dark:text-white">
-                Día {p.dia}
-              </h2>
-              <p className="text-sm text-white dark:text-white">
-                Estado:{" "}
-                {p.completado ? (
-                  <span className="text-green-400 font-medium">
-                    ✅ Completado
-                  </span>
-                ) : (
-                  <span className="text-red-400 font-medium">
-                    ❌ Incompleto
-                  </span>
-                )}
-              </p>
+          <p className="text-gray-600 dark:text-gray-300 text-lg sm:text-xl leading-relaxed max-w-3xl mx-auto font-light">
+            Este es tu portal vibracional. Avanza un día a la vez, con presencia
+            y escucha interna ✨
+          </p>
 
-              {p.desbloqueado ? (
-                <Link
-                  href={`/protected/dia/${p.dia}`}
-                  className="inline-flex items-center gap-2 bg-white dark:bg-primary text-black dark:text-background px-4 py-2 rounded-full text-sm font-medium hover:opacity-90 transition"
-                >
-                  Acceder al Día
-                  <SparklesIcon className="w-4 h-4" />
-                </Link>
-              ) : (
-                <p className="text-sm italic text-white/80 dark:text-white/60">
-                  Disponible próximamente
-                </p>
-              )}
+          {/* Indicador de progreso */}
+          <div className="mt-8 max-w-md mx-auto">
+            <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
+              <span>Progreso del viaje</span>
+              <span>
+                {progreso.filter((p) => p.completado).length} /{" "}
+                {progreso.length}
+              </span>
+            </div>
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+              <div
+                className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-500 ease-out"
+                style={{
+                  width: `${
+                    (progreso.filter((p) => p.completado).length /
+                      progreso.length) *
+                    100
+                  }%`,
+                }}
+              />
             </div>
           </div>
-        ))}
+        </div>
+
+        {/* Grid de días mejorado */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {progreso.map((p, index) => (
+            <div
+              key={p.dia}
+              className={`group relative transform transition-all duration-300 hover:scale-105 ${
+                !p.desbloqueado ? "opacity-60" : ""
+              }`}
+              style={{
+                animationDelay: `${index * 100}ms`,
+                animation: "fadeInUp 0.6s ease-out forwards",
+              }}
+            >
+              <div
+                className={`
+                relative h-80 rounded-3xl overflow-hidden shadow-xl
+                ${
+                  p.desbloqueado
+                    ? "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+                    : "bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600"
+                }
+                ${p.completado ? "ring-2 ring-green-400 ring-opacity-50" : ""}
+                hover:shadow-2xl transition-all duration-300
+              `}
+              >
+                {/* Imagen de fondo mejorada */}
+                <div className="absolute inset-0">
+                  <Image
+                    src={p.imagen_url || "/fallback.png"}
+                    alt={`Día ${p.dia}`}
+                    layout="fill"
+                    objectFit="cover"
+                    className={`transition-all duration-500 ${
+                      p.desbloqueado
+                        ? "opacity-30 group-hover:opacity-50"
+                        : "opacity-10 group-hover:opacity-20"
+                    }`}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                </div>
+
+                {/* Contenido de la card */}
+                <div className="relative z-10 h-full flex flex-col justify-between p-6">
+                  {/* Header de la card */}
+                  <div className="flex items-start justify-between">
+                    <div className="bg-white/90 dark:bg-black/50 backdrop-blur-sm rounded-2xl px-4 py-2">
+                      <h2 className="text-xl font-bold text-gray-800 dark:text-white">
+                        Día {p.dia}
+                      </h2>
+                    </div>
+
+                    {/* Estado visual */}
+                    <div
+                      className={`
+                      w-4 h-4 rounded-full border-2 transition-all duration-300
+                      ${
+                        p.completado
+                          ? "bg-green-400 border-green-400 shadow-lg shadow-green-400/50"
+                          : "bg-transparent border-white/50"
+                      }
+                    `}
+                    />
+                  </div>
+
+                  {/* Footer de la card */}
+                  <div className="space-y-4">
+                    {/* Estado textual mejorado */}
+                    <div className="bg-white/90 dark:bg-black/50 backdrop-blur-sm rounded-2xl px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        {p.completado ? (
+                          <>
+                            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                            <span className="text-green-600 dark:text-green-400 font-semibold text-sm">
+                              Completado
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <div className="w-2 h-2 bg-orange-400 rounded-full" />
+                            <span className="text-orange-600 dark:text-orange-400 font-semibold text-sm">
+                              Pendiente
+                            </span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Botón de acción mejorado */}
+                    {p.desbloqueado ? (
+                      <Link
+                        href={`/protected/dia/${p.dia}`}
+                        className="group/btn flex items-center justify-center gap-3 w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-4 rounded-2xl font-semibold text-sm transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                      >
+                        <span>Acceder al Día</span>
+                        <SparklesIcon className="w-5 h-5 group-hover/btn:rotate-12 transition-transform duration-300" />
+                      </Link>
+                    ) : (
+                      <div className="flex items-center justify-center gap-2 w-full bg-gray-300 dark:bg-gray-600 text-gray-600 dark:text-gray-400 px-6 py-4 rounded-2xl font-medium text-sm cursor-not-allowed">
+                        <svg
+                          className="w-4 h-4"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        <span>Próximamente</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Footer motivacional */}
+        <div className="text-center mt-16 p-8 bg-white/50 dark:bg-black/20 backdrop-blur-sm rounded-3xl border border-white/20 dark:border-gray-700/30">
+          <p className="text-gray-600 dark:text-gray-300 text-lg font-light italic">
+            Cada día es una nueva oportunidad para crecer y vibrar más alto ✨
+          </p>
+        </div>
       </div>
+
+      <style jsx>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </div>
   );
 }

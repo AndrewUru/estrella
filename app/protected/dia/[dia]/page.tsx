@@ -53,8 +53,8 @@ export default function DiaPage() {
 
     if (existente) {
       alert("Ya has completado este día ✨");
-      return router.push("/protected");
-      window.location.reload();
+      router.push("/protected");
+      return; // sin reload aquí
     }
 
     const { error } = await supabase.from("progresos").insert({
@@ -67,7 +67,6 @@ export default function DiaPage() {
       alert("Hubo un problema al guardar tu avance.");
     } else {
       router.push("/protected");
-      router.refresh();
     }
   };
 
@@ -188,13 +187,13 @@ export default function DiaPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 px-4 bg-white rounded-lg shadow-lg py-8 transition-all duration-300">
+    <div className="max-w-2xl mx-auto mt-10 px-4 b rounded-lg shadow-lg py-8 transition-all duration-300">
       <h1 className="text-3xl font-extrabold mb-2 text-blue-700 flex items-center gap-2">
         Día {entrega.dia}
-        <span className="text-gray-500 text-lg font-normal">|</span>
-        <span className="text-gray-800">{entrega.titulo}</span>
+        <span className=" text-lg font-normal">|</span>
+        <span className="">{entrega.titulo}</span>
       </h1>
-      <p className="mb-6 text-gray-700 text-lg">{entrega.descripcion}</p>
+      <p className="mb-6  text-lg">{entrega.descripcion}</p>
 
       <div className="flex flex-col gap-4">
         {entrega.archivo_pdf && (
@@ -221,7 +220,7 @@ export default function DiaPage() {
       </div>
 
       <div className="mt-10 border-t pt-6 text-center">
-        <p className="text-gray-600 text-sm mb-4">
+        <p className=" text-sm mb-4">
           Cuando sientas que has integrado el contenido de hoy, puedes avanzar
           al siguiente paso en tu camino interior.
         </p>

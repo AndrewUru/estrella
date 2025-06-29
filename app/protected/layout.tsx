@@ -6,7 +6,7 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className="min-h-screen flex flex-col bg-background text-foreground">
+    <main className="min-h-screen w-full flex flex-col bg-background text-foreground">
       <Navbar />
       <section className="flex-1 max-w-4xl mx-auto w-full px-6 py-10">
         {/* NAVBAR */}
