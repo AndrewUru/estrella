@@ -1,3 +1,7 @@
+"use client";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase/client";
 import { Navbar } from "@/components/Navbar";
 
 export default function ProtectedLayout({
@@ -5,6 +9,18 @@ export default function ProtectedLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (!data.user) {
+        router.replace("/auth/login");
+      }
+    };
+    checkSession();
+  }, [router]);
+
   return (
     <main className="min-h-screen w-full flex flex-col bg-background text-foreground">
       <Navbar />
