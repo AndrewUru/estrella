@@ -26,10 +26,13 @@ export async function registerUser({
     };
   }
 
+  const now = new Date().toISOString();
+
   const { error: profileError } = await supabase.from("profiles").insert({
     id: user.id,
     email,
-    created_at: new Date().toISOString(),
+    created_at: now,
+    start_date: now, // 👈 esto habilita el desbloqueo progresivo
   });
 
   if (profileError) throw profileError;
