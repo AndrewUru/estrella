@@ -1,14 +1,10 @@
 import { ThemeSwitcher } from "@/components/theme-switcher";
-import { Navbar } from "@/components/Navbar";
 import Link from "next/link";
 import { Hero } from "@/components/hero";
-
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center bg-gradient-to-br from-background via-background to-primary/5 text-foreground overflow-hidden">
       <div className="flex-1 w-full flex flex-col items-center">
-        {/* NAVBAR */}
-        <Navbar />
         {/* HERO SECTION */}
         <Hero />
 

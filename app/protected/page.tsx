@@ -67,7 +67,7 @@ export default function DashboardPage() {
   }, [router]); // Se vuelve a ejecutar cuando cambia la ruta
 
   return (
-    <div className="min-h-screen w-screen overflow-x-hidden bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900">
+    <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900">
       <div className="w-full px-4 py-12">
         {/* Header mejorado con gradiente */}
         <div className="text-center mb-16">
