@@ -2,9 +2,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { EnvVarWarning } from "@/components/env-var-warning";
-import { AuthButton } from "@/components/auth-button";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { hasEnvVars } from "@/lib/utils";
+import dynamic from "next/dynamic";
+const AuthButton = dynamic(() => import("./server-auth-button"), {
+  ssr: true,
+});
 
 export const Navbar = () => (
   <nav className="w-full flex justify-center border-b border-border/50 h-16 bg-card/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
