@@ -67,7 +67,7 @@ export default function DashboardPage() {
   }, [router]); // Se vuelve a ejecutar cuando cambia la ruta
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900">
+    <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900 px-8">
       <div className="w-full px-4 py-12">
         {/* Header mejorado con gradiente */}
         <div className="text-center mb-16">
@@ -75,7 +75,7 @@ export default function DashboardPage() {
             <SparklesIcon className="w-10 h-10 text-white" />
           </div>
 
-          <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent mb-4">
+          <h1 className="text-2xl sm:text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent mb-4">
             ¡Bienvenida,
             <span className="ml-2 inline-block max-w-[300px] align-middle truncate">
               {usuario}
@@ -85,7 +85,7 @@ export default function DashboardPage() {
 
           <p className="text-gray-600 dark:text-gray-300 text-lg sm:text-xl leading-relaxed max-w-3xl mx-auto font-light">
             Este es tu portal vibracional. Avanza un día a la vez, con presencia
-            y escucha interna ✨
+            y escucha interna.
           </p>
 
           {/* Indicador de progreso */}
