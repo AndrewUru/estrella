@@ -89,7 +89,7 @@ export async function Navbar() {
             </label>
 
             {/* Mobile Menu */}
-            <div className="peer-checked:translate-x-0 fixed right-0 top-16 z-50 h-[calc(100vh-4rem)] w-full translate-x-full transform bg-background/95 backdrop-blur transition-transform duration-300 ease-in-out supports-[backdrop-filter]:bg-background/80 md:hidden">
+            <div className="peer-checked:translate-x-0 fixed right-0 top-16 z-50 h-[calc(100vh-4rem)] w-screen translate-x-full transform bg-background/95 backdrop-blur transition-transform duration-300 ease-in-out supports-[backdrop-filter]:bg-background/95 md:hidden overflow-hidden">
               <div className="flex h-full flex-col">
                 {/* Mobile Navigation Links */}
                 <div className="flex-1 space-y-1 p-4">
