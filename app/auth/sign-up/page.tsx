@@ -1,12 +1,10 @@
 import Image from "next/image";
 import { SignUpForm } from "@/components/sign-up-form";
-import { Navbar } from "@/components/Navbar";
 
 export default function Page() {
   return (
     <div className="min-h-svh w-full flex flex-col">
-      {/* NAVBAR siempre arriba */}
-      <Navbar />
+    
 
       {/* Contenido centrado */}
       <div className="flex-1 flex items-center justify-center p-6 md:p-10">
