@@ -1,12 +1,10 @@
-import { Navbar } from "@/components/Navbar";
+
 import { LoginForm } from "@/components/login-form";
 import Image from "next/image";
 
 export default function Page() {
   return (
     <div className="min-h-svh w-full flex flex-col">
-      {/* NAVBAR */}
-      <Navbar />
 
       {/* CONTENIDO */}
       <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 p-6 md:p-10">
