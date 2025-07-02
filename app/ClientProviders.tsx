@@ -4,16 +4,16 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/footer";
 import { ThemeProvider } from "next-themes";
-import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
+
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
-import { useState } from "react";
 
 export default function ClientProviders({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [supabase] = useState(() => createBrowserSupabaseClient());
+  const supabase = createPagesBrowserClient();
 
   return (
     <SessionContextProvider supabaseClient={supabase}>

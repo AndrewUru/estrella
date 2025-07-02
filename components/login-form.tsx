@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuthRedirect } from "@/lib/hooks/use-auth-redirect";
 
 export function LoginForm({
@@ -24,6 +25,7 @@ export function LoginForm({
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   useAuthRedirect(); // Redirección automática si hay sesión
 
@@ -40,7 +42,8 @@ export function LoginForm({
         password,
       });
       if (error) throw error;
-      // No es necesario redireccionar aquí, lo hace useAuthRedirect
+
+      router.refresh(); // Recarga datos tras el login
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "Ha ocurrido un error");
     } finally {
