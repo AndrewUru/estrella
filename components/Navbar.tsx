@@ -1,10 +1,11 @@
-// components/Navbar.tsx
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { AuthButton } from "@/components/auth-button";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 
-export async function Navbar() {
+export function Navbar() {
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4">
@@ -63,7 +64,6 @@ export async function Navbar() {
 
           {/* Mobile Menu Toggle */}
           <div className="md:hidden">
-            {/* Mobile Actions */}
             <div className="md:hidden flex items-center space-x-2">
               <ThemeSwitcher />
               <AuthButton />

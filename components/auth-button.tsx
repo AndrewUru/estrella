@@ -1,18 +1,16 @@
+"use client";
+
+import { useSession } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { createClient } from "@/lib/supabase/server";
-import LogoutButton from "./logout-button"; // ✅ default import
+import LogoutButton from "./logout-button";
 
-export async function AuthButton() {
-  const supabase = await createClient();
+export function AuthButton() {
+  const session = useSession();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  return user ? (
+  return session?.user ? (
     <div className="flex items-center gap-4">
-      Hola, {user.email}!
+      Hola, {session.user.email}!
       <LogoutButton />
     </div>
   ) : (
