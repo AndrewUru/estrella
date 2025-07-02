@@ -2,7 +2,6 @@
 
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase/client";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,8 +13,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useAuthRedirect } from "@/lib/hooks/use-auth-redirect";
 
 export function LoginForm({
   className,
@@ -25,7 +24,8 @@ export function LoginForm({
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+
+  useAuthRedirect(); // Redirección automática si hay sesión
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,10 +40,7 @@ export function LoginForm({
         password,
       });
       if (error) throw error;
-      // Espera breve para asegurar que la sesión se establezca
-      setTimeout(() => {
-        router.push("/protected");
-      }, 200);
+      // No es necesario redireccionar aquí, lo hace useAuthRedirect
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "Ha ocurrido un error");
     } finally {
