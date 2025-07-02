@@ -284,7 +284,7 @@ export function Hero() {
             </motion.button>
           </Link>
 
-          <Link href="/informacion">
+          <Link href="/protected">
             <motion.button
               whileHover={{
                 scale: 1.05,
@@ -293,7 +293,7 @@ export function Hero() {
               whileTap={{ scale: 0.95 }}
               className="px-8 py-4 md:px-10 md:py-5 bg-white/10 backdrop-blur-xl text-white font-semibold rounded-full border border-white/20 hover:border-white/40 transition-all duration-300 text-base md:text-lg shadow-xl"
             >
-              💫 Más Información
+              💫 Mi Espacio
             </motion.button>
           </Link>
         </motion.div>
@@ -342,27 +342,6 @@ export function Hero() {
             <span className="font-medium">Valoración 4.9 / 5</span>
           </motion.div>
         </motion.div>
-      </motion.div>
-
-      {/* Línea decorativa del final mejorada */}
-      <motion.div
-        initial={{ scaleX: 0, opacity: 0 }}
-        animate={{ scaleX: isVisible ? 1 : 0, opacity: isVisible ? 1 : 0 }}
-        transition={{ duration: 1.5, delay: 1.5 }}
-        className="absolute bottom-8 md:bottom-12 left-1/2 transform -translate-x-1/2"
-      >
-        <div className="w-64 md:w-96 h-px bg-gradient-to-r from-transparent via-violet-400/60 via-cyan-400/60 to-transparent relative">
-          <motion.div
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full shadow-lg"
-            animate={{ scale: [1, 1.5, 1] }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "linear",
-              type: "tween",
-            }}
-          />
-        </div>
       </motion.div>
 
       {/* Scroll indicator */}

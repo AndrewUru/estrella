@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase/client";
 import Link from "next/link";
 import { SparklesIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import { useUserProfile } from "@/lib/hooks/useUserProfile";
 
 type ProgresoItem = {
   dia: number;
@@ -16,8 +17,8 @@ type ProgresoItem = {
 
 export default function DashboardPage() {
   const [progreso, setProgreso] = useState<ProgresoItem[]>([]);
-  const [usuario, setUsuario] = useState<string | null>(null);
   const router = useRouter();
+  const { fullName, loading } = useUserProfile();
 
   useEffect(() => {
     const fetchProgreso = async () => {
@@ -25,8 +26,6 @@ export default function DashboardPage() {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) return;
-
-      setUsuario(user.email || "Usuario");
 
       const { data: perfil } = await supabase
         .from("profiles")
@@ -78,7 +77,7 @@ export default function DashboardPage() {
           <h1 className="text-2xl sm:text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent mb-4">
             ¡Bienvenida,
             <span className="ml-2 inline-block max-w-[300px] align-middle truncate">
-              {usuario}
+              {loading ? "..." : fullName || "alumna"}
             </span>
             !
           </h1>

@@ -68,7 +68,13 @@ export default function SignUpWithPayment() {
     }
 
     try {
-      await registerUser({ email, password, subscriptionId, planType, fullName });
+      await registerUser({
+        email,
+        password,
+        subscriptionId,
+        planType,
+        fullName,
+      });
       window.location.href = "/auth/sign-up-success";
     } catch (error: unknown) {
       setError(
@@ -147,7 +153,7 @@ export default function SignUpWithPayment() {
             <div className="group relative">
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
                 <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
-                  ⭐ Recomendado
+                  Recomendado!
                 </div>
               </div>
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/15 to-pink-500/15 rounded-2xl opacity-50 group-hover:opacity-70 transition-all duration-300"></div>
