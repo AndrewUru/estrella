@@ -1,46 +1,42 @@
-"use client";
+import { supabase } from "./client";
 
-import { supabase } from "@/lib/supabase/client";
+interface RegisterUserProps {
+  email: string;
+  password: string;
+  subscriptionId: string;
+  planType: "mensual" | "anual";
+  fullName: string;
+}
 
 export async function registerUser({
   email,
   password,
   subscriptionId,
   planType,
-}: {
-  email: string;
-  password: string;
-  subscriptionId?: string;
-  planType?: "mensual" | "anual";
-}) {
+  fullName,
+}: RegisterUserProps) {
   const { data, error: signUpError } = await supabase.auth.signUp({
     email,
     password,
-    options: {
-      emailRedirectTo: `${window.location.origin}/auth/callback`,
-    },
   });
 
   if (signUpError) throw signUpError;
 
   const user = data.user;
-  const now = new Date().toISOString();
+  if (!user || !user.id) throw new Error("No se pudo crear el usuario");
 
-  if (!user) {
-    throw new Error("No se pudo crear el usuario.");
-  }
-
-  // Insertar o actualizar el perfil
-  const { error: profileError } = await supabase.from("profiles").upsert({
-    id: user.id,
+  const { error: insertError } = await supabase.from("profiles").insert({
+    uuid: user.id, // 👈 clave para relacionar el perfil con el usuario
     email,
-    created_at: now,
-    start_date: now,
-    subscription_id: subscriptionId ?? null,
-    plan_type: planType ?? null,
+    full_name: fullName,
+    is_active: false,
+    start_date: new Date().toISOString().split("T")[0],
+    role: "alumna",
+    subscription_id: subscriptionId,
+    plan: planType,
   });
 
-  if (profileError) throw profileError;
+  if (insertError) throw insertError;
 
-  return { success: true };
+  return user;
 }

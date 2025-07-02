@@ -48,6 +48,7 @@ export default function SignUpWithPayment() {
   const [isLoading, setIsLoading] = useState(false);
   const [subscriptionId, setSubscriptionId] = useState<string | null>(null);
   const [planType, setPlanType] = useState<"mensual" | "anual" | null>(null);
+  const [fullName, setFullName] = useState("");
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,7 +68,7 @@ export default function SignUpWithPayment() {
     }
 
     try {
-      await registerUser({ email, password, subscriptionId, planType });
+      await registerUser({ email, password, subscriptionId, planType, fullName });
       window.location.href = "/auth/sign-up-success";
     } catch (error: unknown) {
       setError(
@@ -288,6 +289,41 @@ export default function SignUpWithPayment() {
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        className="pl-10 h-12 bg-white/80 border-slate-200 focus:border-violet-300 focus:ring-violet-200 rounded-xl"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="group">
+                    <Label
+                      htmlFor="full-name"
+                      className="text-slate-700 font-medium"
+                    >
+                      Nombre
+                    </Label>
+                    <div className="relative mt-2">
+                      <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                        <svg
+                          className="w-5 h-5 text-slate-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M5.121 17.804A13.937 13.937 0 0112 15c2.21 0 4.295.534 6.121 1.475M15 10a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
+                        </svg>
+                      </div>
+                      <Input
+                        id="full-name"
+                        type="text"
+                        placeholder="Tu nombre completo"
+                        required
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
                         className="pl-10 h-12 bg-white/80 border-slate-200 focus:border-violet-300 focus:ring-violet-200 rounded-xl"
                       />
                     </div>
