@@ -67,31 +67,6 @@ export function Navbar() {
             <div className="md:hidden flex items-center space-x-2">
               <ThemeSwitcher />
               <AuthButton />
-
-              <input
-                type="checkbox"
-                id="mobile-menu-toggle"
-                className="peer sr-only"
-              />
-              <label
-                htmlFor="mobile-menu-toggle"
-                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground peer-checked:bg-muted peer-checked:text-foreground"
-                aria-label="Toggle mobile menu"
-              >
-                <svg
-                  className="h-6 w-6 transition-transform peer-checked:rotate-90"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              </label>
             </div>
           </div>
         </div>
