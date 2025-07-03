@@ -1,7 +1,6 @@
 // app/ClientProviders.tsx
 "use client";
 
-import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/footer";
 import { ThemeProvider } from "next-themes";
 import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
@@ -23,7 +22,6 @@ export default function ClientProviders({
         enableSystem
         disableTransitionOnChange
       >
-        <Navbar />
         {children}
         <Footer />
       </ThemeProvider>
