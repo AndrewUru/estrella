@@ -1,25 +1,28 @@
-//C:\estrella\components\auth-button.tsx
 "use client";
 
-import { useSession } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import LogoutButton from "./logout-button";
+import { useAuthStatus } from "@/lib/hooks/useAuthStatus";
 
 export function AuthButton() {
-  const session = useSession();
+  const { loading, loggedIn, user } = useAuthStatus();
 
-  return session?.user ? (
+  if (loading) return null;
+
+  return loggedIn ? (
     <div className="flex items-center gap-4">
-      Hola, {session.user.email}!
+      <Link href="/protected" className="hover:underline text-sm">
+        Hola, {user?.email}!
+      </Link>
       <LogoutButton />
     </div>
   ) : (
     <div className="flex gap-2">
-      <Button asChild size="sm" variant={"outline"}>
+      <Button asChild size="sm" variant="outline">
         <Link href="/auth/login">Iniciar sesión</Link>
       </Button>
-      <Button asChild size="sm" variant={"default"}>
+      <Button asChild size="sm" variant="default">
         <Link href="/auth/sign-up">Registrarse</Link>
       </Button>
     </div>

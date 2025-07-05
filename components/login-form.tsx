@@ -1,3 +1,5 @@
+//C:\estrella\components\login-form.tsx
+
 "use client";
 
 import { cn } from "@/lib/utils";
@@ -27,12 +29,11 @@ export function LoginForm({
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  useAuthRedirect(); // Redirección automática si hay sesión
+  // Si ya hay sesión activa, redirige automáticamente fuera de login
+  useAuthRedirect();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    await supabase.auth.signOut();
-
     setIsLoading(true);
     setError(null);
 
@@ -43,9 +44,13 @@ export function LoginForm({
       });
       if (error) throw error;
 
-      router.refresh(); // Recarga datos tras el login
+      router.push("/protected"); // Redirección al área protegida
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "Ha ocurrido un error");
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Ha ocurrido un error al iniciar sesión."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -91,10 +96,13 @@ export function LoginForm({
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+
             {error && <p className="text-sm text-red-500">{error}</p>}
+
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Ingresando..." : "Entrar"}
             </Button>
+
             <div className="text-center text-sm">
               ¿No tienes cuenta?{" "}
               <Link

@@ -1,11 +1,10 @@
-
+//C:\estrella\app\auth\login\page.tsx
 import { LoginForm } from "@/components/login-form";
 import Image from "next/image";
 
 export default function Page() {
   return (
     <div className="min-h-svh w-full flex flex-col">
-
       {/* CONTENIDO */}
       <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 p-6 md:p-10">
         <div className="w-full max-w-sm bg-card rounded-2xl border border-border shadow-xl p-8 flex flex-col items-center backdrop-blur-sm">
