@@ -1,3 +1,4 @@
+//C:\estrella\components\auth-button.tsx
 "use client";
 
 import { useSession } from "@supabase/auth-helpers-react";

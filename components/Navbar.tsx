@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ThemeSwitcher } from "@/components/theme-switcher";
+import { AuthButton } from "@/components/auth-button";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 export function Navbar() {
@@ -44,18 +45,7 @@ export function Navbar() {
             Mi espacio
           </Link>
           <ThemeSwitcher />
-          <Link
-            href="/login"
-            className="ml-4 px-3 py-1 border rounded hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            Iniciar sesión
-          </Link>
-          <Link
-            href="/register"
-            className="px-3 py-1 border rounded bg-purple-600 text-white hover:bg-purple-700"
-          >
-            Registrarse
-          </Link>
+          <AuthButton />
         </nav>
 
         {/* Mobile menu toggle */}
@@ -112,21 +102,8 @@ export function Navbar() {
           >
             Mi espacio
           </Link>
-          <div className="flex flex-col gap-2 mt-2">
-            <Link
-              href="/login"
-              onClick={() => setMenuOpen(false)}
-              className="px-3 py-2 border rounded text-center hover:bg-gray-100 dark:hover:bg-gray-800"
-            >
-              Iniciar sesión
-            </Link>
-            <Link
-              href="/register"
-              onClick={() => setMenuOpen(false)}
-              className="px-3 py-2 rounded text-center bg-purple-600 text-white hover:bg-purple-700"
-            >
-              Registrarse
-            </Link>
+          <div className="mt-2">
+            <AuthButton />
           </div>
         </div>
       </div>
