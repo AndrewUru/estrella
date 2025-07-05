@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import ClientProviders from "./ClientProviders";
+import { Navbar } from "@/components/Navbar";
 
 export const metadata: Metadata = {
   title: "Estrella del Alba",
@@ -24,6 +25,7 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning className="overflow-x-hidden">
       <body className={`${geistSans.className} antialiased overflow-x-hidden`}>
+        <Navbar />
         <ClientProviders>{children}</ClientProviders>
       </body>
     </html>

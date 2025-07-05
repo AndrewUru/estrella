@@ -1,35 +1,9 @@
 import Link from "next/link";
 import { Hero } from "@/components/hero";
-import { EnvVarWarning } from "@/components/env-var-warning";
-import { AuthButton } from "@/components/auth-button";
-import { ThemeSwitcher } from "@/components/theme-switcher";
-import { hasEnvVars } from "@/lib/utils";
-import Image from "next/image";
 
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center bg-gradient-to-br from-background via-background to-primary/5 text-foreground overflow-hidden">
-      <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16 bg-white dark:bg-black">
-        <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
-          <div className="flex gap-4 items-center">
-            <Link
-              href="/"
-              className="flex items-center gap-2 font-semibold text-lg"
-            >
-              <Image
-                src="/logo-estrella.png"
-                alt="Estrella del Alba Logo"
-                width={32}
-                height={32}
-              />
-              <span>Estrella del Alba</span>
-            </Link>
-            <ThemeSwitcher />
-          </div>
-          {!hasEnvVars ? <EnvVarWarning /> : <AuthButton />}
-        </div>
-      </nav>
-
       <div className="flex-1 w-full flex flex-col items-center">
         {/* HERO SECTION */}
         <Hero />

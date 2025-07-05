@@ -263,7 +263,7 @@ export function Hero() {
           transition={{ duration: 1, delay: 0.9 }}
           className="flex flex-col sm:flex-row gap-4 md:gap-6 mt-8 md:mt-12"
         >
-          <Link href="/auth/sign-up">
+          <Link href="/auth/login">
             <motion.button
               whileHover={{
                 scale: 1.05,
@@ -272,9 +272,7 @@ export function Hero() {
               whileTap={{ scale: 0.95 }}
               className="group relative px-8 py-4 md:px-10 md:py-5 bg-gradient-to-r from-violet-600 via-purple-600 to-violet-600 text-white font-bold rounded-full overflow-hidden shadow-2xl text-base md:text-lg transition-all duration-300"
             >
-              <span className="relative z-10">
-                🌟 Comenzar Mi Transformación
-              </span>
+              <span className="relative z-10">🌟 Iniciar Sesión</span>
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100"
                 initial={{ x: "-100%" }}
@@ -284,7 +282,7 @@ export function Hero() {
             </motion.button>
           </Link>
 
-          <Link href="/protected">
+          <Link href="/sign-up">
             <motion.button
               whileHover={{
                 scale: 1.05,
@@ -293,7 +291,7 @@ export function Hero() {
               whileTap={{ scale: 0.95 }}
               className="px-8 py-4 md:px-10 md:py-5 bg-white/10 backdrop-blur-xl text-white font-semibold rounded-full border border-white/20 hover:border-white/40 transition-all duration-300 text-base md:text-lg shadow-xl"
             >
-              💫 Mi Espacio
+              💫 Registrarse
             </motion.button>
           </Link>
         </motion.div>

@@ -1,3 +1,5 @@
+//C:\estrella\app\protected\page.tsx
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -7,10 +9,6 @@ import Link from "next/link";
 import { SparklesIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useUserProfile } from "@/lib/hooks/useUserProfile";
-import { AuthButton } from "@/components/auth-button";
-import { ThemeSwitcher } from "@/components/theme-switcher";
-import { hasEnvVars } from "@/lib/utils";
-import { EnvVarWarning } from "@/components/env-var-warning";
 
 type ProgresoItem = {
   dia: number;
@@ -71,26 +69,6 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900 px-8">
-      <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16 bg-white dark:bg-black">
-        <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
-          <div className="flex gap-4 items-center">
-            <Link
-              href="/"
-              className="flex items-center gap-2 font-semibold text-lg"
-            >
-              <Image
-                src="/logo-estrella.png"
-                alt="Estrella del Alba Logo"
-                width={32}
-                height={32}
-              />
-              <span>Estrella del Alba</span>
-            </Link>
-            <ThemeSwitcher />
-          </div>
-          {!hasEnvVars ? <EnvVarWarning /> : <AuthButton />}
-        </div>
-      </nav>
       <div className="w-full px-4 py-12">
         {/* Header mejorado con gradiente */}
         <div className="text-center mb-16">
