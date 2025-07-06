@@ -184,7 +184,7 @@ export function Hero() {
               transition={{ type: "spring", stiffness: 300 }}
             >
               Alma
-              <motion.div className="relative inset-2 bg-gradient-to-r from-violet-500/20 to-cyan-500/20 rounded-lg blur-xl opacity-0 group-hover:opacity-100" />
+              <motion.div className="absolute inset-2 bg-gradient-to-r from-violet-500/20 to-cyan-500/20 rounded-lg blur-xl opacity-0 group-hover:opacity-100" />
             </motion.h2>
 
             <motion.div
