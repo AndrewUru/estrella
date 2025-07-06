@@ -282,7 +282,7 @@ export function Hero() {
             </motion.button>
           </Link>
 
-          <Link href="/sign-up">
+          <Link href="/protected/sign-up">
             <motion.button
               whileHover={{
                 scale: 1.05,
