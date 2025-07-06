@@ -40,7 +40,7 @@ export function LoginForm({ className }: { className?: string }) {
       if (error) throw error;
 
       // Redirige a página protegida y refresca el estado
-      router.push("/protected/admin");
+      router.push("/protected");
       router.refresh();
     } catch (error: unknown) {
       setError(
