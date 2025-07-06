@@ -24,12 +24,12 @@ type LayoutProps = {
   children: React.ReactNode;
 };
 
-const Layout: React.FC<LayoutProps> = ({ session, children }) => {
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <html lang="es" suppressHydrationWarning className="overflow-x-hidden">
       <body className={`${geistSans.className} antialiased overflow-x-hidden`}>
         <ClientProviders>
-          <Navbar session={session} />
+          <Navbar />
           {children}
           <CookieConsent />
         </ClientProviders>
