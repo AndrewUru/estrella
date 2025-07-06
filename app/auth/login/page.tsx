@@ -35,7 +35,7 @@ export default async function Page() {
         ></div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center relative z-10 p-6 md:p-10">
+      <div className="flex-1 flex items-center justify-center relative z-10 p-2 md:p-4">
         <div className="w-full max-w-md">
           <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-3xl border border-white/20 shadow-2xl shadow-blue-500/10 p-8 md:p-10 relative overflow-hidden">
             <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 opacity-75 animate-pulse"></div>
@@ -72,12 +72,6 @@ export default async function Page() {
                 <LoginForm />
               </div>
             </div>
-          </div>
-
-          <div className="text-center mt-6">
-            <p className="text-slate-600 dark:text-slate-400 text-sm">
-              Ingresa tus credenciales para acceder a tu cuenta
-            </p>
           </div>
         </div>
       </div>

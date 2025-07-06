@@ -6,32 +6,18 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Session } from "@supabase/supabase-js";
+import { motion, AnimatePresence } from "framer-motion";
 
-export function Navbar() {
+type Props = {
+  session: Session | null;
+};
+
+export function Navbar({ session }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [session, setSession] = useState<Session | null>(null);
-  const supabase = createClientComponentClient();
   const router = useRouter();
   const userMenuRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-      }
-    );
-
-    return () => {
-      listener.subscription.unsubscribe();
-    };
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -87,8 +73,9 @@ export function Navbar() {
           <ThemeSwitcher />
           {user ? (
             <div className="relative" ref={userMenuRef}>
-              <button
+              <motion.button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
+                whileTap={{ scale: 0.9 }}
                 className="rounded-full w-8 h-8 overflow-hidden bg-purple-600 text-white flex items-center justify-center text-xs font-bold"
               >
                 {avatar ? (
@@ -96,28 +83,37 @@ export function Navbar() {
                 ) : (
                   initials
                 )}
-              </button>
-              {userMenuOpen && (
-                <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-zinc-800 rounded-md shadow-lg z-50">
-                  <Link
-                    href="/protected/profile"
-                    onClick={() => setUserMenuOpen(false)}
-                    className="block px-4 py-2 text-sm text-gray-800 dark:text-white hover:bg-purple-100 dark:hover:bg-zinc-700"
+              </motion.button>
+
+              <AnimatePresence>
+                {userMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute right-0 mt-2 w-40 bg-white dark:bg-zinc-800 rounded-md shadow-lg z-50"
                   >
-                    Perfil
-                  </Link>
-                  <button
-                    onClick={async () => {
-                      setUserMenuOpen(false);
-                      await supabase.auth.signOut();
-                      router.refresh();
-                    }}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-800 dark:text-white hover:bg-purple-100 dark:hover:bg-zinc-700"
-                  >
-                    Cerrar sesión
-                  </button>
-                </div>
-              )}
+                    <Link
+                      href="/protected/profile"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="block px-4 py-2 text-sm text-gray-800 dark:text-white hover:bg-purple-100 dark:hover:bg-zinc-700"
+                    >
+                      Perfil
+                    </Link>
+                    <button
+                      onClick={async () => {
+                        setUserMenuOpen(false);
+                        await fetch("/auth/signout", { method: "POST" });
+                        router.push("/");
+
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-800 dark:text-white hover:bg-purple-100 dark:hover:bg-zinc-700"
+                    >
+                      Cerrar sesión
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           ) : (
             <Link
