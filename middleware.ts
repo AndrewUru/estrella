@@ -1,3 +1,5 @@
+//C:\estrella\middleware.ts
+
 import { updateSession } from "@/lib/supabase/middleware";
 import { type NextRequest } from "next/server";
 

@@ -79,7 +79,7 @@ export default function DashboardPage() {
           <h1 className="text-2xl sm:text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent mb-4">
             ¡Bienvenida,
             <span className="ml-2 inline-block max-w-[300px] align-middle truncate">
-              {loading ? "..." : fullName || "alumna"}
+              {loading ? "..." : fullName || "Usuario"}
             </span>
             !
           </h1>
