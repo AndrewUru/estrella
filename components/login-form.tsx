@@ -25,7 +25,7 @@ export function LoginForm({ className }: { className?: string }) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  useAuthRedirect();
+  useAuthRedirect(); // Redirige si ya está logueado
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,7 +39,9 @@ export function LoginForm({ className }: { className?: string }) {
       });
       if (error) throw error;
 
-      router.push("/protected");
+      // Redirige a página protegida y refresca el estado
+      router.push("/protected/admin");
+      router.refresh();
     } catch (error: unknown) {
       setError(
         error instanceof Error
@@ -83,6 +85,7 @@ export function LoginForm({ className }: { className?: string }) {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+
             <div className="grid gap-2">
               <div className="flex items-center">
                 <Label htmlFor="password">Contraseña</Label>
