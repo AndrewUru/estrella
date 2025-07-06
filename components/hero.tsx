@@ -3,6 +3,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image"; // asegúrate de tenerlo importado
 
 export function Hero() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -308,16 +309,32 @@ export function Hero() {
             whileHover={{ scale: 1.05 }}
           >
             <div className="flex -space-x-3">
-              {[1, 2, 3, 4, 5].map((i) => (
+              {[
+                "https://randomuser.me/api/portraits/women/68.jpg",
+                "https://randomuser.me/api/portraits/men/34.jpg",
+                "https://randomuser.me/api/portraits/women/44.jpg",
+                "https://randomuser.me/api/portraits/men/12.jpg",
+                "https://randomuser.me/api/portraits/women/25.jpg",
+              ].map((src, i) => (
                 <motion.div
                   key={i}
-                  className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-violet-400 to-purple-400 rounded-full border-2 border-white/30 shadow-lg"
+                  className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-white/30 shadow-lg overflow-hidden"
                   initial={{ scale: 0, rotate: 180 }}
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ delay: 1.4 + i * 0.1, type: "spring" }}
-                />
+                >
+                  <Image
+                    src={src}
+                    alt={`Usuario ${i + 1}`}
+                    width={40}
+                    height={40}
+                    className="object-cover w-full h-full"
+                    unoptimized
+                  />
+                </motion.div>
               ))}
             </div>
+
             <span className="font-medium">+1,000 almas acompañadas</span>
           </motion.div>
 
