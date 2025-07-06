@@ -1,10 +1,9 @@
-//C:\estrella\components\login-form.tsx
-
 "use client";
 
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 import {
   Card,
   CardContent,
@@ -19,17 +18,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthRedirect } from "@/lib/hooks/use-auth-redirect";
 
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+export function LoginForm({ className }: { className?: string }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  // Si ya hay sesión activa, redirige automáticamente fuera de login
   useAuthRedirect();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -44,7 +39,7 @@ export function LoginForm({
       });
       if (error) throw error;
 
-      router.push("/protected"); // Redirección al área protegida
+      router.push("/protected");
     } catch (error: unknown) {
       setError(
         error instanceof Error
@@ -57,7 +52,17 @@ export function LoginForm({
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <motion.div
+      key={error ? "error" : "no-error"}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{
+        opacity: 1,
+        y: 0,
+        x: error ? [0, -8, 8, -6, 6, -4, 4, 0] : 0,
+      }}
+      transition={{ duration: 0.6 }}
+      className={cn("flex flex-col gap-6", className)}
+    >
       <Card className="bg-background text-foreground">
         <CardHeader>
           <CardTitle className="text-2xl">Iniciar Sesión</CardTitle>
@@ -97,10 +102,40 @@ export function LoginForm({
               />
             </div>
 
-            {error && <p className="text-sm text-red-500">{error}</p>}
+            {error && (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-sm text-red-500"
+              >
+                {error}
+              </motion.p>
+            )}
 
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Ingresando..." : "Entrar"}
+              {isLoading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24">
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      fill="none"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                    />
+                  </svg>
+                  Ingresando...
+                </div>
+              ) : (
+                "Entrar"
+              )}
             </Button>
 
             <div className="text-center text-sm">
@@ -115,6 +150,6 @@ export function LoginForm({
           </form>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 }
