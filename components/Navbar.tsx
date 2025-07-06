@@ -69,13 +69,13 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden sm:flex items-center gap-6 text-sm text-gray-700 dark:text-gray-300">
-          <Link href="/about" className="hover:underline">
+          <Link href="/informacion" className="hover:underline">
             Sobre el curso
           </Link>
-          <Link href="/faq" className="hover:underline">
+          <Link href="/preguntas" className="hover:underline">
             Preguntas
           </Link>
-          <Link href="/contact" className="hover:underline">
+          <Link href="/contacto" className="hover:underline">
             Contacto
           </Link>
           <Link
@@ -154,21 +154,21 @@ export function Navbar() {
       >
         <div className="flex flex-col gap-3 text-sm text-gray-800 dark:text-gray-100">
           <Link
-            href="/about"
+            href="/informacion"
             onClick={() => setMenuOpen(false)}
             className="hover:underline"
           >
             Sobre el curso
           </Link>
           <Link
-            href="/faq"
+            href="/preguntas"
             onClick={() => setMenuOpen(false)}
             className="hover:underline"
           >
             Preguntas
           </Link>
           <Link
-            href="/contact"
+            href="/contacto"
             onClick={() => setMenuOpen(false)}
             className="hover:underline"
           >
