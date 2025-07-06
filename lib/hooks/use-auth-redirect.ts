@@ -1,20 +1,22 @@
 // lib/hooks/use-auth-redirect.ts
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useSession } from "@supabase/auth-helpers-react";
 import { useEffect } from "react";
 
 export function useAuthRedirect(redirectTo: string = "/protected") {
   const session = useSession();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (session) {
+    if (session && pathname === "/auth/login") {
       router.push(redirectTo);
     }
-  }, [session, router, redirectTo]);
+  }, [session, router, redirectTo, pathname]);
 }
+
 export function useAuthRedirectIfNotLoggedIn(
   redirectTo: string = "/auth/login"
 ) {

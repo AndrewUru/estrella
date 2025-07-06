@@ -100,7 +100,7 @@ export function Navbar() {
               {userMenuOpen && (
                 <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-zinc-800 rounded-md shadow-lg z-50">
                   <Link
-                    href="/profile"
+                    href="/protected/profile"
                     onClick={() => setUserMenuOpen(false)}
                     className="block px-4 py-2 text-sm text-gray-800 dark:text-white hover:bg-purple-100 dark:hover:bg-zinc-700"
                   >
@@ -183,7 +183,7 @@ export function Navbar() {
           </Link>
           {user ? (
             <Link
-              href="/profile"
+              href="/protected/profile"
               onClick={() => setMenuOpen(false)}
               className="hover:underline font-semibold"
             >
@@ -195,7 +195,7 @@ export function Navbar() {
               onClick={() => setMenuOpen(false)}
               className="hover:underline font-semibold"
             >
-              Entrar
+              Inicia sesión
             </Link>
           )}
         </div>
