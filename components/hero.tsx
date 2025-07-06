@@ -149,7 +149,7 @@ export function Hero() {
 
       {/* Contenido principal */}
       <motion.div
-        className="relative z-20 flex flex-col gap-6 md:gap-10 items-center px-4 md:px-6 text-center max-w-7xl mx-auto"
+        className="relative z-20 flex flex-col gap-6 md:gap-10 items-center px-4 md:px-6 text-center max-w-7xl mx-auto pt-16 md:pt-20 lg:pt-24"
         style={{ y: scrollY * 0.1 }}
       >
         {/* Badge mejorado */}
@@ -177,7 +177,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 40 }}
           transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-          className="space-y-2 md:space-y-4"
+          className=" space-y-2 md:space-y-4"
         >
           <h1 className="sr-only">
             Estrella del Alba - Reconecta con tu alma en 7 días

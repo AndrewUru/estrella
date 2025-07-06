@@ -1,3 +1,4 @@
+//C:\estrella\components\Navbar.tsx
 "use client";
 
 import { useEffect, useState, useRef } from "react";
@@ -56,7 +57,7 @@ export function Navbar() {
 
   return (
     <motion.header
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+      className={`sticky top-0 w-full z-50 transition-all duration-300 ${
         scrolled
           ? "bg-white/80 dark:bg-black/80 backdrop-blur-md shadow-lg border-b border-zinc-200/50 dark:border-zinc-800/50"
           : "bg-white dark:bg-black border-b border-zinc-200 dark:border-zinc-800"
