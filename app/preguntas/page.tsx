@@ -40,7 +40,7 @@ const faqs = [
 
 export default function PreguntasPage() {
   return (
-    <main className="max-w-3xl mx-auto py-12 px-6">
+    <main className="max-w-3xl mx-auto py-12 px-6 pt-16 md:pt-20 lg:pt-24">
       <h1 className="text-4xl font-bold mb-10 text-center text-purple-700">
         Preguntas Frecuentes
       </h1>
