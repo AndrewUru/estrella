@@ -47,7 +47,7 @@ export function Hero() {
   return (
     <motion.div
       style={{ y, opacity }}
-      className="relative w-screen h-screen flex flex-col justify-center items-center overflow-clip overscroll-none"
+      className="relative w-screen h-screen pt-16 flex flex-col justify-center items-center overflow-clip overscroll-none"
     >
       {/* Fondo gradiente mejorado */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">

@@ -57,9 +57,7 @@ export default function InformacionPage() {
           ¿Cómo accedo al contenido cada día?
         </h2>
         <p className="text-muted-foreground">
-          El contenido se liberará diariamente en nuestra plataforma. Recibirás
-          avisos por WhatsApp (grupo silencioso) cuando cada clase esté
-          disponible.
+          El contenido se liberará diariamente en nuestra plataforma.
         </p>
       </section>
 

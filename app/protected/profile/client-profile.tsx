@@ -17,24 +17,26 @@ type ProfileData = {
 export function ClientProfile() {
   const session = useSession();
   const user = session?.user;
+  const supabase = createClientComponentClient();
 
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!user) return;
+
     const fetchProfile = async () => {
-      const supabase = createClientComponentClient();
       const { data, error } = await supabase
         .from("profiles")
         .select(
           "subscription_id, plan_type, is_active, current_day, has_completed_intro, ritual_done, progress_notes"
         )
-        .eq("id", user?.id)
+        .eq("id", user.id)
         .single();
 
       if (error) {
-        setError("No se pudo cargar el perfil.");
+        setError(error.message || "No se pudo cargar el perfil.");
       } else {
         setProfile(data);
       }
@@ -42,8 +44,8 @@ export function ClientProfile() {
       setLoading(false);
     };
 
-    if (user) fetchProfile();
-  }, [user]);
+    fetchProfile();
+  }, [user, supabase]);
 
   if (!user) {
     return (
@@ -63,6 +65,7 @@ export function ClientProfile() {
 
   return (
     <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl shadow border dark:border-zinc-700 mt-4 space-y-6">
+      {/* DATOS PERSONALES */}
       <section>
         <h2 className="text-xl font-semibold mb-2">Datos personales</h2>
         <p className="text-sm text-zinc-500">ID</p>
@@ -85,6 +88,7 @@ export function ClientProfile() {
         <p className="mb-2">{new Date(user.created_at).toLocaleString()}</p>
       </section>
 
+      {/* DATOS DE PERFIL */}
       {profile && (
         <>
           <section>
@@ -122,6 +126,7 @@ export function ClientProfile() {
         </>
       )}
 
+      {/* ACCIONES */}
       <section>
         <h2 className="text-xl font-semibold mb-2">Acciones</h2>
         <form action="/auth/signout" method="post">
