@@ -78,7 +78,7 @@ export function Stats() {
               Días de Transformación
             </div>
             <div className="text-sm text-gray-600 dark:text-muted-foreground">
-              Un viaje intensivo hacia tu despertar interior
+              Un viaje intensivo hacia tu despertar
             </div>
 
             {/* Floating particles */}

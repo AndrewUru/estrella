@@ -68,7 +68,7 @@ export default function DashboardPage() {
   }, [router]); // Se vuelve a ejecutar cuando cambia la ruta
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900 px-8 pt-16 md:pt-20 lg:pt-24">
+    <div className="min-h-screen h-full overflow-x-hidden bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900 px-8 pt-10 md:pt-10 lg:pt-12">
       <div className="w-full px-4 py-12">
         {/* Header mejorado con gradiente */}
         <div className="text-center mb-16">
@@ -77,9 +77,9 @@ export default function DashboardPage() {
           </div>
 
           <h1 className="text-2xl sm:text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent mb-4">
-            ¡Bienvenida,
+            ¡Bienvenid@,
             <span className="ml-2 inline-block max-w-[300px] align-middle truncate">
-              {loading ? "..." : fullName || "Usuario"}
+              {loading ? "..." : fullName || "Estrella"}
             </span>
             !
           </h1>

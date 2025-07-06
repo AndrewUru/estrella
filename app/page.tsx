@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Hero } from "@/components/hero";
 import { Stats } from "@/components/stats";
+import { Beneficios } from "@/components/beneficios";
 
 export default function Home() {
   return (
@@ -12,55 +13,7 @@ export default function Home() {
         <Stats />
 
         {/* BENEFICIOS */}
-        <section className="w-full max-w-6xl px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 mt-16">
-          <div className="bg-card/30 p-8 rounded-3xl border border-border/50 backdrop-blur-sm hover:shadow-lg transition-shadow duration-300">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-3 h-3 bg-destructive rounded-full"></div>
-              <h2 className="text-2xl font-semibold">¿Te reconoces en esto?</h2>
-            </div>
-            <div className="space-y-4">
-              {[
-                "Desconexión del propósito interior",
-                "Confusión tras años de camino espiritual",
-                "Alta sensibilidad sin herramientas claras",
-                "Deseo de claridad energética y dirección",
-              ].map((item, index) => (
-                <div
-                  key={index}
-                  className="flex items-start gap-3 p-3 bg-destructive/5 rounded-xl"
-                >
-                  <div className="w-2 h-2 bg-destructive rounded-full mt-2 flex-shrink-0"></div>
-                  <span className="text-muted-foreground">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-card/30 p-8 rounded-3xl border border-border/50 backdrop-blur-sm hover:shadow-lg transition-shadow duration-300">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
-              <h2 className="text-2xl font-semibold">
-                Tu transformación en 7 días
-              </h2>
-            </div>
-            <div className="space-y-4">
-              {[
-                "Claridad energética restaurada",
-                "Canal intuitivo activo",
-                "Dirección interior activada",
-                "Pacto sagrado con tu alma",
-              ].map((item, index) => (
-                <div
-                  key={index}
-                  className="flex items-start gap-3 p-3 bg-primary/5 rounded-xl"
-                >
-                  <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                  <span className="text-muted-foreground">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <Beneficios />
 
         {/* PROCESO */}
         <section className="w-full max-w-5xl px-6 mt-16">

@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
+
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image"; // asegúrate de tenerlo importado
@@ -9,10 +10,6 @@ export function Hero() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
   const [scrollY, setScrollY] = useState(0);
-
-  const { scrollYProgress } = useScroll();
-  const y = useTransform(scrollYProgress, [0, 1], [0, -50]);
-  const opacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
   useEffect(() => {
     setIsVisible(true);
@@ -46,7 +43,7 @@ export function Hero() {
 
   return (
     <motion.div
-      style={{ y, opacity }}
+      style={{}}
       className="relative w-screen h-screen pt-16 flex flex-col justify-center items-center overflow-clip overscroll-none"
     >
       {/* Fondo gradiente mejorado */}
@@ -71,21 +68,7 @@ export function Hero() {
           }}
           className="absolute top-1/4 left-1/4 w-32 h-32 md:w-64 md:h-64 bg-gradient-to-r from-violet-500/30 to-purple-500/30 rounded-full blur-3xl"
         />
-        <motion.div
-          animate={{
-            scale: [1.2, 1, 1.2],
-            rotate: [360, 0],
-            x: [0, -80, 0],
-            y: [0, 60, 0],
-          }}
-          transition={{
-            duration: 30,
-            repeat: Infinity,
-            ease: "linear",
-            type: "tween",
-          }}
-          className="absolute bottom-1/4 right-1/4 w-40 h-40 md:w-80 md:h-80 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl"
-        />
+
         <motion.div
           animate={{
             scale: [1, 1.1, 1],
@@ -149,7 +132,7 @@ export function Hero() {
 
       {/* Contenido principal */}
       <motion.div
-        className="relative z-20 flex flex-col gap-6 md:gap-10 items-center px-4 md:px-6 text-center max-w-7xl mx-auto pt-16 md:pt-20 lg:pt-24"
+        className="relative z-20 flex flex-col gap-3 md:gap-5 items-center md:px-6 text-center max-w-7xl mx-auto pt-6 md:pt-8 lg:pt-1"
         style={{ y: scrollY * 0.1 }}
       >
         {/* Badge mejorado */}
@@ -159,7 +142,7 @@ export function Hero() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="group"
         >
-          <div className="relative inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-violet-900/30 to-purple-900/30 backdrop-blur-xl rounded-full border border-white/10 text-white text-sm font-medium shadow-2xl hover:shadow-purple-500/25 transition-all duration-500">
+          <div className="relative inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-violet-900/30 to-purple-900/30 backdrop-blur-xl rounded-full border border-white/10 text-white text-sm font-medium shadow-2xl hover:shadow-purple-500/25 transition-all duration-500">
             <motion.div
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
@@ -201,16 +184,7 @@ export function Hero() {
               transition={{ type: "spring", stiffness: 300 }}
             >
               Alma
-              <motion.div
-                className="absolute -inset-2 bg-gradient-to-r from-violet-500/20 to-cyan-500/20 rounded-lg blur-xl opacity-0 group-hover:opacity-100"
-                animate={{ rotate: [0, 360] }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  ease: "linear",
-                  type: "tween",
-                }}
-              />
+              <motion.div className="relative inset-2 bg-gradient-to-r from-violet-500/20 to-cyan-500/20 rounded-lg blur-xl opacity-0 group-hover:opacity-100" />
             </motion.h2>
 
             <motion.div
@@ -256,46 +230,6 @@ export function Hero() {
           <span className="text-purple-300 font-semibold"> tangible</span> para
           volver a sentir tu conexión interior.
         </motion.p>
-
-        {/* Botones mejorados */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
-          transition={{ duration: 1, delay: 0.9 }}
-          className="flex flex-col sm:flex-row gap-4 md:gap-6 mt-8 md:mt-12"
-        >
-          <Link href="/auth/login">
-            <motion.button
-              whileHover={{
-                scale: 1.05,
-                boxShadow: "0 20px 40px rgba(139, 92, 246, 0.3)",
-              }}
-              whileTap={{ scale: 0.95 }}
-              className="group relative px-8 py-4 md:px-10 md:py-5 bg-gradient-to-r from-violet-600 via-purple-600 to-violet-600 text-white font-bold rounded-full overflow-hidden shadow-2xl text-base md:text-lg transition-all duration-300"
-            >
-              <span className="relative z-10">🌟 Iniciar Sesión</span>
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100"
-                initial={{ x: "-100%" }}
-                whileHover={{ x: "100%" }}
-                transition={{ duration: 0.5 }}
-              />
-            </motion.button>
-          </Link>
-
-          <Link href="/auth/sign-up">
-            <motion.button
-              whileHover={{
-                scale: 1.05,
-                backgroundColor: "rgba(255, 255, 255, 0.15)",
-              }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 md:px-10 md:py-5 bg-white/10 backdrop-blur-xl text-white font-semibold rounded-full border border-white/20 hover:border-white/40 transition-all duration-300 text-base md:text-lg shadow-xl"
-            >
-              💫 Registrarse
-            </motion.button>
-          </Link>
-        </motion.div>
 
         {/* Estadísticas mejoradas */}
         <motion.div
@@ -356,6 +290,46 @@ export function Hero() {
             </div>
             <span className="font-medium">Valoración 4.9 / 5</span>
           </motion.div>
+        </motion.div>
+
+        {/* Botones mejorados */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
+          transition={{ duration: 1, delay: 0.9 }}
+          className="flex flex-col sm:flex-row gap-4 md:gap-6 mt-8 md:mt-12"
+        >
+          <Link href="/auth/login">
+            <motion.button
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0 20px 40px rgba(139, 92, 246, 0.3)",
+              }}
+              whileTap={{ scale: 0.95 }}
+              className="group relative px-8 py-4 md:px-10 md:py-5 bg-gradient-to-r from-violet-600 via-purple-600 to-violet-600 text-white font-bold rounded-full overflow-hidden shadow-2xl text-base md:text-lg transition-all duration-300"
+            >
+              <span className="relative z-10">🌟 Iniciar Sesión</span>
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100"
+                initial={{ x: "-100%" }}
+                whileHover={{ x: "100%" }}
+                transition={{ duration: 0.5 }}
+              />
+            </motion.button>
+          </Link>
+
+          <Link href="/auth/sign-up">
+            <motion.button
+              whileHover={{
+                scale: 1.05,
+                backgroundColor: "rgba(255, 255, 255, 0.15)",
+              }}
+              whileTap={{ scale: 0.95 }}
+              className="px-8 py-4 md:px-10 md:py-5 bg-white/10 backdrop-blur-xl text-white font-semibold rounded-full border border-white/20 hover:border-white/40 transition-all duration-300 text-base md:text-lg shadow-xl"
+            >
+              💫 Registrarse
+            </motion.button>
+          </Link>
         </motion.div>
       </motion.div>
 
