@@ -25,8 +25,10 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning className="overflow-x-hidden">
       <body className={`${geistSans.className} antialiased overflow-x-hidden`}>
-        <Navbar />
-        <ClientProviders>{children}</ClientProviders>
+        <ClientProviders>
+          <Navbar />
+          {children}
+        </ClientProviders>
       </body>
     </html>
   );

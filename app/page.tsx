@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Hero } from "@/components/hero";
+import { Stats } from "@/components/stats";
 
 export default function Home() {
   return (
@@ -8,21 +9,7 @@ export default function Home() {
         {/* HERO SECTION */}
         <Hero />
 
-        {/* STATS/SOCIAL PROOF */}
-        <section className="w-full max-w-5xl px-6 grid grid-cols-1 sm:grid-cols-3 gap-8 mt-8">
-          <div className="text-center p-6 bg-card/50 rounded-2xl border border-border/50 backdrop-blur-sm">
-            <div className="text-3xl font-bold text-primary mb-2">7</div>
-            <div className="text-muted-foreground">Días de Transformación</div>
-          </div>
-          <div className="text-center p-6 bg-card/50 rounded-2xl border border-border/50 backdrop-blur-sm">
-            <div className="text-3xl font-bold text-primary mb-2">100%</div>
-            <div className="text-muted-foreground">Vibracional</div>
-          </div>
-          <div className="text-center p-6 bg-card/50 rounded-2xl border border-border/50 backdrop-blur-sm">
-            <div className="text-3xl font-bold text-primary mb-2">∞</div>
-            <div className="text-muted-foreground">Conexión Interior</div>
-          </div>
-        </section>
+        <Stats />
 
         {/* BENEFICIOS */}
         <section className="w-full max-w-6xl px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 mt-16">
