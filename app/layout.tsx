@@ -4,6 +4,7 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import ClientProviders from "./ClientProviders";
 import { Navbar } from "@/components/Navbar";
+import { CookieConsent } from "@/components/CookieConsent";
 
 export const metadata: Metadata = {
   title: "Estrella del Alba",
@@ -28,6 +29,7 @@ export default function RootLayout({
         <ClientProviders>
           <Navbar />
           {children}
+          <CookieConsent />
         </ClientProviders>
       </body>
     </html>
