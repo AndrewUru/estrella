@@ -1,19 +1,60 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { ThemeSwitcher } from "@/components/theme-switcher";
-import { AuthButton } from "@/components/auth-button";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Session } from "@supabase/supabase-js";
 
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
+  const supabase = createClientComponentClient();
+  const router = useRouter();
+  const userMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+      }
+    );
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(event.target as Node)
+      ) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const user = session?.user;
+  const initials = user?.email?.slice(0, 2).toUpperCase();
+  const avatar = user?.user_metadata?.avatar_url;
 
   return (
     <header className="w-full bg-white dark:bg-black border-b border-zinc-200 dark:border-zinc-800 relative z-50">
       <div className="max-w-5xl mx-auto flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
-        {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/logo-estrella.png"
@@ -27,7 +68,6 @@ export function Navbar() {
           </span>
         </Link>
 
-        {/* Desktop nav */}
         <nav className="hidden sm:flex items-center gap-6 text-sm text-gray-700 dark:text-gray-300">
           <Link href="/about" className="hover:underline">
             Sobre el curso
@@ -45,10 +85,50 @@ export function Navbar() {
             Mi espacio
           </Link>
           <ThemeSwitcher />
-          <AuthButton />
+          {user ? (
+            <div className="relative" ref={userMenuRef}>
+              <button
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+                className="rounded-full w-8 h-8 overflow-hidden bg-purple-600 text-white flex items-center justify-center text-xs font-bold"
+              >
+                {avatar ? (
+                  <Image src={avatar} alt="Avatar" width={32} height={32} />
+                ) : (
+                  initials
+                )}
+              </button>
+              {userMenuOpen && (
+                <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-zinc-800 rounded-md shadow-lg z-50">
+                  <Link
+                    href="/profile"
+                    onClick={() => setUserMenuOpen(false)}
+                    className="block px-4 py-2 text-sm text-gray-800 dark:text-white hover:bg-purple-100 dark:hover:bg-zinc-700"
+                  >
+                    Perfil
+                  </Link>
+                  <button
+                    onClick={async () => {
+                      setUserMenuOpen(false);
+                      await supabase.auth.signOut();
+                      router.refresh();
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-800 dark:text-white hover:bg-purple-100 dark:hover:bg-zinc-700"
+                  >
+                    Cerrar sesión
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              href="/auth/login"
+              className="text-purple-600 font-semibold hover:underline"
+            >
+              Entrar
+            </Link>
+          )}
         </nav>
 
-        {/* Mobile menu toggle */}
         <div className="sm:hidden flex items-center gap-2">
           <ThemeSwitcher />
           <button
@@ -65,7 +145,6 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu animado */}
       <div
         className={`sm:hidden absolute top-16 left-0 w-full transition-all duration-300 ease-in-out overflow-hidden bg-white dark:bg-black border-t border-zinc-200 dark:border-zinc-700 ${
           menuOpen
@@ -102,9 +181,23 @@ export function Navbar() {
           >
             Mi espacio
           </Link>
-          <div className="mt-2">
-            <AuthButton />
-          </div>
+          {user ? (
+            <Link
+              href="/profile"
+              onClick={() => setMenuOpen(false)}
+              className="hover:underline font-semibold"
+            >
+              Perfil
+            </Link>
+          ) : (
+            <Link
+              href="/auth/login"
+              onClick={() => setMenuOpen(false)}
+              className="hover:underline font-semibold"
+            >
+              Entrar
+            </Link>
+          )}
         </div>
       </div>
     </header>
