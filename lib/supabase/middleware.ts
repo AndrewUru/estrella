@@ -1,7 +1,10 @@
+// lib/supabase/middleware.ts
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
+  const response = NextResponse.next(); // 🔁 crear la respuesta que sí permite modificar cookies
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -9,10 +12,10 @@ export async function updateSession(request: NextRequest) {
       cookies: {
         get: (name) => request.cookies.get(name)?.value,
         set: (name, value, options) => {
-          request.cookies.set(name, value, options);
+          response.cookies.set(name, value, options); // ✅ aquí sí puedes modificar cookies
         },
         remove: (name) => {
-          request.cookies.set(name, "", { maxAge: -1 });
+          response.cookies.set(name, "", { maxAge: -1 });
         },
       },
     }
@@ -40,5 +43,5 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  return NextResponse.next();
+  return response;
 }
