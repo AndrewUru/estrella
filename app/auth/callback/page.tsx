@@ -21,8 +21,7 @@ export default function AuthCallback() {
     };
 
     checkSession();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router]); // ✅ Solo se necesita 'router'
+  }, [router]);
 
   return <p className="text-center p-4">Redirigiendo...</p>;
 }
