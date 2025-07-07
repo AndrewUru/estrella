@@ -4,7 +4,6 @@ import { useState } from "react";
 import { registerUser } from "@/lib/supabase/register-user";
 import Script from "next/script";
 
-// Tipado explícito para PayPal
 interface PayPalData {
   subscriptionID: string;
 }
@@ -15,7 +14,6 @@ interface PayPalActions {
   };
 }
 
-// Declaración global para `window.paypal`
 declare global {
   interface Window {
     paypal: {
@@ -67,11 +65,13 @@ export default function SignUpWithPayment() {
         subscriptionId,
         planType,
       });
-
       window.location.href = "/auth/sign-up-success";
-    } catch (err) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      setError((err as any).message || "Error al registrar el usuario.");
+    } catch (err: unknown) {
+      if (err && typeof err === "object" && "message" in err) {
+        setError((err as { message: string }).message);
+      } else {
+        setError("Error al registrar el usuario.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -83,6 +83,7 @@ export default function SignUpWithPayment() {
         Suscripción mensual – 22 €/mes
       </h1>
 
+      {/* PayPal Button */}
       <div className="bg-white border border-gray-200 p-4 rounded-lg shadow">
         <p className="text-sm mb-2 text-gray-600">
           Realiza el pago para habilitar el registro:
@@ -90,65 +91,102 @@ export default function SignUpWithPayment() {
         <div id="paypal-button-container" className="mb-4" />
         {subscriptionId && (
           <p className="text-green-600 text-sm font-medium mb-2">
-            ✅ Pago confirmado
+            ✅ Pago confirmado correctamente
           </p>
         )}
       </div>
 
+      {/* Formulario de registro */}
       {subscriptionId && (
-        <form onSubmit={handleSignUp} className="space-y-4">
-          <input
-            type="text"
-            placeholder="Nombre completo"
-            required
-            className="w-full border border-gray-300 rounded px-3 py-2"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-          />
+        <form
+          onSubmit={handleSignUp}
+          className="space-y-4 bg-white p-6 rounded-lg shadow-md border border-gray-200"
+        >
+          <div>
+            <label
+              htmlFor="fullName"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Nombre completo
+            </label>
+            <input
+              id="fullName"
+              type="text"
+              required
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+            />
+          </div>
 
-          <input
-            type="email"
-            placeholder="Correo electrónico"
-            required
-            className="w-full border border-gray-300 rounded px-3 py-2"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Correo electrónico
+            </label>
+            <input
+              id="email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+            />
+          </div>
 
-          <input
-            type="password"
-            placeholder="Contraseña"
-            required
-            className="w-full border border-gray-300 rounded px-3 py-2"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Contraseña
+            </label>
+            <input
+              id="password"
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+            />
+          </div>
 
-          <input
-            type="password"
-            placeholder="Repite la contraseña"
-            required
-            className="w-full border border-gray-300 rounded px-3 py-2"
-            value={repeatPassword}
-            onChange={(e) => setRepeatPassword(e.target.value)}
-          />
+          <div>
+            <label
+              htmlFor="repeatPassword"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Repite la contraseña
+            </label>
+            <input
+              id="repeatPassword"
+              type="password"
+              required
+              value={repeatPassword}
+              onChange={(e) => setRepeatPassword(e.target.value)}
+              className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+            />
+          </div>
 
           {error && (
-            <p className="text-sm text-red-600 bg-red-50 border border-red-200 p-2 rounded">
+            <div className="text-sm text-red-600 bg-red-50 border border-red-200 p-2 rounded">
               {error}
-            </p>
+            </div>
           )}
 
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-violet-600 hover:bg-violet-700 text-white font-medium py-2 px-4 rounded"
+            className="w-full bg-violet-600 hover:bg-violet-700 text-white font-semibold py-2 px-4 rounded transition-all"
           >
             {isLoading ? "Creando cuenta..." : "Crear cuenta"}
           </button>
         </form>
       )}
 
+      {/* PayPal SDK Script */}
       <Script
         src="https://www.paypal.com/sdk/js?client-id=ASQix2Qu6atiH43_jrk18jeSMDjB_YdTjbfI8jrTJ7x5uagNzUhuNMXacO49ZxJWr_EMpBhrpVPbOvR_&vault=true&intent=subscription"
         onLoad={() => {
