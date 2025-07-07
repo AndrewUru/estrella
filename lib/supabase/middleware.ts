@@ -1,14 +1,9 @@
-//C:\estrella\lib\supabase\middleware.ts
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { hasEnvVars } from "../utils";
 
 export async function updateSession(request: NextRequest) {
-  const supabaseResponse = await supabase.auth.getSession(); // ✅
-
-  if (!hasEnvVars) {
-    return supabaseResponse;
-  }
+  const response = NextResponse.next();
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -17,14 +12,18 @@ export async function updateSession(request: NextRequest) {
       cookies: {
         get: (name) => request.cookies.get(name)?.value,
         set: (name, value, options) => {
-          supabaseResponse.cookies.set(name, value, options);
+          response.cookies.set(name, value, options);
         },
         remove: (name) => {
-          supabaseResponse.cookies.set(name, "", { maxAge: -1 });
+          response.cookies.set(name, "", { maxAge: -1 });
         },
       },
     }
   );
+
+  if (!hasEnvVars) {
+    return response;
+  }
 
   // 🔐 Autenticación
   const {
@@ -51,5 +50,5 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  return supabaseResponse;
+  return response;
 }
