@@ -35,9 +35,8 @@ export default function Page() {
           </p>
         </div>
 
-        {/* Cards de planes mejoradas */}
-        <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          {/* Plan Mensual */}
+        {/* Plan de suscripción único */}
+        <div className="max-w-xl mx-auto mb-12">
           <div className="group relative">
             <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-purple-500 rounded-3xl blur-xl opacity-0 group-hover:opacity-20 transition-all duration-500"></div>
             <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
@@ -57,13 +56,10 @@ export default function Page() {
                     ></path>
                   </svg>
                 </div>
-                <div className="bg-violet-100 text-violet-700 px-3 py-1 rounded-full text-sm font-medium">
-                  Flexible
-                </div>
               </div>
 
               <h2 className="text-2xl font-bold text-slate-800 mb-3">
-                Plan Mensual
+                Suscripción mensual
               </h2>
               <div className="mb-6">
                 <div className="flex items-baseline gap-2">
@@ -129,115 +125,6 @@ export default function Page() {
                     </svg>
                   </div>
                   <span className="text-slate-700">Soporte prioritario</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Plan Anual - Destacado */}
-          <div className="group relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-3xl blur-xl opacity-25 group-hover:opacity-40 transition-all duration-500"></div>
-            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-              <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg">
-                ⭐ Más Popular
-              </div>
-            </div>
-            <div className="relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border-2 border-purple-200 hover:shadow-3xl transition-all duration-500 hover:-translate-y-2 mt-4">
-              <div className="flex items-center justify-between mb-6">
-                <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-full p-3">
-                  <svg
-                    className="w-6 h-6 text-purple-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-                    ></path>
-                  </svg>
-                </div>
-                <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                  Ahorro 33%
-                </div>
-              </div>
-
-              <h2 className="text-2xl font-bold text-slate-800 mb-3">
-                Plan Anual
-              </h2>
-              <div className="mb-6">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-bold text-purple-600">
-                    222€
-                  </span>
-                  <span className="text-slate-500">/año</span>
-                </div>
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="text-slate-400 line-through text-sm">
-                    264€
-                  </span>
-                  <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-medium">
-                    2 meses gratis
-                  </span>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <div className="bg-green-100 rounded-full p-1 mt-0.5">
-                    <svg
-                      className="w-3 h-3 text-green-600"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      ></path>
-                    </svg>
-                  </div>
-                  <span className="text-slate-700">
-                    Todo del plan mensual incluido
-                  </span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="bg-purple-100 rounded-full p-1 mt-0.5">
-                    <svg
-                      className="w-3 h-3 text-purple-600"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      ></path>
-                    </svg>
-                  </div>
-                  <span className="text-slate-700">
-                    Sesión exclusiva anual con guía
-                  </span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="bg-purple-100 rounded-full p-1 mt-0.5">
-                    <svg
-                      className="w-3 h-3 text-purple-600"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      ></path>
-                    </svg>
-                  </div>
-                  <span className="text-slate-700">
-                    Acceso prioritario a nuevos programas
-                  </span>
                 </div>
               </div>
             </div>
