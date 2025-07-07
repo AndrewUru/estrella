@@ -1,4 +1,3 @@
-//C:\estrella\app\auth\callback\page.tsx
 "use client";
 
 import { useEffect } from "react";
@@ -15,16 +14,15 @@ export default function AuthCallback() {
       } = await supabase.auth.getSession();
 
       if (session) {
-        // Redirige después del login o registro exitoso
         router.replace("/protected");
       } else {
-        // Redirige si falla o no hay sesión activa
         router.replace("/auth/login");
       }
     };
 
     checkSession();
-  }, [router, supabase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router]); // ✅ Solo se necesita 'router'
 
   return <p className="text-center p-4">Redirigiendo...</p>;
 }
