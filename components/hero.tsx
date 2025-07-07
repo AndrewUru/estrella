@@ -1,15 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image"; // asegúrate de tenerlo importado
+import Image from "next/image";
 
 export function Hero() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
     setIsVisible(true);
@@ -21,18 +19,13 @@ export function Hero() {
       });
     };
 
-    const handleScroll = () => setScrollY(window.scrollY);
-
     window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("scroll", handleScroll);
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
-  // Partículas flotantes
   const particles = Array.from({ length: 20 }, (_, i) => ({
     id: i,
     x: Math.random() * 100,
@@ -43,15 +36,15 @@ export function Hero() {
 
   return (
     <motion.div
-      style={{}}
-      className="relative w-screen h-screen pt-16 flex flex-col justify-center items-center overflow-clip overscroll-none"
+      className="relative w-screen pt-16 flex flex-col justify-center items-center overflow-clip overscroll-none"
+      style={{ height: "calc(100vh - 64px)" }}
     >
-      {/* Fondo gradiente mejorado */}
+      {/* Fondo */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent" />
       </div>
 
-      {/* Orbes de fondo animados */}
+      {/* Orbes animados */}
       <div className="absolute inset-0 w-full h-full">
         <motion.div
           animate={{
@@ -68,7 +61,6 @@ export function Hero() {
           }}
           className="absolute top-1/4 left-1/4 w-32 h-32 md:w-64 md:h-64 bg-gradient-to-r from-violet-500/30 to-purple-500/30 rounded-full blur-3xl"
         />
-
         <motion.div
           animate={{
             scale: [1, 1.1, 1],
@@ -86,7 +78,7 @@ export function Hero() {
         />
       </div>
 
-      {/* Partículas flotantes */}
+      {/* Partículas */}
       {particles.map((particle) => (
         <motion.div
           key={particle.id}
@@ -117,7 +109,7 @@ export function Hero() {
         </motion.div>
       ))}
 
-      {/* Cursor interactivo mejorado */}
+      {/* Cursor animado */}
       <motion.div
         className="absolute pointer-events-none z-10 hidden md:block"
         animate={{
@@ -131,11 +123,7 @@ export function Hero() {
       </motion.div>
 
       {/* Contenido principal */}
-      <motion.div
-        className="relative z-20 flex flex-col gap-3 md:gap-5 items-center md:px-6 text-center max-w-7xl mx-auto pt-6 md:pt-8 lg:pt-1"
-        style={{ y: scrollY * 0.1 }}
-      >
-        {/* Badge mejorado */}
+      <motion.div className="relative z-20 flex flex-col gap-3 md:gap-5 items-center md:px-6 text-center max-w-7xl mx-auto pt-6 md:pt-8 lg:pt-1">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
@@ -151,42 +139,26 @@ export function Hero() {
             <span className="bg-gradient-to-r from-white to-cyan-100 bg-clip-text text-transparent">
               ✨ 7 días de reconexión energética
             </span>
-            <motion.div className="absolute -inset-1 bg-gradient-to-r from-violet-600/20 to-purple-600/20 rounded-full blur opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </div>
         </motion.div>
 
-        {/* Títulos mejorados */}
+        {/* Títulos */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 40 }}
           transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-          className=" space-y-2 md:space-y-4"
+          className="space-y-2 md:space-y-4"
         >
           <h1 className="sr-only">
             Estrella del Alba - Reconecta con tu alma en 7 días
           </h1>
-
           <div className="relative">
-            <motion.h2
-              className="text-4xl md:text-6xl lg:text-8xl font-black bg-gradient-to-r from-white via-cyan-100 to-violet-100 bg-clip-text text-transparent leading-none tracking-tight"
-              whileHover={{
-                scale: 1.02,
-                textShadow: "0 0 40px rgba(139, 92, 246, 0.5)",
-              }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
+            <motion.h2 className="text-4xl md:text-6xl lg:text-8xl font-black bg-gradient-to-r from-white via-cyan-100 to-violet-100 bg-clip-text text-transparent leading-none tracking-tight">
               Reconecta con tu
             </motion.h2>
-
-            <motion.h2
-              className="text-4xl md:text-6xl lg:text-8xl font-black bg-gradient-to-r from-violet-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent leading-none tracking-tight relative"
-              whileHover={{ scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
+            <motion.h2 className="text-4xl md:text-6xl lg:text-8xl font-black bg-gradient-to-r from-violet-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent leading-none tracking-tight relative">
               Alma
-              <motion.div className="absolute inset-2 bg-gradient-to-r from-violet-500/20 to-cyan-500/20 rounded-lg blur-xl opacity-0 group-hover:opacity-100" />
             </motion.h2>
-
             <motion.div
               className="text-xl md:text-3xl lg:text-4xl font-bold text-white/90 mt-4"
               initial={{ opacity: 0, scale: 0.8 }}
@@ -197,27 +169,14 @@ export function Hero() {
               transition={{ duration: 0.8, delay: 0.8 }}
             >
               en sólo{" "}
-              <motion.span
-                className="inline-block bg-gradient-to-r from-cyan-400 via-violet-400 to-purple-400 bg-clip-text text-transparent font-black relative"
-                whileHover={{ scale: 1.1, rotate: 2 }}
-              >
+              <motion.span className="inline-block bg-gradient-to-r from-cyan-400 via-violet-400 to-purple-400 bg-clip-text text-transparent font-black relative">
                 7 Días
-                <motion.div
-                  className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 to-violet-400 rounded-full"
-                  animate={{ scaleX: [0, 1, 0] }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "linear",
-                    type: "tween",
-                  }}
-                />
               </motion.span>
             </motion.div>
           </div>
         </motion.div>
 
-        {/* Descripción mejorada */}
+        {/* Descripción */}
         <motion.p
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
@@ -231,7 +190,7 @@ export function Hero() {
           volver a sentir tu conexión interior.
         </motion.p>
 
-        {/* Estadísticas mejoradas */}
+        {/* Estadísticas */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
@@ -268,7 +227,6 @@ export function Hero() {
                 </motion.div>
               ))}
             </div>
-
             <span className="font-medium">+1,000 almas acompañadas</span>
           </motion.div>
 
@@ -284,7 +242,6 @@ export function Hero() {
                   initial={{ opacity: 0, scale: 0, rotate: 180 }}
                   animate={{ opacity: 1, scale: 1, rotate: 0 }}
                   transition={{ delay: 1.6 + i * 0.1, type: "spring" }}
-                  whileHover={{ scale: 1.2, rotate: 360 }}
                 />
               ))}
             </div>
@@ -292,7 +249,7 @@ export function Hero() {
           </motion.div>
         </motion.div>
 
-        {/* Botones mejorados */}
+        {/* Botones */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
@@ -301,65 +258,23 @@ export function Hero() {
         >
           <Link href="/auth/login">
             <motion.button
-              whileHover={{
-                scale: 1.05,
-                boxShadow: "0 20px 40px rgba(139, 92, 246, 0.3)",
-              }}
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="group relative px-8 py-4 md:px-10 md:py-5 bg-gradient-to-r from-violet-600 via-purple-600 to-violet-600 text-white font-bold rounded-full overflow-hidden shadow-2xl text-base md:text-lg transition-all duration-300"
             >
               <span className="relative z-10">🌟 Iniciar Sesión</span>
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100"
-                initial={{ x: "-100%" }}
-                whileHover={{ x: "100%" }}
-                transition={{ duration: 0.5 }}
-              />
             </motion.button>
           </Link>
 
           <Link href="/auth/sign-up">
             <motion.button
-              whileHover={{
-                scale: 1.05,
-                backgroundColor: "rgba(255, 255, 255, 0.15)",
-              }}
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="px-8 py-4 md:px-10 md:py-5 bg-white/10 backdrop-blur-xl text-white font-semibold rounded-full border border-white/20 hover:border-white/40 transition-all duration-300 text-base md:text-lg shadow-xl"
             >
               💫 Registrarse
             </motion.button>
           </Link>
-        </motion.div>
-      </motion.div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isVisible ? 1 : 0 }}
-        transition={{ delay: 2 }}
-        className="absolute bottom-4 left-1/2 transform -translate-x-1/2"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "linear",
-            type: "tween",
-          }}
-          className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center"
-        >
-          <motion.div
-            animate={{ y: [0, 12, 0], opacity: [0, 1, 0] }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "linear",
-              type: "tween",
-            }}
-            className="w-1 h-3 bg-white/50 rounded-full mt-2"
-          />
         </motion.div>
       </motion.div>
     </motion.div>
