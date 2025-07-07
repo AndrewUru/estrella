@@ -1,3 +1,5 @@
+// app/auth/sign-up/page.tsx
+
 import Image from "next/image";
 import SignUpWithPayment from "@/components/sign-up-form";
 
@@ -12,7 +14,7 @@ export default function Page() {
       </div>
 
       <div className="relative z-10 flex flex-col px-4 py-8 lg:py-12">
-        {/* Encabezado */}
+        {/* Hero */}
         <div className="text-center mb-12 max-w-3xl mx-auto">
           <div className="relative inline-block mb-6">
             <div className="absolute inset-0 bg-gradient-to-r from-violet-400 to-purple-400 rounded-full blur-lg opacity-20 animate-pulse" />
@@ -29,9 +31,32 @@ export default function Page() {
             Únete a Estrella
           </h1>
           <p className="text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto">
-            Descubre un mundo de crecimiento espiritual con contenidos
-            exclusivos, meditaciones transformadoras y una comunidad que te
-            acompaña en tu camino.
+            Estás a un paso de entrar en un espacio vibracional único, con
+            contenido exclusivo y una comunidad que te apoya en tu camino de
+            reconexión interior. Esto no es un curso, es una experiencia
+            transformadora.
+          </p>
+        </div>
+
+        {/* Por qué pagar */}
+        <div className="max-w-2xl mx-auto mb-10 text-center text-slate-700 text-base leading-relaxed">
+          <h2 className="text-xl font-semibold mb-4 text-violet-600">
+            ¿Por qué una suscripción?
+          </h2>
+          <p className="mb-3">
+            Este proyecto fue creado con muchísimo amor, horas de desarrollo y
+            dedicación a cada detalle. No hay grandes empresas detrás, solo un
+            equipo comprometido con tu transformación.
+          </p>
+          <p className="mb-3">
+            La suscripción mensual de <strong>22 €</strong> permite sostener la
+            plataforma, actualizar el contenido y garantizar que el espacio siga
+            vivo, funcional y accesible para todas las personas que lo
+            necesiten.
+          </p>
+          <p>
+            Gracias por valorar este trabajo consciente. Tu apoyo mantiene la
+            estrella encendida ✨
           </p>
         </div>
 
@@ -40,24 +65,6 @@ export default function Page() {
           <div className="group relative">
             <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-purple-500 rounded-3xl blur-xl opacity-0 group-hover:opacity-20 transition-all duration-500" />
             <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-              <div className="flex items-center justify-between mb-6">
-                <div className="bg-gradient-to-r from-violet-100 to-purple-100 rounded-full p-3">
-                  <svg
-                    className="w-6 h-6 text-violet-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M13 10V3L4 14h7v7l9-11h-7z"
-                    />
-                  </svg>
-                </div>
-              </div>
-
               <h2 className="text-2xl font-bold text-slate-800 mb-3">
                 Suscripción mensual
               </h2>
@@ -69,7 +76,7 @@ export default function Page() {
                   <span className="text-slate-500">/mes</span>
                 </div>
                 <p className="text-slate-600 mt-2">
-                  Cancela cuando quieras, sin compromisos
+                  Cancela cuando quieras, sin compromisos.
                 </p>
               </div>
 
@@ -113,6 +120,8 @@ export default function Page() {
           <div className="flex items-center justify-center gap-6 mb-6 text-slate-500">
             {[
               {
+                label: "Pago seguro",
+                color: "text-green-500",
                 icon: (
                   <path
                     fillRule="evenodd"
@@ -120,10 +129,10 @@ export default function Page() {
                     d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
                   />
                 ),
-                label: "Pago seguro",
-                color: "text-green-500",
               },
               {
+                label: "Garantía 30 días",
+                color: "text-blue-500",
                 icon: (
                   <path
                     fillRule="evenodd"
@@ -131,15 +140,13 @@ export default function Page() {
                     d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                   />
                 ),
-                label: "Garantía 30 días",
-                color: "text-blue-500",
               },
               {
+                label: "Sin compromisos",
+                color: "text-purple-500",
                 icon: (
                   <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 ),
-                label: "Sin compromisos",
-                color: "text-purple-500",
               },
             ].map(({ icon, label, color }) => (
               <div key={label} className="flex items-center gap-2">
