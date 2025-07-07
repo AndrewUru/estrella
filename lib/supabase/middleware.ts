@@ -1,31 +1,31 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { hasEnvVars } from "../utils";
+import { cookies } from "next/headers"; // Asegúrate de tenerlo importado
 
 export async function updateSession(request: NextRequest) {
-  const response = NextResponse.next();
+  // ⚠️ Primero recuperamos las cookies con `await`
+  const cookieStore = await cookies();
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get: (name) => request.cookies.get(name)?.value,
+        get: (name) => {
+          const cookie = cookieStore.get(name);
+          return cookie?.value;
+        },
         set: (name, value, options) => {
-          response.cookies.set(name, value, options);
+          request.cookies.set(name, value, options); // ← podrías necesitar NextResponse aquí
         },
         remove: (name) => {
-          response.cookies.set(name, "", { maxAge: -1 });
+          request.cookies.set(name, "", { maxAge: -1 });
         },
       },
     }
   );
 
-  if (!hasEnvVars) {
-    return response;
-  }
-
-  // 🔐 Autenticación
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -50,5 +50,5 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  return response;
+  return NextResponse.next(); // ← Esta línea también es importante
 }
