@@ -1,3 +1,4 @@
+//C:\estrella\lib\supabase\middleware.ts
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { hasEnvVars } from "../utils";
@@ -14,17 +15,12 @@ export async function updateSession(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() {
-          return request.cookies.getAll();
+        get: (name) => request.cookies.get(name)?.value,
+        set: (name, value, options) => {
+          supabaseResponse.cookies.set(name, value, options);
         },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
-          supabaseResponse = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
+        remove: (name) => {
+          supabaseResponse.cookies.set(name, "", { maxAge: -1 });
         },
       },
     }
