@@ -194,13 +194,6 @@ export function Hero() {
             className="relative inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-violet-900/40 to-purple-900/40 backdrop-blur-xl rounded-full border border-white/20 text-white text-sm font-medium shadow-2xl hover:shadow-purple-500/30 transition-all duration-500"
             whileHover={{ scale: 1.05, y: -2 }}
           >
-            <motion.span
-              className="text-xl"
-              animate={{ rotate: [0, 360] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            >
-              ✨
-            </motion.span>
             <span className="bg-gradient-to-r from-white to-cyan-100 bg-clip-text text-transparent font-semibold">
               7 días de reconexión energética
             </span>
