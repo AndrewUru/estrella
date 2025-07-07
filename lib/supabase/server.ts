@@ -1,9 +1,10 @@
 // lib/supabase/server.ts
 import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { cookies as getCookies } from "next/headers";
+import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
 export function createClient() {
-  const cookieStore = cookies(); // ✅ esto es sincrónico
+  const cookieStore = getCookies() as ReadonlyRequestCookies;
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -11,8 +12,8 @@ export function createClient() {
     {
       cookies: {
         get: (name: string) => cookieStore.get(name)?.value,
-        set: () => {}, // no disponible en server components
-        remove: () => {}, // no disponible en server components
+        set: () => {},
+        remove: () => {},
       },
     }
   );
