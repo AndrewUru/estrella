@@ -150,7 +150,7 @@ export default function SignUpWithPayment() {
       )}
 
       <Script
-        src="https://www.paypal.com/sdk/js?client-id=TU_CLIENT_ID&vault=true&intent=subscription"
+        src="https://www.paypal.com/sdk/js?client-id=ASQix2Qu6atiH43_jrk18jeSMDjB_YdTjbfI8jrTJ7x5uagNzUhuNMXacO49ZxJWr_EMpBhrpVPbOvR_&vault=true&intent=subscription"
         onLoad={() => {
           if (window?.paypal) {
             window.paypal
