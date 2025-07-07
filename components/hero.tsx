@@ -36,8 +36,8 @@ export function Hero() {
 
   return (
     <motion.div
-      className="relative w-screen pt-16 flex flex-col justify-center items-center overflow-clip overscroll-none"
-      style={{ height: "calc(100vh - 64px)" }}
+      className="relative w-screen pt-8 flex flex-col justify-center items-center overflow-clip overscroll-none"
+      style={{ height: "calc(100vh - 32px)" }}
     >
       {/* Fondo */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -123,19 +123,14 @@ export function Hero() {
       </motion.div>
 
       {/* Contenido principal */}
-      <motion.div className="relative z-20 flex flex-col gap-3 md:gap-5 items-center md:px-6 text-center max-w-7xl mx-auto pt-6 md:pt-8 lg:pt-1">
+      <motion.div className="relative z-20 flex flex-col gap-2 md:gap-4 items-center px-2 md:px-4 text-center max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="group"
         >
-          <div className="relative inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-violet-900/30 to-purple-900/30 backdrop-blur-xl rounded-full border border-white/10 text-white text-sm font-medium shadow-2xl hover:shadow-purple-500/25 transition-all duration-500">
-            <motion.div
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="w-3 h-3 bg-gradient-to-r from-cyan-400 to-violet-400 rounded-full shadow-lg shadow-cyan-400/50"
-            />
+          <div className="relative inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-violet-900/30 to-purple-900/30 backdrop-blur-xl rounded-full border border-white/10 text-white text-sm font-medium shadow-2xl hover:shadow-purple-500/25 transition-all duration-500">
             <span className="bg-gradient-to-r from-white to-cyan-100 bg-clip-text text-transparent">
               ✨ 7 días de reconexión energética
             </span>
@@ -147,7 +142,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 40 }}
           transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-          className="space-y-2 md:space-y-4"
+          className="space-y-1 md:space-y-2"
         >
           <h1 className="sr-only">
             Estrella del Alba - Reconecta con tu alma en 7 días
@@ -160,7 +155,7 @@ export function Hero() {
               Alma
             </motion.h2>
             <motion.div
-              className="text-xl md:text-3xl lg:text-4xl font-bold text-white/90 mt-4"
+              className="text-xl md:text-3xl lg:text-4xl font-bold text-white/90 mt-2 md:mt-3"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{
                 opacity: isVisible ? 1 : 0,
@@ -181,7 +176,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
           transition={{ duration: 1, delay: 0.6 }}
-          className="text-lg md:text-xl lg:text-2xl text-white/80 max-w-4xl leading-relaxed font-light"
+          className="text-lg md:text-xl lg:text-2xl text-white/80 max-w-4xl leading-relaxed font-light px-2"
         >
           Una experiencia{" "}
           <span className="text-violet-300 font-semibold">ceremonial</span>,
@@ -195,13 +190,13 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
           transition={{ duration: 1, delay: 1.2 }}
-          className="flex flex-col lg:flex-row items-center gap-6 md:gap-12 mt-12 md:mt-16 text-white/70 text-sm md:text-base"
+          className="flex flex-col lg:flex-row items-center gap-4 md:gap-8 mt-6 md:mt-8 text-white/70 text-sm md:text-base"
         >
           <motion.div
-            className="flex items-center gap-4"
+            className="flex items-center gap-3"
             whileHover={{ scale: 1.05 }}
           >
-            <div className="flex -space-x-3">
+            <div className="flex -space-x-2">
               {[
                 "https://randomuser.me/api/portraits/women/68.jpg",
                 "https://randomuser.me/api/portraits/men/34.jpg",
@@ -211,7 +206,7 @@ export function Hero() {
               ].map((src, i) => (
                 <motion.div
                   key={i}
-                  className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-white/30 shadow-lg overflow-hidden"
+                  className="w-7 h-7 md:w-8 md:h-8 rounded-full border-2 border-white/30 shadow-lg overflow-hidden"
                   initial={{ scale: 0, rotate: 180 }}
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ delay: 1.4 + i * 0.1, type: "spring" }}
@@ -219,8 +214,8 @@ export function Hero() {
                   <Image
                     src={src}
                     alt={`Usuario ${i + 1}`}
-                    width={40}
-                    height={40}
+                    width={32}
+                    height={32}
                     className="object-cover w-full h-full"
                     unoptimized
                   />
@@ -231,14 +226,14 @@ export function Hero() {
           </motion.div>
 
           <motion.div
-            className="flex items-center gap-3"
+            className="flex items-center gap-2"
             whileHover={{ scale: 1.05 }}
           >
             <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map((i) => (
                 <motion.div
                   key={i}
-                  className="w-4 h-4 md:w-5 md:h-5 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full shadow-lg"
+                  className="w-3 h-3 md:w-4 md:h-4 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full shadow-lg"
                   initial={{ opacity: 0, scale: 0, rotate: 180 }}
                   animate={{ opacity: 1, scale: 1, rotate: 0 }}
                   transition={{ delay: 1.6 + i * 0.1, type: "spring" }}
@@ -254,13 +249,13 @@ export function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
           transition={{ duration: 1, delay: 0.9 }}
-          className="flex flex-col sm:flex-row gap-4 md:gap-6 mt-8 md:mt-12"
+          className="flex flex-col sm:flex-row gap-3 md:gap-4 mt-6 md:mt-8"
         >
           <Link href="/auth/login">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="group relative px-8 py-4 md:px-10 md:py-5 bg-gradient-to-r from-violet-600 via-purple-600 to-violet-600 text-white font-bold rounded-full overflow-hidden shadow-2xl text-base md:text-lg transition-all duration-300"
+              className="group relative px-6 py-3 md:px-8 md:py-4 bg-gradient-to-r from-violet-600 via-purple-600 to-violet-600 text-white font-bold rounded-full overflow-hidden shadow-2xl text-base md:text-lg transition-all duration-300"
             >
               <span className="relative z-10">🌟 Iniciar Sesión</span>
             </motion.button>
@@ -270,7 +265,7 @@ export function Hero() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 md:px-10 md:py-5 bg-white/10 backdrop-blur-xl text-white font-semibold rounded-full border border-white/20 hover:border-white/40 transition-all duration-300 text-base md:text-lg shadow-xl"
+              className="px-6 py-3 md:px-8 md:py-4 bg-white/10 backdrop-blur-xl text-white font-semibold rounded-full border border-white/20 hover:border-white/40 transition-all duration-300 text-base md:text-lg shadow-xl"
             >
               💫 Registrarse
             </motion.button>
