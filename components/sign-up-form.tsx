@@ -78,30 +78,34 @@ export default function SignUpWithPayment() {
   };
 
   return (
-    <div className="max-w-md mx-auto py-10 px-4 space-y-6">
-      <h1 className="text-2xl font-bold text-center mb-4">
-        Suscripción mensual – 22 €/mes
-      </h1>
-
-      {/* PayPal Button */}
-      <div className="bg-white border border-gray-200 p-4 rounded-lg shadow">
-        <p className="text-sm mb-2 text-gray-600">
-          Realiza el pago para habilitar el registro:
+    <div className="max-w-md mx-auto py-6 px-4 space-y-6">
+      {/* Paso 1: Pago */}
+      <div className="bg-white border border-gray-200 p-5 rounded-lg shadow">
+        <p className="text-base font-medium text-slate-700 mb-2">
+          Paso 1: Realiza el pago de la suscripción
         </p>
         <div id="paypal-button-container" className="mb-4" />
-        {subscriptionId && (
+        {subscriptionId ? (
           <p className="text-green-600 text-sm font-medium mb-2">
             ✅ Pago confirmado correctamente
+          </p>
+        ) : (
+          <p className="text-sm text-gray-500">
+            Se habilitará el formulario cuando el pago esté confirmado.
           </p>
         )}
       </div>
 
-      {/* Formulario de registro */}
+      {/* Paso 2: Registro */}
       {subscriptionId && (
         <form
           onSubmit={handleSignUp}
           className="space-y-4 bg-white p-6 rounded-lg shadow-md border border-gray-200"
         >
+          <p className="text-base font-medium text-slate-700 mb-2">
+            Paso 2: Completa tu registro
+          </p>
+
           <div>
             <label
               htmlFor="fullName"
@@ -116,6 +120,7 @@ export default function SignUpWithPayment() {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+              placeholder="Ej. Ana López"
             />
           </div>
 
@@ -133,6 +138,7 @@ export default function SignUpWithPayment() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+              placeholder="tu@email.com"
             />
           </div>
 
@@ -150,6 +156,7 @@ export default function SignUpWithPayment() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+              placeholder="Crea una contraseña segura"
             />
           </div>
 
@@ -167,6 +174,7 @@ export default function SignUpWithPayment() {
               value={repeatPassword}
               onChange={(e) => setRepeatPassword(e.target.value)}
               className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+              placeholder="Vuelve a escribirla"
             />
           </div>
 
@@ -201,7 +209,7 @@ export default function SignUpWithPayment() {
                 },
                 createSubscription: (data, actions) => {
                   return actions.subscription.create({
-                    plan_id: "P-7PF96689L4734453RNBSUC2I",
+                    plan_id: "P-7PF96689L4734453RNBSUC2I", // reemplaza si cambia
                   });
                 },
                 onApprove: (data) => {
