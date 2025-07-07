@@ -61,21 +61,6 @@ export function Hero() {
           }}
           className="absolute top-1/4 left-1/4 w-32 h-32 md:w-64 md:h-64 bg-gradient-to-r from-violet-500/30 to-purple-500/30 rounded-full blur-3xl"
         />
-        <motion.div
-          animate={{
-            scale: [1, 1.1, 1],
-            rotate: [180, 540],
-            x: [0, -120, 0],
-            y: [0, -80, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear",
-            type: "tween",
-          }}
-          className="absolute top-1/2 right-1/3 w-24 h-24 md:w-48 md:h-48 bg-gradient-to-r from-pink-500/25 to-rose-500/25 rounded-full blur-2xl"
-        />
       </div>
 
       {/* Partículas */}
