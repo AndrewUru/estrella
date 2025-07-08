@@ -1,10 +1,12 @@
+// C:\estrella\lib\supabase\register-user.ts
+
 import { supabase } from "./client";
 
 interface RegisterUserProps {
   email: string;
   password: string;
-  subscriptionId: string;
-  planType: "mensual" | "anual";
+  subscriptionId: string | null; // 👈 permite valor null
+  planType: "gratis" | "premium"; // 👈 permite gratis o premium
   fullName: string;
 }
 
@@ -26,10 +28,10 @@ export async function registerUser({
   if (!user || !user.id) throw new Error("No se pudo crear el usuario");
 
   const { error: insertError } = await supabase.from("profiles").insert({
-    uuid: user.id, // 👈 clave para relacionar el perfil con el usuario
+    uuid: user.id,
     email,
     full_name: fullName,
-    is_active: false,
+    is_active: planType === "gratis", // 👈 activo automáticamente si es gratis
     start_date: new Date().toISOString().split("T")[0],
     role: "alumna",
     subscription_id: subscriptionId,

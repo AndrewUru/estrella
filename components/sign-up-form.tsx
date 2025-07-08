@@ -4,28 +4,10 @@ import { useState } from "react";
 import { registerUser } from "@/lib/supabase/register-user";
 import Script from "next/script";
 
-interface PayPalData {
-  subscriptionID: string;
-}
-
-interface PayPalActions {
-  subscription: {
-    create: (input: { plan_id: string }) => Promise<string>;
-  };
-}
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare global {
   interface Window {
-    paypal: {
-      Buttons: (config: {
-        style?: object;
-        createSubscription: (
-          data: PayPalData,
-          actions: PayPalActions
-        ) => Promise<string>;
-        onApprove: (data: PayPalData) => void;
-      }) => { render: (selector: string) => void };
-    };
+    paypal?: any; // o la versión estricta mencionada arriba
   }
 }
 
@@ -37,15 +19,14 @@ export default function SignUpWithPayment() {
   const [error, setError] = useState<string | null>(null);
   const [subscriptionId, setSubscriptionId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  const planType = "mensual";
+  const [planType, setPlanType] = useState<"gratis" | "premium">("gratis");
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
-    if (!subscriptionId) {
+    if (planType === "premium" && !subscriptionId) {
       setError("Primero realiza el pago con PayPal.");
       setIsLoading(false);
       return;
@@ -62,16 +43,12 @@ export default function SignUpWithPayment() {
         email,
         password,
         fullName,
-        subscriptionId,
+        subscriptionId: subscriptionId || null,
         planType,
       });
       window.location.href = "/auth/sign-up-success";
-    } catch (err: unknown) {
-      if (err && typeof err === "object" && "message" in err) {
-        setError((err as { message: string }).message);
-      } else {
-        setError("Error al registrar el usuario.");
-      }
+    } catch {
+      setError("Error al registrar el usuario.");
     } finally {
       setIsLoading(false);
     }
@@ -79,142 +56,92 @@ export default function SignUpWithPayment() {
 
   return (
     <div className="max-w-md mx-auto py-6 px-4 space-y-6">
-      {/* Paso 1: Pago */}
-      <div className="bg-white border border-gray-200 p-5 rounded-lg shadow">
-        <p className="text-base font-medium text-slate-700 mb-2">
-          Paso 1: Realiza el pago de la suscripción
-        </p>
-        <div id="paypal-button-container" className="mb-4" />
-        {subscriptionId ? (
-          <p className="text-green-600 text-sm font-medium mb-2">
-            ✅ Pago confirmado correctamente
-          </p>
-        ) : (
-          <p className="text-sm text-gray-500">
-            Se habilitará el formulario cuando el pago esté confirmado.
-          </p>
-        )}
+      <div className="bg-white p-4 rounded-lg shadow border">
+        <label className="block text-sm font-medium text-gray-700">
+          Selecciona tu plan
+        </label>
+        <select
+          value={planType}
+          onChange={(e) => setPlanType(e.target.value as "gratis" | "premium")}
+          className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+        >
+          <option value="gratis">Gratis</option>
+          <option value="premium">Premium (22€ / mes)</option>
+        </select>
       </div>
 
-      {/* Paso 2: Registro */}
-      {subscriptionId && (
+      {planType === "premium" && (
+        <div className="bg-white border p-5 rounded-lg shadow">
+          <div id="paypal-button-container" />
+          {subscriptionId ? (
+            <p className="text-green-600 text-sm">✅ Pago confirmado</p>
+          ) : (
+            <p className="text-sm text-gray-500">
+              Realiza el pago para activar el formulario.
+            </p>
+          )}
+        </div>
+      )}
+
+      {(planType === "gratis" || subscriptionId) && (
         <form
           onSubmit={handleSignUp}
-          className="space-y-4 bg-white p-6 rounded-lg shadow-md border border-gray-200"
+          className="space-y-4 bg-white p-6 rounded shadow-md"
         >
-          <p className="text-base font-medium text-slate-700 mb-2">
-            Paso 2: Completa tu registro
-          </p>
-
-          <div>
-            <label
-              htmlFor="fullName"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Nombre completo
-            </label>
-            <input
-              id="fullName"
-              type="text"
-              required
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
-              placeholder="Ej. Ana López"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Correo electrónico
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
-              placeholder="tu@email.com"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Contraseña
-            </label>
-            <input
-              id="password"
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
-              placeholder="Crea una contraseña segura"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="repeatPassword"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Repite la contraseña
-            </label>
-            <input
-              id="repeatPassword"
-              type="password"
-              required
-              value={repeatPassword}
-              onChange={(e) => setRepeatPassword(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
-              placeholder="Vuelve a escribirla"
-            />
-          </div>
-
-          {error && (
-            <div className="text-sm text-red-600 bg-red-50 border border-red-200 p-2 rounded">
-              {error}
-            </div>
-          )}
-
+          <input
+            type="text"
+            required
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            placeholder="Nombre completo"
+            className="w-full border px-3 py-2 rounded"
+          />
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            className="w-full border px-3 py-2 rounded"
+          />
+          <input
+            type="password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Contraseña"
+            className="w-full border px-3 py-2 rounded"
+          />
+          <input
+            type="password"
+            required
+            value={repeatPassword}
+            onChange={(e) => setRepeatPassword(e.target.value)}
+            placeholder="Repite la contraseña"
+            className="w-full border px-3 py-2 rounded"
+          />
+          {error && <div className="text-red-600">{error}</div>}
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-violet-600 hover:bg-violet-700 text-white font-semibold py-2 px-4 rounded transition-all"
+            className="w-full bg-violet-600 hover:bg-violet-700 text-white py-2 rounded"
           >
             {isLoading ? "Creando cuenta..." : "Crear cuenta"}
           </button>
         </form>
       )}
 
-      {/* PayPal SDK Script */}
       <Script
-        src="https://www.paypal.com/sdk/js?client-id=ASQix2Qu6atiH43_jrk18jeSMDjB_YdTjbfI8jrTJ7x5uagNzUhuNMXacO49ZxJWr_EMpBhrpVPbOvR_&vault=true&intent=subscription"
+        src="https://www.paypal.com/sdk/js?client-id=TU_CLIENT_ID&vault=true&intent=subscription"
         onLoad={() => {
-          if (window?.paypal) {
+          if (window?.paypal && planType === "premium") {
             window.paypal
               .Buttons({
-                style: {
-                  layout: "vertical",
-                  shape: "rect",
-                  label: "subscribe",
-                  color: "gold",
-                },
-                createSubscription: (data, actions) => {
-                  return actions.subscription.create({
-                    plan_id: "P-7PF96689L4734453RNBSUC2I", // reemplaza si cambia
-                  });
-                },
-                onApprove: (data) => {
-                  setSubscriptionId(data.subscriptionID);
-                },
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                createSubscription: (_, actions) =>
+                  actions.subscription.create({ plan_id: "TU_PLAN_ID_PAYPAL" }),
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                onApprove: (data) => setSubscriptionId(data.subscriptionID),
               })
               .render("#paypal-button-container");
           }

@@ -17,6 +17,8 @@ type Entrega = {
   audio_url?: string;
 };
 
+type Plan = "gratis" | "premium";
+
 export default function DiaPage() {
   const params = useParams();
   const router = useRouter();
@@ -25,6 +27,7 @@ export default function DiaPage() {
   const [accesoPermitido, setAccesoPermitido] = useState(false);
   const [entrega, setEntrega] = useState<Entrega | null>(null);
   const [loading, setLoading] = useState(true);
+  const [tipoPlan, setTipoPlan] = useState<Plan | null>(null);
 
   const avanzarDia = async () => {
     const {
@@ -81,18 +84,22 @@ export default function DiaPage() {
 
       const { data: perfil } = await supabase
         .from("profiles")
-        .select("start_date")
+        .select("start_date, plan")
         .eq("id", user.id)
         .single();
 
-      if (!perfil?.start_date) return;
+      if (!perfil?.start_date || !perfil.plan) return;
+
+      setTipoPlan(perfil.plan);
 
       const diasDesdeInicio = Math.floor(
         (new Date().getTime() - new Date(perfil.start_date).getTime()) /
           (1000 * 60 * 60 * 24)
       );
 
-      const acceso = dia <= diasDesdeInicio + 1;
+      const acceso =
+        (perfil.plan === "gratis" && dia === 1) || dia <= diasDesdeInicio + 1;
+
       setAccesoPermitido(acceso);
 
       if (!acceso) {
@@ -141,17 +148,31 @@ export default function DiaPage() {
       </div>
     );
 
-  if (!accesoPermitido)
+  if (!accesoPermitido) {
+    const mensaje =
+      tipoPlan === "gratis" && dia > 1
+        ? {
+            icon: <SparklesIcon className="w-12 h-12 text-purple-500 mb-4" />,
+            titulo: "Este contenido es parte del plan premium",
+            descripcion:
+              "Gracias por unirte al Día 1 de forma gratuita. Para seguir avanzando en tu viaje interior, puedes desbloquear todos los días del programa por solo 22 €.",
+          }
+        : {
+            icon: (
+              <DocumentTextIcon className="w-12 h-12 text-yellow-400 mb-4" />
+            ),
+            titulo: "Este contenido no está disponible aún.",
+            descripcion:
+              "Cada día tiene su tiempo sagrado. Vuelve más adelante cuando tu alma esté lista para recibir este material.",
+          };
+
     return (
       <div className="flex flex-col items-center mt-20 px-4 text-center">
-        <DocumentTextIcon className="w-12 h-12 text-yellow-400 mb-4" />
+        {mensaje.icon}
         <h2 className="text-2xl font-semibold mb-2 text-gray-800">
-          Este contenido no está disponible aún.
+          {mensaje.titulo}
         </h2>
-        <p className="text-gray-600 mb-6 max-w-md">
-          Cada día tiene su tiempo sagrado. Vuelve más adelante cuando tu alma
-          esté lista para recibir este material.
-        </p>
+        <p className="text-gray-600 mb-6 max-w-md">{mensaje.descripcion}</p>
         <a
           href="/protected/"
           className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
@@ -161,6 +182,7 @@ export default function DiaPage() {
         </a>
       </div>
     );
+  }
 
   if (!entrega)
     return (

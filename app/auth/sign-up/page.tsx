@@ -68,8 +68,17 @@ export default function Page() {
               Mientras otros cursos cuestan cientos o miles de euros, aquí tu
               alma se reconecta sin que tu bolsillo sufra.
             </p>
+            <p className="text-slate-700 text-sm">
+              ¿Quieres probar antes de comprometerte? También puedes acceder de
+              forma gratuita al{" "}
+              <span className="font-semibold text-purple-600">
+                primer día del curso
+              </span>
+              . Descubre si esta experiencia vibra contigo desde el inicio.
+            </p>
             <p className="text-slate-500 text-sm">
-              Acceso inmediato a la plataforma y comunidad.
+              Acceso inmediato a la plataforma y comunidad. Elige el plan que
+              mejor se alinee con tu camino.
             </p>
           </div>
 
