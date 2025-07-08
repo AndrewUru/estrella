@@ -4,10 +4,32 @@ import { useState } from "react";
 import { registerUser } from "@/lib/supabase/register-user";
 import Script from "next/script";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+interface PayPalSubscriptionData {
+  subscriptionID: string;
+}
+
+interface PayPalActions {
+  subscription: {
+    create: (options: { plan_id: string }) => Promise<string>;
+  };
+}
+
+interface PayPalButtonConfig {
+  style?: Record<string, unknown>;
+  createSubscription: (
+    data: PayPalSubscriptionData,
+    actions: PayPalActions
+  ) => Promise<string>;
+  onApprove: (data: PayPalSubscriptionData) => void;
+}
+
 declare global {
   interface Window {
-    paypal?: any; // o la versión estricta mencionada arriba
+    paypal?: {
+      Buttons: (config: PayPalButtonConfig) => {
+        render: (selector: string) => void;
+      };
+    };
   }
 }
 
@@ -137,11 +159,13 @@ export default function SignUpWithPayment() {
           if (window?.paypal && planType === "premium") {
             window.paypal
               .Buttons({
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                createSubscription: (_, actions) =>
-                  actions.subscription.create({ plan_id: "TU_PLAN_ID_PAYPAL" }),
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                onApprove: (data) => setSubscriptionId(data.subscriptionID),
+                createSubscription: (_data, actions) =>
+                  actions.subscription.create({
+                    plan_id: "TU_PLAN_ID_PAYPAL",
+                  }),
+                onApprove: (data) => {
+                  setSubscriptionId(data.subscriptionID);
+                },
               })
               .render("#paypal-button-container");
           }
