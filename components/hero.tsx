@@ -8,7 +8,6 @@ import Image from "next/image";
 export function Hero() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
     setIsVisible(true);
@@ -20,16 +19,10 @@ export function Hero() {
       });
     };
 
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
     window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("scroll", handleScroll);
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -52,10 +45,9 @@ export function Hero() {
 
   return (
     <motion.div
-      className="relative w-screen pt-8 flex flex-col justify-center items-center overflow-clip overscroll-none"
+      className="relative w-screen pt-8 flex flex-col justify-center items-center overflow-clip "
       style={{
         height: "calc(100vh - 32px)",
-        transform: `translateY(${scrollY * 0.5}px)`,
       }}
     >
       {/* Fondo mejorado con múltiples gradientes */}
@@ -164,7 +156,7 @@ export function Hero() {
         </motion.div>
       ))}
 
-      {/* Cursor animado mejorado */}
+      {/* Efecto de fondo animado */}
       <motion.div
         className="absolute pointer-events-none z-10 hidden md:block"
         animate={{
@@ -291,7 +283,7 @@ export function Hero() {
           >
             tangible
           </motion.span>{" "}
-          para volver a sentir tu conexión interior.
+          para volver a sentir tu conexión interior
         </motion.p>
 
         {/* Estadísticas mejoradas */}
@@ -403,26 +395,6 @@ export function Hero() {
               </motion.span>
             </motion.button>
           </Link>
-        </motion.div>
-
-        {/* Indicador de scroll */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
-          transition={{ duration: 1, delay: 2 }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center"
-          >
-            <motion.div
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              className="w-1 h-3 bg-gradient-to-b from-white/60 to-transparent rounded-full mt-2"
-            />
-          </motion.div>
         </motion.div>
       </motion.div>
     </motion.div>
