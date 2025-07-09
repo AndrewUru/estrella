@@ -1,14 +1,9 @@
-import fs from "fs";
-import csv from "csv-parser";
-import { createClient } from "@supabase/supabase-js";
-import "dotenv/config";
+/* eslint-disable @typescript-eslint/no-var-requires */
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
-const FILE = "scripts/usuarios_limpios.csv";
+require("dotenv").config({ path: ".env.local" });
+const fs = require("fs");
+const csv = require("csv-parser");
+const { createClient } = require("@supabase/supabase-js");
 
 interface Usuario {
   full_name: string;
@@ -16,27 +11,48 @@ interface Usuario {
   role: string;
 }
 
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
+
+const FILE = "scripts/usuarios_limpios.csv";
 const usuarios: Usuario[] = [];
 
 fs.createReadStream(FILE)
   .pipe(csv(["full_name", "email", "role"]))
-  .on("data", (data) => {
-    if (data.email) {
+  .on("data", (data: Record<string, string>) => {
+    const email = data.email?.trim();
+    if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       usuarios.push({
         full_name: data.full_name.trim(),
-        email: data.email.trim(),
+        email,
         role: data.role?.trim() || "alumna",
       });
+    } else {
+      console.warn(`⚠️ Email inválido o vacío: ${data.email}`);
     }
   })
   .on("end", async () => {
     console.log(`🔄 Procesando ${usuarios.length} usuarios...\n`);
 
     for (const user of usuarios) {
+      // Saltar si ya existe en Supabase
+      const { data: existingUser } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("email", user.email)
+        .maybeSingle();
+
+      if (existingUser) {
+        console.log(`ℹ️ Usuario ya existe, se omite: ${user.email}`);
+        continue;
+      }
+
       const { data: authData, error: authError } =
         await supabase.auth.admin.createUser({
           email: user.email,
-          email_confirm: false, // para que Supabase envíe el correo de confirmación
+          email_confirm: false,
           user_metadata: {
             full_name: user.full_name,
             role: user.role,

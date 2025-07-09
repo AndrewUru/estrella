@@ -62,7 +62,7 @@ export function Hero() {
         <motion.div
           animate={{
             scale: [1, 1.4, 1.2, 1],
-            rotate: [0, 180, 270, 360],
+
             x: [0, 150, -100, 0],
             y: [0, -80, 60, 0],
           }}
@@ -78,7 +78,7 @@ export function Hero() {
         <motion.div
           animate={{
             scale: [1.2, 1, 1.3, 1.2],
-            rotate: [360, 180, 0, 360],
+
             x: [0, -200, 100, 0],
             y: [0, 100, -60, 0],
           }}
@@ -86,7 +86,6 @@ export function Hero() {
             duration: 35,
             repeat: Infinity,
             ease: "easeInOut",
-            type: "tween",
           }}
           className="absolute top-3/4 right-1/4 w-32 h-32 md:w-60 md:h-60 bg-gradient-to-r from-cyan-500/25 to-blue-500/25 rounded-full blur-3xl"
         />
@@ -104,7 +103,7 @@ export function Hero() {
           animate={{
             y: [-30, 30, -30],
             x: [-20, 20, -20],
-            rotate: [0, 360],
+
             scale: [0.8, 1.2, 0.8],
           }}
           transition={{
@@ -137,7 +136,6 @@ export function Hero() {
             y: [-30, -120, -30],
             opacity: [0, 0.8, 0],
             scale: [0, 1.2, 0],
-            rotate: [0, 180, 360],
           }}
           transition={{
             duration: particle.duration,
