@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { registerUser } from "@/lib/supabase/register-user";
 import Script from "next/script";
 
+// ✅ Tipado estricto de PayPal
 interface PayPalSubscriptionData {
   subscriptionID: string;
 }
@@ -15,9 +16,14 @@ interface PayPalActions {
 }
 
 interface PayPalButtonConfig {
-  style?: Record<string, unknown>;
+  style?: {
+    shape?: string;
+    color?: string;
+    layout?: string;
+    label?: string;
+  };
   createSubscription: (
-    data: PayPalSubscriptionData,
+    data: Record<string, unknown>,
     actions: PayPalActions
   ) => Promise<string>;
   onApprove: (data: PayPalSubscriptionData) => void;
@@ -33,6 +39,11 @@ declare global {
   }
 }
 
+const PAYPAL_PLAN_IDS = {
+  "premium-mensual": "P-7PF96689L4734453RNBSUC2I",
+  "premium-anual": "P-9G192901S6962110GNBSUDZQ",
+};
+
 export default function SignUpWithPayment() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,14 +52,18 @@ export default function SignUpWithPayment() {
   const [error, setError] = useState<string | null>(null);
   const [subscriptionId, setSubscriptionId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [planType, setPlanType] = useState<"gratis" | "premium">("gratis");
+  const [planType, setPlanType] = useState<
+    "gratis" | "premium-mensual" | "premium-anual"
+  >("gratis");
+
+  const paypalContainerRef = useRef<HTMLDivElement>(null);
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
-    if (planType === "premium" && !subscriptionId) {
+    if (planType !== "gratis" && !subscriptionId) {
       setError("Primero realiza el pago con PayPal.");
       setIsLoading(false);
       return;
@@ -76,6 +91,35 @@ export default function SignUpWithPayment() {
     }
   };
 
+  useEffect(() => {
+    if (!window?.paypal || planType === "gratis") return;
+
+    if (paypalContainerRef.current) {
+      paypalContainerRef.current.innerHTML = "";
+    }
+
+    const plan_id =
+      PAYPAL_PLAN_IDS[planType as "premium-mensual" | "premium-anual"];
+
+    const config: PayPalButtonConfig = {
+      style: {
+        shape: "rect",
+        color: "gold",
+        layout: "vertical",
+        label: "subscribe",
+      },
+      createSubscription: (_data, actions) =>
+        actions.subscription.create({
+          plan_id,
+        }),
+      onApprove: (data) => {
+        setSubscriptionId(data.subscriptionID);
+      },
+    };
+
+    window.paypal.Buttons(config).render("#paypal-button-container");
+  }, [planType]);
+
   return (
     <div className="max-w-md mx-auto py-6 px-4 space-y-6">
       <div className="bg-white p-4 rounded-lg shadow border">
@@ -84,17 +128,22 @@ export default function SignUpWithPayment() {
         </label>
         <select
           value={planType}
-          onChange={(e) => setPlanType(e.target.value as "gratis" | "premium")}
+          onChange={(e) =>
+            setPlanType(
+              e.target.value as "gratis" | "premium-mensual" | "premium-anual"
+            )
+          }
           className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
         >
           <option value="gratis">Gratis</option>
-          <option value="premium">Premium (22€ / mes)</option>
+          <option value="premium-mensual">Premium (22 €/mes)</option>
+          <option value="premium-anual">Premium (220 €/año)</option>
         </select>
       </div>
 
-      {planType === "premium" && (
+      {planType !== "gratis" && (
         <div className="bg-white border p-5 rounded-lg shadow">
-          <div id="paypal-button-container" />
+          <div id="paypal-button-container" ref={paypalContainerRef} />
           {subscriptionId ? (
             <p className="text-green-600 text-sm">✅ Pago confirmado</p>
           ) : (
@@ -155,21 +204,7 @@ export default function SignUpWithPayment() {
 
       <Script
         src="https://www.paypal.com/sdk/js?client-id=ASQix2Qu6atiH43_jrk18jeSMDjB_YdTjbfI8jrTJ7x5uagNzUhuNMXacO49ZxJWr_EMpBhrpVPbOvR_&vault=true&intent=subscription"
-        onLoad={() => {
-          if (window?.paypal && planType === "premium") {
-            window.paypal
-              .Buttons({
-                createSubscription: (_data, actions) =>
-                  actions.subscription.create({
-                    plan_id: "TU_PLAN_ID_PAYPAL",
-                  }),
-                onApprove: (data) => {
-                  setSubscriptionId(data.subscriptionID);
-                },
-              })
-              .render("#paypal-button-container");
-          }
-        }}
+        strategy="afterInteractive"
       />
     </div>
   );

@@ -6,7 +6,7 @@ interface RegisterUserProps {
   email: string;
   password: string;
   subscriptionId: string | null; // 👈 permite valor null
-  planType: "gratis" | "premium"; // 👈 permite gratis o premium
+  planType: "gratis" | "premium-mensual" | "premium-anual"; // 👈 permite gratis o premium
   fullName: string;
 }
 
