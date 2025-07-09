@@ -1,14 +1,16 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-
 require("dotenv").config({ path: ".env.local" });
 const fs = require("fs");
 const csv = require("csv-parser");
 const { createClient } = require("@supabase/supabase-js");
+const { randomBytes } = require("crypto");
+const path = require("path");
 
 interface Usuario {
   full_name: string;
   email: string;
   role: string;
+  password: string;
 }
 
 const supabase = createClient(
@@ -19,6 +21,10 @@ const supabase = createClient(
 const FILE = "scripts/usuarios_limpios.csv";
 const usuarios: Usuario[] = [];
 
+function generatePassword(length = 12) {
+  return randomBytes(length).toString("base64").slice(0, length);
+}
+
 fs.createReadStream(FILE)
   .pipe(csv(["full_name", "email", "role"]))
   .on("data", (data: Record<string, string>) => {
@@ -28,6 +34,7 @@ fs.createReadStream(FILE)
         full_name: data.full_name.trim(),
         email,
         role: data.role?.trim() || "alumna",
+        password: generatePassword(),
       });
     } else {
       console.warn(`⚠️ Email inválido o vacío: ${data.email}`);
@@ -36,8 +43,9 @@ fs.createReadStream(FILE)
   .on("end", async () => {
     console.log(`🔄 Procesando ${usuarios.length} usuarios...\n`);
 
+    const usuariosExport: string[] = ["full_name,email,password"];
+
     for (const user of usuarios) {
-      // Saltar si ya existe en Supabase
       const { data: existingUser } = await supabase
         .from("profiles")
         .select("id")
@@ -52,6 +60,7 @@ fs.createReadStream(FILE)
       const { data: authData, error: authError } =
         await supabase.auth.admin.createUser({
           email: user.email,
+          password: "estrella2025",
           email_confirm: false,
           user_metadata: {
             full_name: user.full_name,
@@ -75,6 +84,8 @@ fs.createReadStream(FILE)
           role: user.role,
           is_active: false,
           start_date: new Date().toISOString().split("T")[0],
+          plan_type: "gratis", // 🔐 nuevo campo para la suscripción
+          subscription_id: null,
         },
       ]);
 
@@ -84,8 +95,13 @@ fs.createReadStream(FILE)
         );
       } else {
         console.log(`✅ Usuario creado y perfil insertado: ${user.email}`);
+        usuariosExport.push(`${user.full_name},${user.email},${user.password}`);
       }
     }
 
-    console.log("\n🎉 Importación completada.");
+    // Guardar el CSV con los accesos
+    const exportPath = path.resolve("usuarios_generados.csv");
+    fs.writeFileSync(exportPath, usuariosExport.join("\n"), "utf-8");
+    console.log(`\n📁 Archivo generado: ${exportPath}`);
+    console.log("🎉 Importación finalizada.");
   });

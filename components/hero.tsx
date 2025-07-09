@@ -47,7 +47,7 @@ export function Hero() {
     <motion.div
       className="relative w-screen pt-8 flex flex-col justify-center items-center overflow-clip "
       style={{
-        height: "calc(100vh - 32px)",
+        height: "calc(90vh - 16px)",
       }}
     >
       {/* Fondo mejorado con múltiples gradientes */}
