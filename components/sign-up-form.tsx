@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { registerUser } from "@/lib/supabase/register-user";
 import Script from "next/script";
 
-// ✅ Tipado estricto de PayPal
 interface PayPalSubscriptionData {
   subscriptionID: string;
 }
@@ -98,8 +97,7 @@ export default function SignUpWithPayment() {
       paypalContainerRef.current.innerHTML = "";
     }
 
-    const plan_id =
-      PAYPAL_PLAN_IDS[planType as "premium-mensual" | "premium-anual"];
+    const plan_id = PAYPAL_PLAN_IDS[planType];
 
     const config: PayPalButtonConfig = {
       style: {
@@ -109,9 +107,7 @@ export default function SignUpWithPayment() {
         label: "subscribe",
       },
       createSubscription: (_data, actions) =>
-        actions.subscription.create({
-          plan_id,
-        }),
+        actions.subscription.create({ plan_id }),
       onApprove: (data) => {
         setSubscriptionId(data.subscriptionID);
       },
@@ -122,8 +118,8 @@ export default function SignUpWithPayment() {
 
   return (
     <div className="max-w-md mx-auto py-6 px-4 space-y-6">
-      <div className="bg-white p-4 rounded-lg shadow border">
-        <label className="block text-sm font-medium text-gray-700">
+      <div className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow border border-gray-300 dark:border-gray-600">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
           Selecciona tu plan
         </label>
         <select
@@ -133,7 +129,7 @@ export default function SignUpWithPayment() {
               e.target.value as "gratis" | "premium-mensual" | "premium-anual"
             )
           }
-          className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+          className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded px-3 py-2 mt-1"
         >
           <option value="gratis">Gratis</option>
           <option value="premium-mensual">Premium (22 €/mes)</option>
@@ -142,12 +138,14 @@ export default function SignUpWithPayment() {
       </div>
 
       {planType !== "gratis" && (
-        <div className="bg-white border p-5 rounded-lg shadow">
+        <div className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 p-5 rounded-lg shadow">
           <div id="paypal-button-container" ref={paypalContainerRef} />
           {subscriptionId ? (
-            <p className="text-green-600 text-sm">✅ Pago confirmado</p>
+            <p className="text-green-600 dark:text-green-400 text-sm">
+              ✅ Pago confirmado
+            </p>
           ) : (
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               Realiza el pago para activar el formulario.
             </p>
           )}
@@ -157,7 +155,7 @@ export default function SignUpWithPayment() {
       {(planType === "gratis" || subscriptionId) && (
         <form
           onSubmit={handleSignUp}
-          className="space-y-4 bg-white p-6 rounded shadow-md"
+          className="space-y-4 bg-white dark:bg-gray-900 p-6 rounded shadow-md border border-gray-300 dark:border-gray-700"
         >
           <input
             type="text"
@@ -165,7 +163,7 @@ export default function SignUpWithPayment() {
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             placeholder="Nombre completo"
-            className="w-full border px-3 py-2 rounded"
+            className="w-full border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-2 rounded"
           />
           <input
             type="email"
@@ -173,7 +171,7 @@ export default function SignUpWithPayment() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
-            className="w-full border px-3 py-2 rounded"
+            className="w-full border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-2 rounded"
           />
           <input
             type="password"
@@ -181,7 +179,7 @@ export default function SignUpWithPayment() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Contraseña"
-            className="w-full border px-3 py-2 rounded"
+            className="w-full border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-2 rounded"
           />
           <input
             type="password"
@@ -189,13 +187,15 @@ export default function SignUpWithPayment() {
             value={repeatPassword}
             onChange={(e) => setRepeatPassword(e.target.value)}
             placeholder="Repite la contraseña"
-            className="w-full border px-3 py-2 rounded"
+            className="w-full border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-2 rounded"
           />
-          {error && <div className="text-red-600">{error}</div>}
+          {error && (
+            <div className="text-red-600 dark:text-red-400">{error}</div>
+          )}
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-violet-600 hover:bg-violet-700 text-white py-2 rounded"
+            className="w-full bg-violet-600 hover:bg-violet-700 dark:bg-violet-500 dark:hover:bg-violet-600 text-white py-2 rounded"
           >
             {isLoading ? "Creando cuenta..." : "Crear cuenta"}
           </button>

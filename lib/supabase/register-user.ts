@@ -5,8 +5,8 @@ import { supabase } from "./client";
 interface RegisterUserProps {
   email: string;
   password: string;
-  subscriptionId: string | null; // 👈 permite valor null
-  planType: "gratis" | "premium-mensual" | "premium-anual"; // 👈 permite gratis o premium
+  subscriptionId: string | null;
+  planType: "gratis" | "premium-mensual" | "premium-anual";
   fullName: string;
 }
 
@@ -17,6 +17,7 @@ export async function registerUser({
   planType,
   fullName,
 }: RegisterUserProps) {
+  // Crear el usuario en auth
   const { data, error: signUpError } = await supabase.auth.signUp({
     email,
     password,
@@ -27,11 +28,12 @@ export async function registerUser({
   const user = data.user;
   if (!user || !user.id) throw new Error("No se pudo crear el usuario");
 
+  // Insertar perfil en la tabla 'profiles'
   const { error: insertError } = await supabase.from("profiles").insert({
-    uuid: user.id,
+    id: user.id, // 👈 clave primaria correcta
     email,
     full_name: fullName,
-    is_active: planType === "gratis", // 👈 activo automáticamente si es gratis
+    is_active: planType === "gratis",
     start_date: new Date().toISOString().split("T")[0],
     role: "alumna",
     subscription_id: subscriptionId,
