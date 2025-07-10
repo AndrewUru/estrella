@@ -1,5 +1,3 @@
-// C:\estrella\lib\supabase\register-user.ts
-
 import { supabase } from "./client";
 
 interface RegisterUserProps {
@@ -17,7 +15,6 @@ export async function registerUser({
   planType,
   fullName,
 }: RegisterUserProps) {
-  // Crear el usuario en auth
   const { data, error: signUpError } = await supabase.auth.signUp({
     email,
     password,
@@ -28,16 +25,17 @@ export async function registerUser({
   const user = data.user;
   if (!user || !user.id) throw new Error("No se pudo crear el usuario");
 
-  // Insertar perfil en la tabla 'profiles'
   const { error: insertError } = await supabase.from("profiles").insert({
-    id: user.id, // 👈 clave primaria correcta
+    id: user.id, // UUID correcto
     email,
     full_name: fullName,
     is_active: planType === "gratis",
     start_date: new Date().toISOString().split("T")[0],
+    created_at: new Date().toISOString(), // opcional
     role: "alumna",
     subscription_id: subscriptionId,
     plan: planType,
+    plan_type: planType,
   });
 
   if (insertError) throw insertError;
