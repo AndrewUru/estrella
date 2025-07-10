@@ -25,20 +25,23 @@ export async function registerUser({
   const user = data.user;
   if (!user || !user.id) throw new Error("No se pudo crear el usuario");
 
-  const { error: insertError } = await supabase.from("profiles").insert({
-    id: user.id, // UUID correcto
+  const { error: insertError, data } = await supabase.from("profiles").insert({
+    id: user.id,
     email,
     full_name: fullName,
     is_active: planType === "gratis",
     start_date: new Date().toISOString().split("T")[0],
-    created_at: new Date().toISOString(), // opcional
+    created_at: new Date().toISOString(),
     role: "alumna",
     subscription_id: subscriptionId,
     plan: planType,
     plan_type: planType,
   });
 
-  if (insertError) throw insertError;
+  if (insertError) {
+    console.error("❌ Insert error:", insertError);
+    throw insertError;
+  }
 
   return user;
 }
