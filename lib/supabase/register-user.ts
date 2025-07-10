@@ -15,6 +15,7 @@ export async function registerUser({
   planType,
   fullName,
 }: RegisterUserProps) {
+  // Paso 1: Crear usuario en auth
   const { data, error: signUpError } = await supabase.auth.signUp({
     email,
     password,
@@ -25,7 +26,8 @@ export async function registerUser({
   const user = data.user;
   if (!user || !user.id) throw new Error("No se pudo crear el usuario");
 
-  const { error: insertError, data } = await supabase.from("profiles").insert({
+  // Paso 2: Crear perfil
+  const { error: insertError } = await supabase.from("profiles").insert({
     id: user.id,
     email,
     full_name: fullName,
