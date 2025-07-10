@@ -1,3 +1,13 @@
+import { supabase } from "./client";
+
+interface RegisterUserProps {
+  email: string;
+  password: string;
+  subscriptionId: string | null;
+  planType: "gratis" | "premium-mensual" | "premium-anual";
+  fullName: string;
+}
+
 export async function registerUser({
   email,
   password,
@@ -5,7 +15,7 @@ export async function registerUser({
   planType,
   fullName,
 }: RegisterUserProps) {
-  // Paso 1: Crear usuario
+  // Paso 1: Crear usuario en auth
   const { data, error: signUpError } = await supabase.auth.signUp({
     email,
     password,
@@ -24,7 +34,7 @@ export async function registerUser({
     throw new Error("No se pudo obtener el ID del usuario");
   }
 
-  // Paso 2: Insertar perfil
+  // Paso 2: Crear perfil
   const { error: insertError } = await supabase.from("profiles").insert({
     id: userId,
     email,
@@ -40,7 +50,7 @@ export async function registerUser({
 
   if (insertError) {
     console.error("❌ Error al insertar perfil:", insertError);
-    throw new Error("Error al crear el perfil: " + insertError.message);
+    throw new Error("Error al guardar el perfil: " + insertError.message);
   }
 
   return user;
