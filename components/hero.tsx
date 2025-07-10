@@ -62,7 +62,6 @@ export function Hero() {
         <motion.div
           animate={{
             scale: [1, 1.4, 1.2, 1],
-
             x: [0, 150, -100, 0],
             y: [0, -80, 60, 0],
           }}
@@ -78,7 +77,6 @@ export function Hero() {
         <motion.div
           animate={{
             scale: [1.2, 1, 1.3, 1.2],
-
             x: [0, -200, 100, 0],
             y: [0, 100, -60, 0],
           }}
@@ -103,7 +101,6 @@ export function Hero() {
           animate={{
             y: [-30, 30, -30],
             x: [-20, 20, -20],
-
             scale: [0.8, 1.2, 0.8],
           }}
           transition={{
@@ -160,7 +157,6 @@ export function Hero() {
         animate={{
           x: mousePosition.x * 40,
           y: mousePosition.y * 40,
-          rotate: mousePosition.x * 15,
         }}
         transition={{ type: "spring", stiffness: 150, damping: 25 }}
       >
@@ -306,9 +302,13 @@ export function Hero() {
                 <motion.div
                   key={i}
                   className="w-8 h-8 md:w-9 md:h-9 rounded-full border-2 border-white/30 shadow-lg overflow-hidden"
-                  initial={{ scale: 0, rotate: 180 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  transition={{ delay: 1.6 + i * 0.1, type: "spring" }}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{
+                    delay: 1.6 + i * 0.1,
+                    type: "spring",
+                    stiffness: 100,
+                  }}
                   whileHover={{ scale: 1.1, z: 10 }}
                 >
                   <Image
@@ -322,7 +322,7 @@ export function Hero() {
                 </motion.div>
               ))}
             </div>
-            <span className="font-semibold">+1,000 almas acompañadas</span>
+            <span className="font-semibold">+500 almas acompañadas</span>
           </motion.div>
 
           <motion.div
@@ -334,9 +334,13 @@ export function Hero() {
                 <motion.div
                   key={i}
                   className="w-4 h-4 md:w-5 md:h-5 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full shadow-lg"
-                  initial={{ opacity: 0, scale: 0, rotate: 180 }}
-                  animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                  transition={{ delay: 1.8 + i * 0.1, type: "spring" }}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{
+                    delay: 1.8 + i * 0.1,
+                    type: "spring",
+                    stiffness: 100,
+                  }}
                   whileHover={{ scale: 1.2, y: -2 }}
                 />
               ))}
@@ -363,13 +367,10 @@ export function Hero() {
                 initial={{ scale: 0 }}
                 whileHover={{ scale: 1 }}
               />
-              <motion.span
-                className="relative z-10 flex items-center gap-2"
-                whileHover={{ x: 2 }}
-              >
+              <span className="relative z-10 flex items-center gap-2">
                 <span className="text-xl">🌟</span>
                 Iniciar Sesión
-              </motion.span>
+              </span>
             </motion.button>
           </Link>
 
@@ -384,13 +385,10 @@ export function Hero() {
                 initial={{ scale: 0 }}
                 whileHover={{ scale: 1 }}
               />
-              <motion.span
-                className="relative z-10 flex items-center gap-2"
-                whileHover={{ x: 2 }}
-              >
+              <span className="relative z-10 flex items-center gap-2">
                 <span className="text-xl">💫</span>
-                Registrarse
-              </motion.span>
+                Registrate GRATIS
+              </span>
             </motion.button>
           </Link>
         </motion.div>
