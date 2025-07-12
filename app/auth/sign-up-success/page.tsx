@@ -22,21 +22,24 @@ export default function Page() {
               </div>
             </div>
             <CardTitle className="text-2xl font-bold text-foreground">
-              ¡Tu cuenta está lista!
+              🌟 ¡Bienvenida, alma luminosa!
             </CardTitle>
             <CardDescription className="text-muted-foreground">
-              Ya puedes comenzar tu viaje interior 🌟
+              Tu cuenta ha sido creada con éxito. Estás a un paso de comenzar tu viaje interior.
             </CardDescription>
           </CardHeader>
-          <CardContent className="text-center space-y-4">
+          <CardContent className="text-center space-y-5">
             <p className="text-sm text-muted-foreground">
-              Te hemos registrado correctamente. Pulsa el botón para acceder a tu espacio sagrado.
+              Hemos enviado un correo de verificación a tu bandeja de entrada. Por favor, confirma tu dirección para activar tu cuenta y acceder al portal sagrado.
+            </p>
+            <p className="text-sm text-muted-foreground italic">
+              Si no lo encuentras, revisa la carpeta de spam o promociones.
             </p>
             <Link
-              href="/protected"
-              className="inline-block bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-purple-700 transition"
+              href="/"
+              className="inline-block bg-gradient-to-r from-violet-600 to-purple-600 text-white px-6 py-2 rounded-full hover:from-violet-700 hover:to-purple-700 transition font-medium"
             >
-              Ir al Dashboard
+              Volver al Inicio
             </Link>
           </CardContent>
         </Card>
