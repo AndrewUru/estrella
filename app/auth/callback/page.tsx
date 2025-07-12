@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
+import { ensureUserProfile } from "@/lib/supabase/ensure-user-profile";
 
 export default function AuthCallback() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function AuthCallback() {
       } = await supabase.auth.getSession();
 
       if (session) {
+        await ensureUserProfile(); // Crea perfil si no existe con plan "gratis"
         router.replace("/protected");
       } else {
         router.replace("/auth/login");
