@@ -1,5 +1,3 @@
-//C:\estrella\app\protected\page.tsx
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -19,6 +17,7 @@ type ProgresoItem = {
 
 export default function DashboardPage() {
   const [progreso, setProgreso] = useState<ProgresoItem[]>([]);
+  const [esGratis, setEsGratis] = useState(false);
   const router = useRouter();
   const { fullName, loading } = useUserProfile();
 
@@ -37,6 +36,8 @@ export default function DashboardPage() {
 
       if (!perfil?.start_date) return;
 
+      setEsGratis(perfil.plan === "gratis");
+
       const diasDesdeInicio = Math.floor(
         (new Date().getTime() - new Date(perfil.start_date).getTime()) /
           (1000 * 60 * 60 * 24)
@@ -48,7 +49,7 @@ export default function DashboardPage() {
         .order("dia");
 
       const { data: completados } = await supabase
-        .from("progresos") // Asegúrate que el nombre de la tabla es "progresos"
+        .from("progresos")
         .select("dia")
         .eq("user_id", user.id);
 
@@ -63,18 +64,16 @@ export default function DashboardPage() {
             : e.dia <= diasDesdeInicio + 1,
         imagen_url: e.imagen_url || null,
       }));
-      
 
       setProgreso(progresoFormateado);
     };
 
     fetchProgreso();
-  }, [router]); // Se vuelve a ejecutar cuando cambia la ruta
+  }, [router]);
 
   return (
     <div className="min-h-screen h-full overflow-x-hidden bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900 px-8 pt-10 md:pt-10 lg:pt-12">
       <div className="w-full px-4 py-12">
-        {/* Header mejorado con gradiente */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mb-6 shadow-lg">
             <SparklesIcon className="w-10 h-10 text-white" />
@@ -93,13 +92,17 @@ export default function DashboardPage() {
             y escucha interna.
           </p>
 
-          {/* Indicador de progreso */}
+          {esGratis && (
+            <div className="mt-6 text-sm text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900 px-6 py-4 rounded-2xl max-w-xl mx-auto">
+              Estás en el plan gratuito. Solo el Día 1 está desbloqueado. <Link href="/upgrade" className="underline font-semibold">Mejora tu plan</Link> para acceder al contenido completo ✨
+            </div>
+          )}
+
           <div className="mt-8 max-w-md mx-auto">
             <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
               <span>Progreso del viaje</span>
               <span>
-                {progreso.filter((p) => p.completado).length} /{" "}
-                {progreso.length}
+                {progreso.filter((p) => p.completado).length} / {progreso.length}
               </span>
             </div>
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
@@ -107,9 +110,7 @@ export default function DashboardPage() {
                 className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-500 ease-out"
                 style={{
                   width: `${
-                    (progreso.filter((p) => p.completado).length /
-                      progreso.length) *
-                    100
+                    (progreso.filter((p) => p.completado).length / progreso.length) * 100
                   }%`,
                 }}
               />
