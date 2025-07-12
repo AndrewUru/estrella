@@ -43,6 +43,42 @@ export default function Page() {
         <div className="grid lg:grid-cols-2 gap-16 items-start mb-24">
           {/* Contenido principal */}
           <div className="text-center lg:text-left space-y-8">
+            {/* Formulario de registro */}
+          <div className="relative lg:sticky lg:top-8">
+            {/* Efecto de fondo del formulario */}
+            <div className="absolute inset-0 bg-gradient-to-r from-violet-200/50 to-purple-200/50 dark:from-violet-700/20 dark:to-purple-700/20 rounded-2xl blur-xl transform rotate-1" />
+            <div className="absolute inset-0 bg-gradient-to-l from-indigo-200/30 to-pink-200/30 dark:from-indigo-700/15 dark:to-pink-700/15 rounded-2xl blur-lg transform -rotate-1" />
+            
+            {/* Contenedor del formulario */}
+            <div className="relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/30 dark:border-gray-700/30">
+              <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent dark:from-gray-700/20 rounded-2xl pointer-events-none" />
+              <div className="relative">
+                <SignUpWithPayment />
+              </div>
+            </div>
+
+            {/* Indicadores de confianza */}
+            <div className="mt-6 flex justify-center space-x-6 text-xs text-slate-500 dark:text-slate-400">
+              <div className="flex items-center">
+                <svg className="w-4 h-4 text-green-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span>Seguro SSL</span>
+              </div>
+              <div className="flex items-center">
+                <svg className="w-4 h-4 text-blue-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span>Pago verificado</span>
+              </div>
+              <div className="flex items-center">
+                <svg className="w-4 h-4 text-purple-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
+                </svg>
+                <span>Acceso inmediato</span>
+              </div>
+            </div>
+          </div>
             {/* Logo con efectos */}
             <div className="inline-block relative mb-8">
               <div className="absolute inset-0 bg-gradient-to-r from-violet-400 via-purple-400 to-indigo-400 dark:from-violet-500 dark:via-purple-500 dark:to-indigo-500 rounded-full blur-xl opacity-30 animate-pulse scale-125" />
@@ -145,42 +181,7 @@ export default function Page() {
             </div>
           </div>
 
-          {/* Formulario de registro */}
-          <div className="relative lg:sticky lg:top-8">
-            {/* Efecto de fondo del formulario */}
-            <div className="absolute inset-0 bg-gradient-to-r from-violet-200/50 to-purple-200/50 dark:from-violet-700/20 dark:to-purple-700/20 rounded-2xl blur-xl transform rotate-1" />
-            <div className="absolute inset-0 bg-gradient-to-l from-indigo-200/30 to-pink-200/30 dark:from-indigo-700/15 dark:to-pink-700/15 rounded-2xl blur-lg transform -rotate-1" />
-            
-            {/* Contenedor del formulario */}
-            <div className="relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/30 dark:border-gray-700/30">
-              <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent dark:from-gray-700/20 rounded-2xl pointer-events-none" />
-              <div className="relative">
-                <SignUpWithPayment />
-              </div>
-            </div>
-
-            {/* Indicadores de confianza */}
-            <div className="mt-6 flex justify-center space-x-6 text-xs text-slate-500 dark:text-slate-400">
-              <div className="flex items-center">
-                <svg className="w-4 h-4 text-green-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span>Seguro SSL</span>
-              </div>
-              <div className="flex items-center">
-                <svg className="w-4 h-4 text-blue-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span>Pago verificado</span>
-              </div>
-              <div className="flex items-center">
-                <svg className="w-4 h-4 text-purple-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
-                </svg>
-                <span>Acceso inmediato</span>
-              </div>
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>
