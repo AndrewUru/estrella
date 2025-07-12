@@ -1,9 +1,11 @@
+//C:\estrella\components\sign-up-form.tsx
 "use client";
 
 import { useState } from "react";
 import { registerUser } from "@/lib/supabase/register-user";
 import PlanSelector from "./PlanSelector";
 import Script from "next/script";
+import Image from "next/image";
 
 type PlanType = "gratis" | "premium-mensual" | "premium-anual";
 
@@ -103,6 +105,42 @@ export default function SignUpForm() {
         >
           {isLoading ? "Registrando..." : "Crear cuenta"}
         </button>
+        <div className="relative my-6">
+  <div className="absolute inset-0 flex items-center">
+    <div className="w-full border-t border-gray-300" />
+  </div>
+  <div className="relative flex justify-center text-sm">
+    <span className="bg-white dark:bg-gray-800 px-2 text-gray-500 dark:text-gray-400">
+      o continúa con
+    </span>
+  </div>
+</div>
+
+<button
+  type="button"
+  onClick={() =>
+    supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo:
+          process.env.NODE_ENV === "development"
+            ? "http://localhost:3000/auth/callback"
+            : "https://estrelladelalba.com/auth/callback",
+      },
+    })
+  }
+  className="w-full bg-white border border-gray-300 text-gray-700 py-2 rounded hover:bg-gray-100 flex items-center justify-center gap-2"
+>
+<Image
+  src="/google-icon.svg"
+  alt="Google"
+  width={20}
+  height={20}
+  className="h-5 w-5"
+/>
+  <span>Registrarse con Google</span>
+</button>
+
       </form>
 
       <Script

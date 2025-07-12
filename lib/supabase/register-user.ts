@@ -13,11 +13,12 @@ export async function registerUser({
   planType: "gratis" | "premium-mensual" | "premium-anual";
   fullName: string;
 }) {
-  // Paso 1: Crear usuario en auth
+  // Paso 1: Crear usuario en auth sin redirección ni confirmación por correo
   const { data, error: signUpError } = await supabase.auth.signUp({
     email,
     password,
     options: {
+      emailRedirectTo: 'null', // Evita redirección de email
       data: {
         full_name: fullName,
         is_active: planType === "gratis",
@@ -59,6 +60,9 @@ export async function registerUser({
     console.error("❌ Error al insertar perfil:", profileError);
     throw new Error("Error al guardar perfil: " + profileError.message);
   }
+
+  // Paso 3: Iniciar sesión automática
+  await supabase.auth.signInWithPassword({ email, password });
 
   return user;
 }

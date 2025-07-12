@@ -1,3 +1,5 @@
+// C:\estrella\app\auth\sign-up-success\page.tsx
+
 import {
   Card,
   CardContent,
@@ -5,7 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { MailCheck } from "lucide-react";
+import { Sparkles } from "lucide-react";
+import Link from "next/link";
 
 export default function Page() {
   return (
@@ -14,22 +17,27 @@ export default function Page() {
         <Card className="shadow-xl border border-white/10 bg-gradient-to-br from-background/80 to-muted/40 backdrop-blur-sm">
           <CardHeader className="text-center space-y-4">
             <div className="flex justify-center">
-              <div className="bg-green-500/10 p-3 rounded-full border border-green-500/30">
-                <MailCheck className="h-8 w-8 text-green-500" />
+              <div className="bg-purple-500/10 p-3 rounded-full border border-purple-500/30">
+                <Sparkles className="h-8 w-8 text-purple-500" />
               </div>
             </div>
             <CardTitle className="text-2xl font-bold text-foreground">
-              ¡Gracias por registrarte!
+              ¡Tu cuenta está lista!
             </CardTitle>
             <CardDescription className="text-muted-foreground">
-              Te enviamos un correo de confirmación
+              Ya puedes comenzar tu viaje interior 🌟
             </CardDescription>
           </CardHeader>
           <CardContent className="text-center space-y-4">
             <p className="text-sm text-muted-foreground">
-              Por favor, revisa tu bandeja de entrada (o la carpeta de spam) y
-              confirma tu cuenta antes de iniciar sesión.
+              Te hemos registrado correctamente. Pulsa el botón para acceder a tu espacio sagrado.
             </p>
+            <Link
+              href="/protected"
+              className="inline-block bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-purple-700 transition"
+            >
+              Ir al Dashboard
+            </Link>
           </CardContent>
         </Card>
       </div>
