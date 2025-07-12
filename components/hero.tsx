@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Star, Users, Sparkles, Zap } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+
 
 export function Hero() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -162,33 +164,43 @@ export function Hero() {
         </motion.div>
 
         {/* CTA Buttons */}
-        <motion.div
-          className="flex flex-col sm:flex-row gap-4 justify-center mt-6"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-        >
-          <motion.button
-            className="px-8 py-3 bg-gradient-to-r from-violet-600 to-purple-600 text-white rounded-full text-lg font-semibold hover:from-violet-500 hover:to-purple-500 transition-all duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            aria-label="Iniciar sesión en la plataforma"
-          >
-            Iniciar Sesión
-          </motion.button>
-          
-          <motion.button
-            className="px-8 py-3 border-2 border-white/60 text-white rounded-full text-lg font-semibold backdrop-blur-sm bg-white/10 hover:bg-white/20 transition-all duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            aria-label="Registrarse gratis en la plataforma"
-          >
-            <span className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5" />
-              Regístrate GRATIS
-            </span>
-          </motion.button>
-        </motion.div>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
+          <Link href="/auth/login">
+            <motion.button
+              className="relative px-8 py-4 bg-gradient-to-r from-violet-600 to-purple-600 text-white rounded-full text-lg font-semibold overflow-hidden group"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-violet-400 to-purple-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                initial={false}
+              />
+              <span className="relative z-10 flex items-center gap-2">
+                Iniciar Sesión
+                <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>→</motion.div>
+              </span>
+            </motion.button>
+          </Link>
+
+          <Link href="/auth/sign-up">
+            <motion.button
+              className="relative px-8 py-4 border-2 border-white/60 text-white rounded-full text-lg font-semibold backdrop-blur-sm bg-white/10 hover:bg-white/20 transition-all duration-300 group"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"
+                initial={false}
+              />
+              <span className="relative z-10 flex items-center gap-2">
+                <Sparkles className="w-5 h-5" />
+                Regístrate GRATIS
+              </span>
+            </motion.button>
+          </Link>
+        </div>
+       
+
       </div>
     </div>
   );
