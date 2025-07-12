@@ -28,6 +28,7 @@ export default async function ProfilePage() {
       `
       subscription_id,
       plan_type,
+      plan,
       is_active,
       current_day,
       ritual_done,
@@ -129,6 +130,11 @@ export default async function ProfilePage() {
             <div className="px-6 py-4 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Plan */}
+
+                <p className="text-sm">
+  <strong>Plan:</strong> {profile.plan || "No definido"}
+</p>
+
                 <div className="p-3 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <Shield className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
