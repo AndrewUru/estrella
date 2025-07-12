@@ -31,7 +31,7 @@ export default function DashboardPage() {
 
       const { data: perfil } = await supabase
         .from("profiles")
-        .select("start_date")
+        .select("start_date, plan")
         .eq("id", user.id)
         .single();
 
@@ -57,9 +57,13 @@ export default function DashboardPage() {
       const progresoFormateado: ProgresoItem[] = (entregas || []).map((e) => ({
         dia: e.dia,
         completado: completadosSet.has(e.dia),
-        desbloqueado: e.dia <= diasDesdeInicio + 1,
+        desbloqueado:
+          perfil.plan === "gratis"
+            ? e.dia === 1
+            : e.dia <= diasDesdeInicio + 1,
         imagen_url: e.imagen_url || null,
       }));
+      
 
       setProgreso(progresoFormateado);
     };

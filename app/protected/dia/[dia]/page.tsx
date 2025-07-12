@@ -1,3 +1,5 @@
+//C:\estrella\app\protected\dia\[dia]\page.tsx
+
 "use client";
 
 import { useEffect, useState } from "react";
