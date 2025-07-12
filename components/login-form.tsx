@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   Card,
@@ -117,6 +118,28 @@ export function LoginForm({ className }: { className?: string }) {
                 <CardDescription className="text-slate-600 dark:text-slate-400">
                   Ingresa tus credenciales para acceder a tu cuenta
                 </CardDescription>
+                
+  <Button
+    variant="outline"
+    className="w-full flex items-center justify-center gap-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+    onClick={async () => {
+      await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: process.env.NEXT_PUBLIC_BASE_URL + "/auth/callback",
+        },
+      });
+    }}
+  >
+    <Image
+      src="/google-icon.svg"
+      alt="Google"
+      width={20}
+      height={20}
+      className="dark:invert"
+    />
+    Iniciar sesión con Google
+  </Button>
               </CardHeader>
 
               <CardContent className="space-y-6">

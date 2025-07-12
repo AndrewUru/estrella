@@ -30,7 +30,7 @@ export default function DashboardPage() {
 
       const { data: perfil } = await supabase
         .from("profiles")
-        .select("start_date, plan")
+        .select("start_date, plan, full_name")
         .eq("id", user.id)
         .single();
 
