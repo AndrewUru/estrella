@@ -18,7 +18,7 @@ export function useUserProfile() {
       const { data, error } = await supabase
         .from("profiles")
         .select("full_name")
-        .eq("uuid", user.id)
+        .eq("id", user.id)
         .single();
 
       if (!error && data?.full_name) {
