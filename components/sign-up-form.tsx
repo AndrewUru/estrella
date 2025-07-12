@@ -40,7 +40,7 @@ export default function SignUpPage() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: process.env.NEXT_PUBLIC_BASE_URL + "/bienvenida",
+        redirectTo: process.env.NEXT_PUBLIC_BASE_URL + "auth/callback",
       },
     });
   };
