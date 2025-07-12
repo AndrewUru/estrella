@@ -159,27 +159,7 @@ export function Beneficios() {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Flecha de transformación para desktop */}
-      <div className="hidden lg:flex justify-center items-center absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
-        <div className="w-20 h-20 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 rounded-full flex items-center justify-center shadow-2xl animate-pulse">
-          <Sparkles className="w-10 h-10 text-white animate-spin" />
-        </div>
-      </div>
-
-      <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
+      </div>      
     </section>
   );
 }

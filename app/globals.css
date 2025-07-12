@@ -68,9 +68,3 @@
   }
 }
 
-/* En tu archivo global.css o tailwind.css */
-.hero-full-width {
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
-  margin-right: calc(-50vw + 50%);
-}
