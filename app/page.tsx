@@ -30,7 +30,7 @@ export default function Home() {
               escucharla.
             </p>
             <Link
-              href="/protected"
+              href="/upgrade"
               className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-background rounded-full text-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300"
             >
               Comenzar mi Transformación

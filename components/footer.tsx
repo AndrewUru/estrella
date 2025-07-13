@@ -106,7 +106,7 @@ export function Footer() {
                   <span className="text-xs text-muted-foreground">Tema</span>
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  <p>📧 Soporte: contacto@estrelladelabla.com</p>
+                  <p>📧 Soporte: Marketing@samariluz.com</p>
                 </div>
               </div>
             </div>
@@ -116,43 +116,44 @@ export function Footer() {
           <div className="h-px bg-gradient-to-r from-transparent via-border/50 to-transparent mb-6"></div>
 
           {/* Footer inferior */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
-            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
-              <p className="text-center sm:text-left">
-                Con amor creado por{" "}
-                <a
-                  href="https://elsaltoweb.es/"
-                  target="_blank"
-                  className="group relative font-semibold text-primary hover:text-primary/80 transition-all duration-300"
-                  rel="noreferrer"
-                >
-                  <span className="relative z-10">ElSaltoweb.es</span>
-                  <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-primary/30 group-hover:w-full transition-all duration-300"></span>
-                </a>{" "}
-                y{" "}
-                <a
-                  href="https://samariluz.com"
-                  target="_blank"
-                  className="group relative font-semibold text-primary hover:text-primary/80 transition-all duration-300"
-                  rel="noreferrer"
-                >
-                  <span className="relative z-10">Samari Luz</span>
-                  <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-primary/30 group-hover:w-full transition-all duration-300"></span>
-                </a>
-              </p>
-              <div className="hidden sm:block w-px h-4 bg-border/50"></div>
-              <span className="text-center sm:text-left">
-                © {new Date().getFullYear()} Estrella del Alba. Todos los
-                derechos reservados.
-              </span>
-            </div>
+<div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
+  <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+    <p className="text-center sm:text-left">
+      Con amor creado por{" "}
+      <a
+        href="https://samariluz.com"
+        target="_blank"
+        className="group relative font-semibold text-primary hover:text-primary/80 transition-all duration-300"
+        rel="noreferrer"
+      >
+        <span className="relative z-10">Samari Luz</span>
+        <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-primary/30 group-hover:w-full transition-all duration-300"></span>
+      </a>{" "}
+      y{" "}
+      <a
+        href="https://elsaltoweb.es/"
+        target="_blank"
+        className="group relative font-semibold text-primary hover:text-primary/80 transition-all duration-300"
+        rel="noreferrer"
+      >
+        <span className="relative z-10">ElSaltoweb.es</span>
+        <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-primary/30 group-hover:w-full transition-all duration-300"></span>
+      </a>
+    </p>
+    <div className="hidden sm:block w-px h-4 bg-border/50"></div>
+    <span className="text-center sm:text-left">
+      © {new Date().getFullYear()} Estrella del Alba. Todos los
+      derechos reservados.
+    </span>
+  </div>
 
-            <div className="flex items-center gap-4 text-xs">
-              <span className="opacity-75">Versión 1.0</span>
-              <div className="w-px h-4 bg-border/50"></div>
-              <span className="opacity-75">Hecho con ✨ y 💜</span>
-            </div>
-          </div>
+  <div className="flex items-center gap-4 text-xs">
+    <span className="opacity-75">Versión 1.0</span>
+    <div className="w-px h-4 bg-border/50"></div>
+    <span className="opacity-75">Hecho con ✨ y 💜</span>
+  </div>
+</div>
+
         </div>
       </div>
 
