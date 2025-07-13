@@ -69,10 +69,13 @@ export default function UpgradePage() {
         <h1 className="text-3xl font-bold text-purple-700 dark:text-purple-300 mb-4">
           Desbloquea tu Estrella Completa ✨
         </h1>
-        <p className="text-gray-700 dark:text-gray-300 mb-6 text-lg">
+        <p className="text-gray-700 dark:text-gray-300 mb-4 text-lg">
           Elige cómo quieres acceder a todo el programa: suscripción mensual o anual.
         </p>
-
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+          Hemos creado esta suscripción con mucho amor y cuidado para que sea accesible y al mismo tiempo nos ayude a sostener el proyecto de esta app, desarrollada con esfuerzo, intuición y cariño para acompañarte en tu camino.
+        </p>
+  
         <div className="flex justify-center gap-4 mb-6">
           <button
             onClick={() => setSelectedPlan("22")}
@@ -84,7 +87,7 @@ export default function UpgradePage() {
           >
             Mensual – 22 €
           </button>
-
+  
           <button
             onClick={() => setSelectedPlan("222")}
             className={`px-6 py-3 rounded-full font-semibold border transition-all duration-300 ${
@@ -96,24 +99,25 @@ export default function UpgradePage() {
             Anual – 77 €
           </button>
         </div>
-
+  
         <div className="text-2xl font-semibold text-purple-800 dark:text-purple-200 mb-6">
           {selectedPlan === "22"
             ? "Suscripción mensual de 22 €"
             : "Suscripción anual de 222 €"}
         </div>
-
+  
         <div id="paypal-button-container" className="mb-6"></div>
-
+  
         <p className="text-sm text-gray-500 dark:text-gray-400">
           * Si ya hiciste el pago, tu acceso se activará automáticamente. Si no, contáctanos para asistencia.
         </p>
       </div>
-
+  
       <Script
         src="https://www.paypal.com/sdk/js?client-id=ASQix2Qu6atiH43_jrk18jeSMDjB_YdTjbfI8jrTJ7x5uagNzUhuNMXacO49ZxJWr_EMpBhrpVPbOvR_&vault=true&intent=subscription"
         strategy="afterInteractive"
       />
     </div>
   );
+  
 }

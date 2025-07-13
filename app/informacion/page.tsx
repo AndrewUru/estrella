@@ -18,12 +18,15 @@ export default function InformacionPage() {
           <h1 className="text-5xl md:text-6xl font-black bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 bg-clip-text text-transparent mb-6">
             ¿Cómo funciona Estrella del Alba 7D?
           </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-4">
             Como suscriptora premium, desbloqueas día a día una experiencia guiada de 7 días: audio canalizado + guía práctica PDF, todo desde un mismo lugar.
+          </p>
+          <p className="text-sm text-muted-foreground max-w-xl mx-auto">
+            Esta suscripción, de precio accesible, nos permite sostener y cuidar esta plataforma independiente creada con dedicación, esfuerzo y mucho amor para acompañarte en tu proceso de reconexión.
           </p>
         </div>
       </section>
-
+  
       {/* Funcionalidad Visual */}
       <section className="grid md:grid-cols-3 gap-8">
         <div className="bg-muted rounded-2xl p-6 text-center shadow-lg border border-border">
@@ -37,7 +40,7 @@ export default function InformacionPage() {
             Escucha una activación vibracional guiada para abrir el canal interno y conectar con tu alma.
           </p>
         </div>
-
+  
         <div className="bg-muted rounded-2xl p-6 text-center shadow-lg border border-border">
           <div className="flex justify-center mb-4">
             <div className="p-3 bg-pink-500 rounded-xl">
@@ -49,7 +52,7 @@ export default function InformacionPage() {
             Prácticas energéticas, reflexión y guía escrita para anclar la experiencia en tu vida.
           </p>
         </div>
-
+  
         <div className="bg-muted rounded-2xl p-6 text-center shadow-lg border border-border">
           <div className="flex justify-center mb-4">
             <div className="p-3 bg-blue-500 rounded-xl">
@@ -64,4 +67,5 @@ export default function InformacionPage() {
       </section>
     </main>
   );
+  
 }
