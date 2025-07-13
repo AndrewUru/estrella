@@ -1,9 +1,19 @@
-import type { NextConfig } from "next";
+//C:\estrella\next.config.ts
+/** @type {import('next').NextConfig} */
+import withPWA from "next-pwa";
 
-const nextConfig: NextConfig = {
+const baseConfig = {
+  reactStrictMode: true,
   images: {
     domains: ["lh3.googleusercontent.com"],
   },
 };
 
-export default nextConfig;
+const withPwaConfig = withPWA({
+  dest: "public",
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === "development",
+});
+
+export default withPwaConfig(baseConfig);
