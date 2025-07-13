@@ -93,7 +93,7 @@ export default function UpgradePage() {
                 : "bg-white dark:bg-gray-700 text-purple-700 dark:text-purple-200 border-purple-300"
             }`}
           >
-            Anual – 222 €
+            Anual – 77 €
           </button>
         </div>
 
