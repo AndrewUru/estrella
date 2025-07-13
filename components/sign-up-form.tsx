@@ -1,4 +1,4 @@
-// app/auth/sign-up/page.tsx
+//C:\estrella\components\sign-up-form.tsx
 
 "use client";
 
@@ -17,6 +17,8 @@ export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://estrelladelalba.com";
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -26,21 +28,26 @@ export default function SignUpPage() {
       email,
       password,
       options: {
-        emailRedirectTo: process.env.NEXT_PUBLIC_BASE_URL + "/protected",
+        emailRedirectTo: `${baseUrl}/protected`,
       },
     });
 
-    if (error) setError(error.message);
-    else router.push("/bienvenida");
+    if (error) {
+      setError(error.message);
+    } else {
+      router.push("/check-email");
+    }
 
     setLoading(false);
   };
 
   const handleGoogleSignUp = async () => {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://estrelladelalba.com";
+
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: process.env.NEXT_PUBLIC_BASE_URL + "auth/callback",
+        redirectTo: `${baseUrl}/auth/callback`,
       },
     });
   };
