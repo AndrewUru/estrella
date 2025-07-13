@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
+import { ArrowRight, Sparkles, Heart } from 'lucide-react';
 import { Hero } from "@/components/hero";
 import { Stats } from "@/components/stats";
 import { Beneficios } from "@/components/beneficios";
@@ -19,25 +21,78 @@ export default function Home() {
         {/* PROCESO */}
         <ProcesoSection />
 
+        
         {/* CTA FINAL */}
         <section className="w-full max-w-4xl px-6 text-center mt-16">
-          <div className="bg-gradient-to-r from-primary/10 to-primary/5 p-12 rounded-3xl border border-primary/20">
-            <h2 className="text-3xl font-bold mb-4">
-              ¿Lista para regresar a casa?
-            </h2>
-            <p className="text-muted-foreground mb-8 text-lg max-w-2xl mx-auto">
-              Tu alma ya conoce el camino. Solo necesitas recordar cómo
-              escucharla.
-            </p>
-            <Link
-              href="/upgrade"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-background rounded-full text-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300"
-            >
-              Comenzar mi Transformación
-              <span>✨</span>
-            </Link>
+      <div className="relative bg-gradient-to-br from-purple-900/20 via-primary/10 to-pink-900/20 p-12 rounded-3xl border border-primary/30 overflow-hidden">
+        {/* Elementos decorativos de fondo */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-pulse"></div>
+        <div className="absolute top-4 right-4 text-primary/20 animate-bounce">
+          <Sparkles size={24} />
+        </div>
+        <div className="absolute bottom-4 left-4 text-primary/20 animate-bounce" style={{ animationDelay: '0.5s' }}>
+          <Heart size={20} />
+        </div>
+        
+        {/* Contenido principal */}
+        <div className="relative z-10">
+          <div className="flex justify-center mb-6">
+            <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-primary/30 shadow-lg">
+              <Image
+                src="/images/samari1.png"
+                alt="Samari Luz"
+                fill
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent"></div>
+            </div>
           </div>
-        </section>
+          
+          <div className="space-y-6">
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent leading-tight">
+              Tu alma te está llamando
+            </h2>
+            
+            <div className="max-w-2xl mx-auto space-y-4">
+              <p className="text-muted-foreground text-xl leading-relaxed">
+                El camino de regreso a casa ya existe dentro de ti. 
+              </p>
+              <p className="text-muted-foreground/80 text-lg">
+                Solo necesitas <span className="text-primary font-semibold">recordar cómo escucharla</span> y dar el primer paso.
+              </p>
+            </div>
+            
+            {/* Urgencia sutil */}
+            <div className="flex items-center justify-center gap-2 text-primary/70 text-sm">
+              <Sparkles size={16} />
+              <span>Comienza tu transformación hoy</span>
+              <Sparkles size={16} />
+            </div>
+          </div>
+          
+            {/* Botón mejorado */}
+            <div className="mt-10">
+              <Link
+                href="/upgrade"
+                className="group relative inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-primary to-purple-600 text-white rounded-full text-xl font-semibold shadow-2xl hover:shadow-primary/25 hover:scale-105 transition-all duration-500 overflow-hidden"
+              >
+                {/* Efecto de brillo */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                
+                <span className="relative z-10">Comenzar mi Transformación</span>
+                <ArrowRight className="relative z-10 group-hover:translate-x-1 transition-transform duration-300" size={24} />
+                <div className="relative z-10 text-2xl animate-pulse">✨</div>
+              </Link>
+              
+              {/* Texto de apoyo */}
+              <p className="text-muted-foreground/60 text-sm mt-4">
+                Sin compromisos • Resultados garantizados • Apoyo personalizado
+              </p>
+            </div>
+        </div>
+      </div>
+    </section>
+
       </div>
     </main>
   );
