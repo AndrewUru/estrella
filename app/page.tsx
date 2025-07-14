@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Sparkles, Heart } from 'lucide-react';
+import { Sparkles, Heart } from 'lucide-react';
 import { Hero } from "@/components/hero";
 import { Stats } from "@/components/stats";
 import { Beneficios } from "@/components/beneficios";
