@@ -2,15 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import {
-  User,
-  Mail,
-  Calendar,
-  Crown,
-  Shield,
-  CheckCircle,
-  XCircle,
-} from "lucide-react";
+import { User, Mail, Crown, Shield, CheckCircle, XCircle } from "lucide-react";
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -26,15 +18,14 @@ export default async function ProfilePage() {
     .from("profiles")
     .select(
       `
-      subscription_id,
-      plan_type,
-      plan,
-      is_active,
-      current_day,
-      ritual_done,
-      has_completed_intro,
-      progress_notes
-    `
+    subscription_id,
+    plan_type,
+    plan,
+    is_active,
+    role,
+    full_name,
+    email
+  `
     )
     .eq("id", user.id)
     .single();
@@ -132,8 +123,8 @@ export default async function ProfilePage() {
                 {/* Plan */}
 
                 <p className="text-sm">
-  <strong>Plan:</strong> {profile.plan || "No definido"}
-</p>
+                  <strong>Plan:</strong> {profile.plan || "No definido"}
+                </p>
 
                 <div className="p-3 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
@@ -178,38 +169,6 @@ export default async function ProfilePage() {
                   </span>
                 </div>
               </div>
-
-              {/* Progreso */}
-              {profile.current_day && (
-                <div className="p-3 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Calendar className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
-                    <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
-                      Progreso
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-2xl font-bold text-zinc-900 dark:text-white">
-                          {profile.current_day}
-                        </span>
-                        <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                          días completados
-                        </span>
-                      </div>
-                    </div>
-                    {profile.ritual_done && (
-                      <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
-                        <CheckCircle className="w-4 h-4" />
-                        <span className="text-xs font-medium">
-                          Ritual de hoy completado
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         )}
