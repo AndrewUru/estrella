@@ -80,8 +80,6 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                 
                 <span className="relative z-10">Comenzar mi Transformación</span>
-                <ArrowRight className="relative z-10 group-hover:translate-x-1 transition-transform duration-300" size={24} />
-                <div className="relative z-10 text-2xl animate-pulse">✨</div>
               </Link>
               
               {/* Texto de apoyo */}
