@@ -22,10 +22,10 @@ const faqs = [
       "Cada día subimos la clase a la plataforma y te notificamos por WhatsApp en un grupo silencioso.",
   },
   {
-    question: "🧘‍♀️ ¿Hay sesiones en vivo?",
-    answer:
-      "Sí. El Día 7 realizaremos un ritual de cierre en directo con Samarí para integrar y sellar el proceso.",
-  },
+  question: "🧘‍♀️ ¿Hay sesiones en vivo?",
+  answer:
+    "De momento no hay sesiones en vivo previstas. Todo el contenido estará disponible para que lo sigas a tu ritmo durante los 7 días.",
+},
   {
     question: "🙏 ¿Y si no puedo hacerlo cada día?",
     answer:
