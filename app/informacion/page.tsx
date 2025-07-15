@@ -15,18 +15,22 @@ export default function InformacionPage() {
               <Star className="w-8 h-8 text-white" />
             </div>
           </div>
-          <h1 className="text-5xl md:text-6xl font-black bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 bg-clip-text text-transparent mb-6">
+          <h1 className="text-4xl md:text-4xl font-black bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 bg-clip-text text-transparent mb-6">
             ¿Cómo funciona Estrella del Alba 7D?
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-4">
-            Como suscriptora premium, desbloqueas día a día una experiencia guiada de 7 días: audio canalizado + guía práctica PDF, todo desde un mismo lugar.
+            Como suscriptora premium, desbloqueas día a día una experiencia
+            guiada de 7 días: audio canalizado + guía práctica PDF, todo desde
+            un mismo lugar.
           </p>
           <p className="text-sm text-muted-foreground max-w-xl mx-auto">
-            Esta suscripción, de precio accesible, nos permite sostener y cuidar esta plataforma independiente creada con dedicación, esfuerzo y mucho amor para acompañarte en tu proceso de reconexión.
+            Esta suscripción, de precio accesible, nos permite sostener y cuidar
+            esta plataforma independiente creada con dedicación, esfuerzo y
+            mucho amor para acompañarte en tu proceso de reconexión.
           </p>
         </div>
       </section>
-  
+
       {/* Funcionalidad Visual */}
       <section className="grid md:grid-cols-3 gap-8">
         <div className="bg-muted rounded-2xl p-6 text-center shadow-lg border border-border">
@@ -35,12 +39,15 @@ export default function InformacionPage() {
               <Mic className="w-6 h-6 text-white" />
             </div>
           </div>
-          <h3 className="text-xl font-semibold mb-2">Audio Canalizado Diario</h3>
+          <h3 className="text-xl font-semibold mb-2">
+            Audio Canalizado Diario
+          </h3>
           <p className="text-muted-foreground">
-            Escucha una activación vibracional guiada para abrir el canal interno y conectar con tu alma.
+            Escucha una activación vibracional guiada para abrir el canal
+            interno y conectar con tu alma.
           </p>
         </div>
-  
+
         <div className="bg-muted rounded-2xl p-6 text-center shadow-lg border border-border">
           <div className="flex justify-center mb-4">
             <div className="p-3 bg-pink-500 rounded-xl">
@@ -49,10 +56,11 @@ export default function InformacionPage() {
           </div>
           <h3 className="text-xl font-semibold mb-2">PDF de Integración</h3>
           <p className="text-muted-foreground">
-            Prácticas energéticas, reflexión y guía escrita para anclar la experiencia en tu vida.
+            Prácticas energéticas, reflexión y guía escrita para anclar la
+            experiencia en tu vida.
           </p>
         </div>
-  
+
         <div className="bg-muted rounded-2xl p-6 text-center shadow-lg border border-border">
           <div className="flex justify-center mb-4">
             <div className="p-3 bg-blue-500 rounded-xl">
@@ -61,11 +69,11 @@ export default function InformacionPage() {
           </div>
           <h3 className="text-xl font-semibold mb-2">Avanza a tu Ritmo</h3>
           <p className="text-muted-foreground">
-            El contenido se desbloquea diariamente pero queda disponible siempre. Avanza cuando lo sientas.
+            El contenido se desbloquea diariamente pero queda disponible
+            siempre. Avanza cuando lo sientas.
           </p>
         </div>
       </section>
     </main>
   );
-  
 }
