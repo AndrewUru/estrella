@@ -221,6 +221,103 @@ export function Navbar() {
           </motion.button>
         </div>
       </div>
+
+      {/* Menú móvil */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="sm:hidden bg-white dark:bg-black border-t border-zinc-200 dark:border-zinc-800 shadow-lg"
+          >
+            <div className="px-4 py-4 space-y-3">
+              {[
+                { href: "/", label: "Inicio", icon: "🏠" },
+                { href: "/informacion", label: "Sobre el curso", icon: "📚" },
+                { href: "/preguntas", label: "Preguntas", icon: "❓" },
+                {
+                  href: "/protected",
+                  label: "Mi espacio",
+                  icon: "✨",
+                  highlight: true,
+                },
+              ].map((item, index) => (
+                <motion.div
+                  key={item.href}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Link
+                    href={item.href}
+                    onClick={() => setMenuOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                      item.highlight
+                        ? "bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 font-semibold"
+                        : "text-zinc-800 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                    }`}
+                  >
+                    <span className="text-lg">{item.icon}</span>
+                    {item.label}
+                  </Link>
+                </motion.div>
+              ))}
+
+              <div className="border-t border-zinc-200 dark:border-zinc-800 pt-3 mt-3">
+                {user ? (
+                  <>
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.3 }}
+                    >
+                      <Link
+                        href="/protected/profile"
+                        onClick={() => setMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-800 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors duration-200"
+                      >
+                        <span className="text-lg">👤</span>
+                        Perfil
+                      </Link>
+                    </motion.div>
+                    <motion.button
+                      onClick={async () => {
+                        setMenuOpen(false);
+                        await supabase.auth.signOut();
+                        router.push("/");
+                      }}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.4 }}
+                      className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors duration-200"
+                    >
+                      <span className="text-lg">🚪</span>
+                      Cerrar sesión
+                    </motion.button>
+                  </>
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    <Link
+                      href="/auth/login"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold hover:from-purple-700 hover:to-purple-800 transition-all duration-200"
+                    >
+                      <span className="text-lg">🔐</span>
+                      Inicia sesión
+                    </Link>
+                  </motion.div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
 }
