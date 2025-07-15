@@ -12,7 +12,7 @@ export default async function Page() {
   } = await supabase.auth.getSession();
 
   if (session) {
-    redirect("/dashboard"); // Redirige si ya está logueado
+    redirect("/protected"); // Redirige si ya está logueado
   }
 
   return (
