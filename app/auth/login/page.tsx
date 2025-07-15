@@ -5,7 +5,7 @@ import { LoginForm } from "@/components/login-form";
 import Image from "next/image";
 
 export default async function Page() {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerComponentClient({ cookies: () => cookies() });
 
   const {
     data: { session },
