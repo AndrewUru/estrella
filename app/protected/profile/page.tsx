@@ -3,6 +3,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { User, Mail, Crown, Shield, CheckCircle, XCircle } from "lucide-react";
+import Image from "next/image";
+import { UserProfile } from "@/types/supabase";
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -24,11 +26,12 @@ export default async function ProfilePage() {
     is_active,
     role,
     full_name,
-    email
+    email,
+    avatar_url
   `
     )
     .eq("id", user.id)
-    .single();
+    .single<UserProfile>();
 
   if (error) console.error("Error al cargar perfil:", error.message);
 
@@ -96,11 +99,53 @@ export default async function ProfilePage() {
                     Nombre completo
                   </p>
                   <p className="text-sm font-medium text-zinc-900 dark:text-white">
-                    {user.user_metadata.full_name}
+                    {profile?.full_name ||
+                      user.user_metadata?.full_name ||
+                      "Sin nombre definido"}
                   </p>
                 </div>
               </div>
             )}
+          </div>
+          {/* Foto de perfil */}
+          <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-700 overflow-hidden">
+            <div className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-700">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-indigo-100 dark:bg-indigo-900/20 rounded-lg">
+                  <User className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                </div>
+                <h2 className="text-xl font-semibold text-zinc-900 dark:text-white">
+                  Foto de Perfil
+                </h2>
+              </div>
+            </div>
+            <div className="px-6 py-4 text-center">
+              <Image
+                src={profile?.avatar_url?.trim() || "/default-avatar.png"}
+                alt="Foto de perfil"
+                fill
+                className="object-cover"
+              />
+              <form
+                action="/api/upload-avatar"
+                method="POST"
+                encType="multipart/form-data"
+                className="mt-4 flex flex-col items-center gap-2"
+              >
+                <input
+                  type="file"
+                  name="avatar"
+                  accept="image/*"
+                  className="text-sm"
+                />
+                <button
+                  type="submit"
+                  className="bg-primary text-white px-4 py-2 rounded-full text-sm hover:bg-primary/80"
+                >
+                  Subir nueva imagen
+                </button>
+              </form>
+            </div>
           </div>
         </div>
 
@@ -123,7 +168,7 @@ export default async function ProfilePage() {
                 {/* Plan */}
 
                 <p className="text-sm">
-                  <strong>Plan:</strong> {profile.plan || "No definido"}
+                  <strong>Plan:</strong> {profile?.plan || "No definido"}
                 </p>
 
                 <div className="p-3 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg">
