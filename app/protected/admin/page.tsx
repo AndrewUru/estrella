@@ -4,14 +4,17 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { redirect } from "next/navigation";
 
 export default async function AdminPage() {
-  // ✅ Esperamos cookies() antes de crear supabase
   const cookieStore = cookies();
   const supabase = createServerComponentClient({ cookies: () => cookieStore });
 
   const {
     data: { session },
   } = await supabase.auth.getSession();
-  if (!session) redirect("/auth/login");
+
+  if (!session) {
+    // 🔁 Redirige al login incluyendo returnTo=/protected/admin
+    redirect(`/auth/login?returnTo=/protected/admin`);
+  }
 
   const user = session.user;
   const { data: profile, error } = await supabase
@@ -42,6 +45,7 @@ export default async function AdminPage() {
     .from("profiles")
     .select("id, full_name, email, plan_type, is_active")
     .order("created_at", { ascending: false });
+
   return (
     <main className="max-w-5xl mx-auto py-12 px-4">
       <h1 className="text-3xl font-bold mb-6">Panel de Administración</h1>
@@ -54,21 +58,11 @@ export default async function AdminPage() {
           <table className="min-w-full text-sm text-left bg-white dark:bg-zinc-900">
             <thead className="bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200">
               <tr>
-                <th scope="col" className="px-4 py-3">
-                  Nombre
-                </th>
-                <th scope="col" className="px-4 py-3">
-                  Email
-                </th>
-                <th scope="col" className="px-4 py-3">
-                  Plan
-                </th>
-                <th scope="col" className="px-4 py-3">
-                  Estado
-                </th>
-                <th scope="col" className="px-4 py-3">
-                  Acciones
-                </th>
+                <th className="px-4 py-3">Nombre</th>
+                <th className="px-4 py-3">Email</th>
+                <th className="px-4 py-3">Plan</th>
+                <th className="px-4 py-3">Estado</th>
+                <th className="px-4 py-3">Acciones</th>
               </tr>
             </thead>
             <tbody>
