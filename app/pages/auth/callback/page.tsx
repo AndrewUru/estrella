@@ -1,4 +1,6 @@
 // pages/auth/callback.tsx
+"use client";
+
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabase/client";
@@ -17,7 +19,18 @@ export default function AuthCallback() {
         console.error("Error obteniendo usuario:", error);
         return;
       }
-      {
+
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+
+      if (
+        profileError &&
+        (profileError.code === "PGRST116" ||
+          profileError.message.includes("0 rows"))
+      ) {
         await supabase.from("profiles").insert({
           id: user.id,
           email: user.email,
