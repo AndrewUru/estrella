@@ -1,4 +1,6 @@
 // C:\estrella\app\auth\login\page.tsx
+"use client";
+
 import { cookies } from "next/headers";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { redirect } from "next/navigation";
