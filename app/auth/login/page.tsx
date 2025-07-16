@@ -4,22 +4,18 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { redirect } from "next/navigation";
 import { LoginForm } from "@/components/login-form";
 import Image from "next/image";
+import { headers } from "next/headers";
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams?: Record<string, string | string[] | undefined>;
-}) {
+export default async function Page() {
   const supabase = createServerComponentClient({ cookies: () => cookies() });
 
   const {
     data: { session },
   } = await supabase.auth.getSession();
 
-  const returnTo =
-    typeof searchParams?.returnTo === "string"
-      ? searchParams.returnTo
-      : "/protected";
+  const headersList = await headers();
+  const url = new URL(headersList.get("x-url") ?? "", "http://localhost");
+  const returnTo = url.searchParams.get("returnTo") ?? "/protected";
 
   if (session) {
     redirect(returnTo);
