@@ -5,11 +5,11 @@ import { redirect } from "next/navigation";
 import { LoginForm } from "@/components/login-form";
 import Image from "next/image";
 
-export default async function Page({
-  searchParams,
-}: {
+interface PageProps {
   searchParams?: Record<string, string | string[] | undefined>;
-}) {
+}
+
+export default async function Page({ searchParams }: PageProps) {
   const supabase = createServerComponentClient({ cookies: () => cookies() });
 
   const {
@@ -24,7 +24,6 @@ export default async function Page({
   if (session) {
     redirect(returnTo);
   }
-
   return (
     <div className="min-h-svh w-full flex flex-col relative overflow-hidden">
       {/* Background decorativo */}
