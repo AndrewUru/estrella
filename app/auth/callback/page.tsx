@@ -1,11 +1,12 @@
 // pages/auth/callback.tsx
+"use client";
+
 import { useEffect } from "react";
-import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 export default function AuthCallback() {
   const router = useRouter();
-  const returnTo = router.query.returnTo as string | undefined;
 
   useEffect(() => {
     const syncUser = async () => {
@@ -13,6 +14,7 @@ export default function AuthCallback() {
         data: { user },
         error,
       } = await supabase.auth.getUser();
+
       if (error || !user) return;
 
       const { error: profileError } = await supabase
@@ -33,11 +35,14 @@ export default function AuthCallback() {
         });
       }
 
-      router.replace(returnTo || "/bienvenida");
+      const returnTo =
+        new URLSearchParams(window.location.search).get("returnTo") ??
+        "/bienvenida";
+      router.push(returnTo);
     };
 
     syncUser();
-  }, [router, returnTo]);
+  }, [router]);
 
   return <p className="text-center mt-10">Autenticando...</p>;
 }
