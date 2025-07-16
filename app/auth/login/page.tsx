@@ -1,10 +1,15 @@
+// C:\estrella\app\auth\login\page.tsx
 import { cookies } from "next/headers";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { redirect } from "next/navigation";
 import { LoginForm } from "@/components/login-form";
 import Image from "next/image";
 
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: { returnTo?: string };
+}) {
   const supabase = createServerComponentClient({ cookies: () => cookies() });
 
   const {
@@ -12,9 +17,9 @@ export default async function Page() {
   } = await supabase.auth.getSession();
 
   if (session) {
-    redirect("/dashboard"); // Redirige si ya está logueado
+    const returnTo = searchParams?.returnTo ?? "/protected";
+    redirect(returnTo);
   }
-
   return (
     <div className="min-h-svh w-full flex flex-col relative overflow-hidden">
       {/* Background decorativo */}

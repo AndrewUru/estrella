@@ -1,3 +1,4 @@
+//C:\estrella\components\login-form.tsx
 "use client";
 
 import { cn } from "@/lib/utils";
@@ -18,6 +19,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthRedirect } from "@/lib/hooks/use-auth-redirect";
+import { useSearchParams } from "next/navigation";
 
 export function LoginForm({ className }: { className?: string }) {
   const [email, setEmail] = useState("");
@@ -25,6 +27,9 @@ export function LoginForm({ className }: { className?: string }) {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const returnTo = searchParams.get("returnTo") ?? "/protected";
 
   useAuthRedirect(); // Redirige si ya está logueado
 
@@ -41,7 +46,8 @@ export function LoginForm({ className }: { className?: string }) {
       if (error) throw error;
 
       // Redirige a página protegida y refresca el estado
-      router.push("/protected");
+      router.push(returnTo);
+
       router.refresh();
     } catch (error: unknown) {
       setError(
@@ -118,28 +124,32 @@ export function LoginForm({ className }: { className?: string }) {
                 <CardDescription className="text-slate-600 dark:text-slate-400">
                   Ingresa tus credenciales para acceder a tu cuenta
                 </CardDescription>
-                
-  <Button
-    variant="outline"
-    className="w-full flex items-center justify-center gap-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
-    onClick={async () => {
-      await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: process.env.NEXT_PUBLIC_BASE_URL + "/auth/callback",
-        },
-      });
-    }}
-  >
-    <Image
-      src="/google-icon.svg"
-      alt="Google"
-      width={20}
-      height={20}
-      className="dark:invert"
-    />
-    Iniciar sesión con Google
-  </Button>
+
+                <Button
+                  variant="outline"
+                  className="w-full flex items-center justify-center gap-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  onClick={async () => {
+                    await supabase.auth.signInWithOAuth({
+                      provider: "google",
+                      options: {
+                        redirectTo: `${
+                          process.env.NEXT_PUBLIC_BASE_URL
+                        }/auth/callback?returnTo=${encodeURIComponent(
+                          returnTo
+                        )}`,
+                      },
+                    });
+                  }}
+                >
+                  <Image
+                    src="/google-icon.svg"
+                    alt="Google"
+                    width={20}
+                    height={20}
+                    className="dark:invert"
+                  />
+                  Iniciar sesión con Google
+                </Button>
               </CardHeader>
 
               <CardContent className="space-y-6">

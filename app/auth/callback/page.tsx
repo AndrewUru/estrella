@@ -2,11 +2,13 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 
 export default function AuthCallback() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const returnTo = searchParams.get("returnTo") ?? "/bienvenida";
 
   useEffect(() => {
     const syncUser = async () => {
@@ -20,15 +22,17 @@ export default function AuthCallback() {
         return;
       }
 
-      // Verifica si el perfil ya existe en la tabla `profiles`
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", user.id)
         .single();
 
-      if (profileError && (profileError.code === "PGRST116" || profileError.message.includes("0 rows"))) {
-        // El perfil no existe, crearlo manualmente
+      if (
+        profileError &&
+        (profileError.code === "PGRST116" ||
+          profileError.message.includes("0 rows"))
+      ) {
         const { error: insertError } = await supabase.from("profiles").insert({
           id: user.id,
           email: user.email,
@@ -48,11 +52,11 @@ export default function AuthCallback() {
         console.log("Perfil ya existe:", profile);
       }
 
-      router.push("/bienvenida");
+      router.push(returnTo);
     };
 
     syncUser();
-  }, [router]);
+  }, [router, returnTo]);
 
   return <p className="text-center mt-10">Autenticando...</p>;
 }
