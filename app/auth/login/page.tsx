@@ -5,11 +5,11 @@ import { redirect } from "next/navigation";
 import { LoginForm } from "@/components/login-form";
 import Image from "next/image";
 
-interface PageProps {
+export default async function Page({
+  searchParams,
+}: {
   searchParams?: Record<string, string | string[] | undefined>;
-}
-
-export default async function Page({ searchParams }: PageProps) {
+}) {
   const supabase = createServerComponentClient({ cookies: () => cookies() });
 
   const {
