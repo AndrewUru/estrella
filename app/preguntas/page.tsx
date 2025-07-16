@@ -22,10 +22,10 @@ const faqs = [
       "Cada día subimos la clase a la plataforma y te notificamos por WhatsApp en un grupo silencioso.",
   },
   {
-  question: "🧘‍♀️ ¿Hay sesiones en vivo?",
-  answer:
-    "De momento no hay sesiones en vivo previstas. Todo el contenido estará disponible para que lo sigas a tu ritmo durante los 7 días.",
-},
+    question: "🧘‍♀️ ¿Hay sesiones en vivo?",
+    answer:
+      "De momento no hay sesiones en vivo previstas. Todo el contenido estará disponible para que lo sigas a tu ritmo durante los 7 días.",
+  },
   {
     question: "🙏 ¿Y si no puedo hacerlo cada día?",
     answer:
@@ -34,12 +34,12 @@ const faqs = [
   {
     question: "🔐 ¿El acceso caduca?",
     answer:
-      "No. Una vez inscrita, tendrás acceso de por vida mientras la plataforma esté activa.",
+      "Depende del plan. Si eliges una suscripción mensual o anual, el acceso estará disponible mientras tu suscripción esté activa. En el caso de acceso gratuito, podrás acceder mientras la plataforma esté en funcionamiento.",
   },
   {
     question: "💸 ¿Es un pago único o suscripción?",
     answer:
-      "Es una suscripción mensual de 22 €. Puedes cancelar en cualquier momento desde tu perfil.",
+      "Es una suscripción. Puedes elegir entre un plan mensual de 22 € o un plan anual de 77 €. Puedes cancelar en cualquier momento desde tu perfil.",
   },
 ];
 

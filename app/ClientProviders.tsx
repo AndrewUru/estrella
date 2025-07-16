@@ -1,9 +1,8 @@
-// app/ClientProviders.tsx
 "use client";
 
 import { Footer } from "@/components/footer";
 import { ThemeProvider } from "next-themes";
-import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
+import { createBrowserClient } from "@supabase/ssr";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 
@@ -12,7 +11,12 @@ export default function ClientProviders({
 }: {
   children: React.ReactNode;
 }) {
-  const [supabase] = useState(() => createPagesBrowserClient());
+  const [supabase] = useState(() =>
+    createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+  );
 
   return (
     <SessionContextProvider supabaseClient={supabase}>

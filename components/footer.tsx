@@ -84,7 +84,7 @@ export function Footer() {
                   Contacto
                 </Link>
                 <Link
-                  href="/informacion"
+                  href="/preguntas"
                   className="text-xs text-muted-foreground hover:text-primary transition-colors duration-300"
                 >
                   Preguntas Frecuentes

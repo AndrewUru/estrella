@@ -1,4 +1,4 @@
-// app/admin/page.tsx
+// C:\estrella\app\protected\admin\page.tsx
 import { cookies } from "next/headers";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { redirect } from "next/navigation";
@@ -20,7 +20,23 @@ export default async function AdminPage() {
     .eq("id", user.id)
     .single();
 
-  if (error || !profile?.is_admin) redirect("/");
+  if (error) {
+    return (
+      <div className="p-6 text-red-600">
+        <h2 className="text-xl font-bold mb-2">⚠️ Error al cargar perfil</h2>
+        <pre>{error.message}</pre>
+      </div>
+    );
+  }
+
+  if (!profile?.is_admin) {
+    return (
+      <div className="p-6 text-yellow-600">
+        <h2 className="text-xl font-bold mb-2">🔒 Acceso restringido</h2>
+        <p>No tienes permisos de administrador para ver esta sección.</p>
+      </div>
+    );
+  }
 
   const { data: users } = await supabase
     .from("profiles")
