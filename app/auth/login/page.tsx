@@ -8,7 +8,7 @@ import Image from "next/image";
 export default async function Page({
   searchParams,
 }: {
-  searchParams?: { returnTo?: string };
+  searchParams?: Record<string, string | string[] | undefined>;
 }) {
   const supabase = createServerComponentClient({ cookies: () => cookies() });
 
@@ -16,10 +16,15 @@ export default async function Page({
     data: { session },
   } = await supabase.auth.getSession();
 
+  const returnTo =
+    typeof searchParams?.returnTo === "string"
+      ? searchParams.returnTo
+      : "/protected";
+
   if (session) {
-    const returnTo = searchParams?.returnTo ?? "/protected";
     redirect(returnTo);
   }
+
   return (
     <div className="min-h-svh w-full flex flex-col relative overflow-hidden">
       {/* Background decorativo */}
