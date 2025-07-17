@@ -86,49 +86,53 @@ export default function UsuariosPage() {
 
   return (
     <main className="p-6 max-w-6xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold text-pink-800">
+      <h1 className="text-3xl font-bold text-primary">
         👥 Usuarias registradas
       </h1>
-      <div className="overflow-x-auto bg-white rounded-xl shadow border">
-        <table className="w-full text-sm">
-          <thead className="bg-pink-100 text-pink-800">
+
+      <div className="overflow-x-auto rounded-2xl border border-border bg-card shadow">
+        <table className="w-full text-sm text-left">
+          <thead className="bg-secondary text-secondary-foreground">
             <tr>
-              <th className="p-2 text-left">Nombre</th>
-              <th className="p-2 text-left">Correo</th>
-              <th className="p-2 text-left">Rol</th>
-              <th className="p-2 text-left">Plan</th>
-              <th className="p-2 text-left">Inicio</th>
-              <th className="p-2 text-left">Vencimiento</th>
-              <th className="p-2 text-center">Suscripción</th>
+              <th className="p-3 font-semibold">Nombre</th>
+              <th className="p-3 font-semibold">Correo</th>
+              <th className="p-3 font-semibold">Rol</th>
+              <th className="p-3 font-semibold">Plan</th>
+              <th className="p-3 font-semibold">Inicio</th>
+              <th className="p-3 font-semibold">Vencimiento</th>
+              <th className="p-3 text-center font-semibold">Suscripción</th>
             </tr>
           </thead>
           <tbody>
             {usuarios.map((u, i) => (
-              <tr key={u.id} className={i % 2 ? "bg-pink-50" : "bg-white"}>
-                <td className="p-2">{u.full_name || "—"}</td>
-                <td className="p-2 text-gray-600">{u.email}</td>
-                <td className="p-2 capitalize">{u.role}</td>
-                <td className="p-2">{u.plan || "—"}</td>
-                <td className="p-2">
+              <tr
+                key={u.id}
+                className={i % 2 ? "bg-muted/40" : "bg-background"}
+              >
+                <td className="p-3">{u.full_name || "—"}</td>
+                <td className="p-3 text-muted-foreground">{u.email}</td>
+                <td className="p-3 capitalize">{u.role}</td>
+                <td className="p-3">{u.plan || "—"}</td>
+                <td className="p-3">
                   {u.start_date
                     ? new Date(u.start_date).toLocaleDateString()
                     : "—"}
                 </td>
-                <td className="p-2">
+                <td className="p-3">
                   {u.end_date ? new Date(u.end_date).toLocaleDateString() : "—"}
                 </td>
-                <td className="p-2 text-center">
+                <td className="p-3 text-center">
                   <button
                     onClick={() =>
                       toggleSuscripcion(u.id, u.subscription_active)
                     }
-                    className={`px-3 py-1 rounded-full text-xs font-semibold shadow border transition ${
-                      u.subscription_active === true
-                        ? "bg-green-100 text-green-700 border-green-200 hover:bg-green-200"
-                        : "bg-gray-100 text-gray-500 border-gray-200 hover:bg-gray-200"
+                    className={`px-3 py-1 rounded-full text-xs font-medium border shadow-sm transition duration-150 ${
+                      u.subscription_active
+                        ? "bg-green-100 text-green-700 border-green-200 hover:bg-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-700"
+                        : "bg-gray-100 text-gray-500 border-gray-200 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700"
                     }`}
                   >
-                    {u.subscription_active === true ? "Activa" : "Inactiva"}
+                    {u.subscription_active ? "Activa" : "Inactiva"}
                   </button>
                 </td>
               </tr>

@@ -87,18 +87,22 @@ export default function ContenidoPage() {
 
   return (
     <main className="p-6 max-w-5xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold text-pink-800">
+      <h1 className="text-3xl font-bold text-primary">
         🌀 Contenido Ceremonial
       </h1>
 
-      {mensaje && <div className="text-sm text-pink-600">{mensaje}</div>}
+      {mensaje && (
+        <div className="text-sm text-muted-foreground">{mensaje}</div>
+      )}
 
       {entregas.map((dia, i) => (
         <div
           key={dia.id}
-          className="bg-white border rounded-xl p-4 shadow space-y-4"
+          className="bg-card border border-border rounded-2xl p-5 shadow-sm space-y-4"
         >
-          <h2 className="text-lg font-semibold text-pink-700">Día {dia.dia}</h2>
+          <h2 className="text-lg font-semibold text-foreground">
+            Día {dia.dia}
+          </h2>
 
           <Input
             value={dia.titulo}
@@ -136,7 +140,10 @@ export default function ContenidoPage() {
         </div>
       ))}
 
-      <Button onClick={guardarCambios} className="mt-6">
+      <Button
+        onClick={guardarCambios}
+        className="mt-6 bg-primary text-primary-foreground hover:bg-primary/90"
+      >
         💾 Guardar todo
       </Button>
     </main>
