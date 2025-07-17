@@ -60,6 +60,8 @@ export function LoginForm({ className }: { className?: string }) {
     }
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div className=" w-full relative overflow-hidden flex items-center justify-center">
       {/* Fondo adaptativo para light/dark mode */}
@@ -224,13 +226,54 @@ export function LoginForm({ className }: { className?: string }) {
                       </div>
                       <Input
                         id="password"
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         placeholder="••••••••"
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="pl-10 h-12 bg-white/70 dark:bg-gray-800/70 border-white/20 dark:border-gray-700/20 focus:border-violet-300 dark:focus:border-violet-400 focus:ring-violet-200 dark:focus:ring-violet-600 rounded-xl transition-all duration-300 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                        aria-describedby={error ? "error-message" : undefined}
+                        className="pl-10 pr-10 h-12 bg-white/70 dark:bg-gray-800/70 border-white/20 dark:border-gray-700/20 focus:border-violet-300 dark:focus:border-violet-400 focus:ring-violet-200 dark:focus:ring-violet-600 rounded-xl transition-all duration-300 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        className="absolute right-3 inset-y-0 flex items-center text-slate-500 dark:text-slate-400 hover:text-violet-600 dark:hover:text-violet-300"
+                        aria-label={
+                          showPassword
+                            ? "Ocultar contraseña"
+                            : "Mostrar contraseña"
+                        }
+                      >
+                        {showPassword ? (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-5.05 0-9.29-3.17-11-8 1.23-3.29 3.61-5.97 6.59-7.41" />
+                            <path d="M1 1l22 22" />
+                          </svg>
+                        ) : (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                          </svg>
+                        )}
+                      </button>
                     </div>
                   </div>
 
