@@ -1,3 +1,4 @@
+//C:\estrella\app\upgrade\page.tsx
 "use client";
 
 import { useState } from "react";
@@ -5,32 +6,6 @@ import Script from "next/script";
 import { supabase } from "@/lib/supabase/client";
 import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
-
-// Tipos para PayPal
-type PayPalActions = {
-  subscription: {
-    create: (details: { plan_id: string }) => Promise<string>;
-  };
-};
-
-type PayPalData = {
-  subscriptionID: string;
-};
-
-declare global {
-  interface Window {
-    paypal?: {
-      Buttons: (options: {
-        style?: Record<string, string>;
-        createSubscription: (
-          data: PayPalData,
-          actions: PayPalActions
-        ) => Promise<string>;
-        onApprove: (data: PayPalData) => void;
-      }) => { render: (selector: string) => void };
-    };
-  }
-}
 
 export default function UpgradePage() {
   const [paypalReady, setPaypalReady] = useState(false);

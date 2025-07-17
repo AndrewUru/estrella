@@ -15,27 +15,6 @@ const PAYPAL_PLAN_IDS: Record<Exclude<PlanType, "gratis">, string> = {
   "premium-anual": "P-9G192901S6962110GNBSUDZQ",
 };
 
-declare global {
-  interface Window {
-    paypal?: {
-      Buttons: (config: {
-        style?: object;
-        createSubscription: (
-          data: unknown,
-          actions: {
-            subscription: {
-              create: ({ plan_id }: { plan_id: string }) => Promise<string>;
-            };
-          }
-        ) => Promise<string>;
-        onApprove: (data: { subscriptionID: string }) => void;
-      }) => {
-        render: (selector: string) => void;
-      };
-    };
-  }
-}
-
 export default function PlanSelector({
   planType,
   setPlanType,
