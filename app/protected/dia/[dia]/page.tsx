@@ -208,12 +208,12 @@ export default function DiaPage() {
     );
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 px-6 bg-white rounded-2xl shadow-xl py-10 transition-all duration-300">
-      <h1 className="text-3xl font-extrabold mb-4 text-purple-700 flex items-center gap-2">
+    <div className="max-w-3xl mx-auto mt-10 px-6 rounded-2xl shadow-xl py-10 transition-all duration-300">
+      <h1 className="text-3xl font-extrabold mb-4 flex items-center gap-2">
         Día {entrega.dia} <span className="text-lg font-normal">|</span>{" "}
         <span>{entrega.titulo}</span>
       </h1>
-      <p className="mb-6 text-lg text-gray-700">{entrega.descripcion}</p>
+      <p className="mb-6 text-lg ">{entrega.descripcion}</p>
 
       <div className="flex flex-col gap-6">
         {entrega.archivo_pdf && (
@@ -230,7 +230,7 @@ export default function DiaPage() {
         )}
 
         {entrega.audio_url && (
-          <div className="bg-white p-4 rounded-xl shadow-lg">
+          <div className="p-4 rounded-xl shadow-lg">
             <audio
               controls
               src={entrega.audio_url}
@@ -239,9 +239,7 @@ export default function DiaPage() {
             >
               Tu navegador no soporta la reproducción de audio.
             </audio>
-            <span className="text-sm text-gray-700 block mt-2">
-              Meditación del día
-            </span>
+            <span className="text-sm block mt-2">Meditación del día</span>
           </div>
         )}
       </div>
