@@ -63,16 +63,25 @@ export default function UpgradePage() {
 
   const handlePaypalReady = () => {
     setPaypalReady(true);
-    renderButton(
-      "paypal-monthly",
-      "P-7PF96689L4734453RNBSUC2I",
-      "premium-mensual"
-    );
-    renderButton(
-      "paypal-annual",
-      "P-9G192901S6962110GNBSUDZQ",
-      "premium-anual"
-    );
+
+    const waitForPaypal = () => {
+      if (typeof window.paypal !== "undefined") {
+        renderButton(
+          "paypal-monthly",
+          "P-7PF96689L4734453RNBSUC2I",
+          "premium-mensual"
+        );
+        renderButton(
+          "paypal-annual",
+          "P-9G192901S6962110GNBSUDZQ",
+          "premium-anual"
+        );
+      } else {
+        setTimeout(waitForPaypal, 100); // Vuelve a intentar
+      }
+    };
+
+    waitForPaypal();
   };
 
   return (
