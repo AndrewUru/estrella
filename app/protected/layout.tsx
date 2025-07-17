@@ -1,3 +1,4 @@
+//C:\estrella\app\protected\layout.tsx
 import { ClientWrapper } from "./client-wrapper";
 
 export default function ProtectedLayout({

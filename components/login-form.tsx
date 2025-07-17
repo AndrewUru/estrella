@@ -18,7 +18,7 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuthRedirect } from "@/lib/hooks/use-auth-redirect";
+//import { useAuthRedirect } from "@/lib/hooks/use-auth-redirect";
 import { useSearchParams } from "next/navigation";
 
 export function LoginForm({ className }: { className?: string }) {
@@ -31,7 +31,7 @@ export function LoginForm({ className }: { className?: string }) {
   const searchParams = useSearchParams();
   const returnTo = searchParams.get("returnTo") ?? "/protected";
 
-  useAuthRedirect(); // Redirige si ya está logueado
+  //useAuthRedirect(); // Redirige si ya está logueado
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

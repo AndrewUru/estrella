@@ -1,26 +1,33 @@
 // app/auth/login/page.tsx
-import { cookies, headers } from "next/headers";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { redirect } from "next/navigation";
+"use client";
+
+import { useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { LoginForm } from "@/components/login-form";
 
-export default async function Page() {
-  const supabase = createServerComponentClient({ cookies: () => cookies() });
+export default function LoginPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const supabase = createClientComponentClient();
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  useEffect(() => {
+    async function checkSession() {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
-  const headersList = await headers();
-  const url = new URL(headersList.get("x-url") ?? "http://localhost");
-  const returnTo = url.searchParams.get("returnTo") ?? "/protected";
+      if (session?.user) {
+        const returnTo = searchParams.get("returnTo") || "/protected";
+        router.push(returnTo);
+      }
+    }
 
-  if (session) {
-    redirect(returnTo);
-  }
+    checkSession();
+  }, [router, searchParams, supabase]);
 
   return (
-    <div className="min-h-svh w-full flex flex-col relative overflow-hidden">
+    <div className="min-h-screen w-full flex flex-col justify-center items-center p-4">
       <LoginForm />
     </div>
   );
