@@ -134,7 +134,7 @@ export default function UpgradePage() {
               🌞 Plan Anual
             </h2>
             <p className="mb-4 text-gray-600 dark:text-gray-300">
-              Una sola vez al año: 222 €. Ahorra más de 15%.
+              Una sola vez al año: 77 €. Ahorra más de 40%.
             </p>
             {paypalReady ? (
               <div id="paypal-annual" />

@@ -1,3 +1,4 @@
+//C:\estrella\components\Navbar.tsx
 "use client";
 
 import { useEffect, useState, useRef } from "react";

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Star, Mic, FileText, Clock } from "lucide-react";
+import Link from "next/link";
 
 export default function InformacionPage() {
   return (
@@ -15,7 +16,7 @@ export default function InformacionPage() {
               <Star className="w-8 h-8 text-white" />
             </div>
           </div>
-          <h1 className="text-4xl md:text-4xl font-black bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 bg-clip-text text-transparent mb-6">
+          <h1 className="text-3xl md:text-2xl font-black bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 bg-clip-text text-transparent mb-6">
             ¿Cómo funciona Estrella del Alba 7D?
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-4">
@@ -28,6 +29,14 @@ export default function InformacionPage() {
             esta plataforma independiente creada con dedicación, esfuerzo y
             mucho amor para acompañarte en tu proceso de reconexión.
           </p>
+        </div>
+        <div className="flex justify-center">
+          <Link
+            href="/upgrade"
+            className="inline-block bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white text-sm font-semibold px-6 py-3 rounded-xl shadow-md transition-all duration-300"
+          >
+            💎 Acceder como Premium
+          </Link>
         </div>
       </section>
 
