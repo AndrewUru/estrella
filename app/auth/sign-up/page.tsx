@@ -146,12 +146,7 @@ export default function Page() {
             {/* Precio y propuesta de valor */}
             <div className="bg-gradient-to-r from-violet-500/10 to-purple-500/10 dark:from-violet-600/20 dark:to-purple-600/20 rounded-2xl p-6 border border-violet-200/30 dark:border-violet-700/30">
               <div className="text-center lg:text-left">
-                <p className="text-lg xl:text-xl text-slate-700 dark:text-slate-300 font-semibold mb-2">
-                  Mientras otros cursos cuestan cientos o miles de euros{" "}
-                  <span className="text-2xl xl:text-3xl font-bold text-purple-600 dark:text-purple-400">
-                    aquí tu alma se reconecta sin que tu bolsillo sufra.
-                  </span>
-                </p>
+                {/* Nota final */}
                 <div className="bg-white/80 dark:bg-gray-700/80 rounded-lg p-4 border border-white/50 dark:border-gray-600/50">
                   <p className="text-slate-700 dark:text-slate-300 text-sm xl:text-base">
                     ¿Quieres probar antes de comprometerte? También puedes
