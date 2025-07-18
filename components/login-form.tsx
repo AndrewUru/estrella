@@ -63,7 +63,7 @@ export function LoginForm({ className }: { className?: string }) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className=" w-full relative overflow-hidden flex items-center justify-center">
+    <div className="relative overflow-hidden flex items-center justify-center">
       {/* Fondo adaptativo para light/dark mode */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Gradiente base adaptativo */}

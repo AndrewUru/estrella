@@ -5,10 +5,10 @@ import LoginContent from "./LoginContent";
 export default function LoginPage() {
   return (
     <div className="min-h-screen w-full flex items-center justify-center  px-4">
-      <div className="w-full max-w-md rounded-2xl shadow-xl p-8 space-y-6 animate-fade-in">
+      <div className="w-full max-w-md rounded-2xl shadow-xl p-2 space-y-6 animate-fade-in">
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-bold ">
-            Bienvenida a Estrella del Alba
+            Hola de nuevo
           </h1>
           <p className="text-sm ">
             Inicia sesión para continuar tu viaje de reconexión con el alma.
