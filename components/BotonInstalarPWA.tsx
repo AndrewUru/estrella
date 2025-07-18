@@ -6,10 +6,15 @@ import { Sparkles } from "lucide-react";
 
 export default function BotonInstalarPWA() {
   const [mostrarBoton, setMostrarBoton] = useState(false);
+  const esModoDesarrollo = process.env.NODE_ENV === "development";
 
   useEffect(() => {
     const verificar = () => {
-      if (typeof window !== "undefined" && window.deferredPrompt) {
+      // Mostrar el botón si se capturó el evento o si estamos en modo desarrollo
+      if (
+        typeof window !== "undefined" &&
+        (window.deferredPrompt || esModoDesarrollo)
+      ) {
         setMostrarBoton(true);
       }
     };
@@ -20,7 +25,7 @@ export default function BotonInstalarPWA() {
     return () => {
       window.removeEventListener("beforeinstallprompt", verificar);
     };
-  }, []);
+  }, [esModoDesarrollo]);
 
   const instalarApp = async () => {
     if (window.deferredPrompt) {
@@ -31,6 +36,10 @@ export default function BotonInstalarPWA() {
       console.log(`Instalación: ${outcome}`);
       window.deferredPrompt = undefined;
       setMostrarBoton(false);
+    } else if (esModoDesarrollo) {
+      alert(
+        "Este botón aparece solo en modo desarrollo. El evento real no fue capturado."
+      );
     }
   };
 
