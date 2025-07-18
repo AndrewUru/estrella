@@ -77,7 +77,7 @@ export default function UpgradePage() {
           "premium-anual"
         );
       } else {
-        setTimeout(waitForPaypal, 100); // Vuelve a intentar
+        setTimeout(waitForPaypal, 300); // Vuelve a intentar
       }
     };
 
