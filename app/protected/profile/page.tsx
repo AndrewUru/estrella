@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { User, Mail, Crown, Shield, CheckCircle, XCircle } from "lucide-react";
 import Image from "next/image";
 import { UserProfile } from "@/types/supabase";
+import { UploadAvatarForm } from "@/app/protected/profile/UploadAvatarForm";
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -120,31 +121,19 @@ export default async function ProfilePage() {
               </div>
             </div>
             <div className="px-6 py-4 text-center">
-              <Image
-                src={profile?.avatar_url?.trim() || "/default-avatar.png"}
-                alt="Foto de perfil"
-                fill
-                className="object-cover"
-              />
-              <form
-                action="/api/upload-avatar"
-                method="POST"
-                encType="multipart/form-data"
-                className="mt-4 flex flex-col items-center gap-2"
-              >
-                <input
-                  type="file"
-                  name="avatar"
-                  accept="image/*"
-                  className="text-sm"
+              <div className="relative w-32 h-32 mx-auto rounded-full overflow-hidden">
+                <Image
+                  src={
+                    profile?.avatar_url?.trim() ||
+                    user.user_metadata?.avatar_url?.trim() ||
+                    "/default-avatar.png"
+                  }
+                  alt="Foto de perfil"
+                  fill
+                  className="object-cover"
                 />
-                <button
-                  type="submit"
-                  className="bg-primary text-white px-4 py-2 rounded-full text-sm hover:bg-primary/80"
-                >
-                  Subir nueva imagen
-                </button>
-              </form>
+              </div>
+              <UploadAvatarForm />
             </div>
           </div>
         </div>
