@@ -1,25 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Sparkles } from "lucide-react";
 
 export default function BotonInstalarPWA() {
   const [mostrarBoton, setMostrarBoton] = useState(false);
 
   useEffect(() => {
-    const comprobarDisponibilidad = () => {
+    const verificar = () => {
       if (typeof window !== "undefined" && window.deferredPrompt) {
         setMostrarBoton(true);
       }
     };
 
-    window.addEventListener("beforeinstallprompt", comprobarDisponibilidad);
-    comprobarDisponibilidad();
+    window.addEventListener("beforeinstallprompt", verificar);
+    verificar();
 
     return () => {
-      window.removeEventListener(
-        "beforeinstallprompt",
-        comprobarDisponibilidad
-      );
+      window.removeEventListener("beforeinstallprompt", verificar);
     };
   }, []);
 
@@ -35,16 +34,25 @@ export default function BotonInstalarPWA() {
     }
   };
 
-  if (!mostrarBoton) return null;
-
   return (
-    <div className="fixed bottom-6 right-6 z-50">
-      <button
-        onClick={instalarApp}
-        className="bg-purple-600 text-white font-semibold px-4 py-2 rounded-2xl shadow-lg hover:bg-purple-700 transition-all"
-      >
-        Instalar App
-      </button>
-    </div>
+    <AnimatePresence>
+      {mostrarBoton && (
+        <motion.div
+          initial={{ opacity: 0, y: 60 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 60 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="fixed bottom-6 right-6 z-50"
+        >
+          <button
+            onClick={instalarApp}
+            className="flex items-center gap-2 bg-gradient-to-br from-purple-600 via-fuchsia-500 to-pink-500 text-white font-semibold px-5 py-3 rounded-2xl shadow-xl hover:scale-105 transition-all duration-300"
+          >
+            <Sparkles className="w-5 h-5" />
+            Instalar la app Estrella del Alba
+          </button>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
