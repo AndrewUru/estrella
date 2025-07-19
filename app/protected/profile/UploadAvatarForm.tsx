@@ -14,6 +14,12 @@ export function UploadAvatarForm() {
       return;
     }
 
+    const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      setMessage("Formato no permitido. Usa PNG, JPG o WebP.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("avatar", file);
 
@@ -34,7 +40,6 @@ export function UploadAvatarForm() {
     } catch (error) {
       console.error(error);
       setMessage("Error al subir la imagen");
-    } finally {
     }
   };
 
@@ -47,7 +52,7 @@ export function UploadAvatarForm() {
         ref={fileInputRef}
         type="file"
         name="avatar"
-        accept="image/*"
+        accept="image/png, image/jpeg, image/jpg, image/webp"
         className="text-sm block w-full text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700"
       />
       {message && <p className="text-sm text-red-500">{message}</p>}
