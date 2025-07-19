@@ -55,6 +55,15 @@ export function UploadAvatarForm() {
         accept="image/png, image/jpeg, image/jpg, image/webp"
         className="text-sm block w-full text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700"
       />
+
+      {/* Botón para subir */}
+      <button
+        type="submit"
+        className="mt-2 px-4 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition"
+      >
+        Guardar Imagen
+      </button>
+
       {message && <p className="text-sm text-red-500">{message}</p>}
     </form>
   );
