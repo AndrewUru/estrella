@@ -9,10 +9,19 @@ export async function POST(req: Request) {
   const formData = await req.formData();
   const file = formData.get("avatar") as File;
 
-  // Verificamos archivo recibido
+  // Verificar que exista un archivo y que no esté vacío
   if (!file || file.size === 0) {
     return NextResponse.json(
       { error: "No se recibió ningún archivo" },
+      { status: 400 }
+    );
+  }
+
+  // Validar tipo de imagen permitida
+  const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
+  if (!allowedTypes.includes(file.type)) {
+    return NextResponse.json(
+      { error: "Formato de imagen no permitido. Usa PNG, JPG o WebP." },
       { status: 400 }
     );
   }
@@ -58,6 +67,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: updateError.message }, { status: 500 });
   }
 
-  // Redireccionar de vuelta al perfil
+  // Redireccionar al perfil
   return NextResponse.redirect(new URL("/protected/profile", req.url));
 }
