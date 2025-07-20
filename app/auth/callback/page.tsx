@@ -1,4 +1,5 @@
 // pages/auth/callback.tsx
+// pages/auth/callback.tsx
 "use client";
 
 import { useEffect } from "react";
@@ -17,13 +18,13 @@ export default function AuthCallback() {
 
       if (error || !user) return;
 
-      const { error: profileError } = await supabase
+      const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("id")
         .eq("id", user.id)
         .maybeSingle();
 
-      if (profileError) {
+      if (!profile && !profileError) {
         await supabase.from("profiles").insert({
           id: user.id,
           email: user.email,
@@ -35,10 +36,13 @@ export default function AuthCallback() {
         });
       }
 
-      const returnTo =
-        new URLSearchParams(window.location.search).get("returnTo") ??
-        "/bienvenida";
-      router.push(returnTo);
+      const params = new URLSearchParams(window.location.search);
+      const rawReturnTo = params.get("returnTo") ?? "";
+const isSafePath = rawReturnTo.startsWith("/") && !rawReturnTo.startsWith("//");
+const safePath = isSafePath ? rawReturnTo : "/protected";
+
+router.replace(safePath);
+
     };
 
     syncUser();
