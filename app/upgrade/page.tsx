@@ -16,7 +16,11 @@ export default function UpgradePage() {
     planType: string
   ) => {
     const paypal = window.paypal;
-    if (!paypal) return;
+    if (!paypal || !paypal.Buttons) {
+  console.warn("PayPal Buttons no disponibles");
+  return;
+}
+
 
     paypal
       .Buttons({
@@ -62,27 +66,33 @@ export default function UpgradePage() {
   };
 
   const handlePaypalReady = () => {
-    setPaypalReady(true);
+  const maxRetries = 10;
+  let retries = 0;
 
-    const waitForPaypal = () => {
-      if (typeof window.paypal !== "undefined") {
-        renderButton(
-          "paypal-monthly",
-          "P-7PF96689L4734453RNBSUC2I",
-          "premium-mensual"
-        );
-        renderButton(
-          "paypal-annual",
-          "P-9G192901S6962110GNBSUDZQ",
-          "premium-anual"
-        );
-      } else {
-        setTimeout(waitForPaypal, 300); // Vuelve a intentar
-      }
-    };
+  const waitForPayPal = () => {
+    if (window.paypal) {
+      setPaypalReady(true);
 
-    waitForPaypal();
+      renderButton(
+        "paypal-monthly",
+        "P-7PF96689L4734453RNBSUC2I",
+        "premium-mensual"
+      );
+      renderButton(
+        "paypal-annual",
+        "P-9G192901S6962110GNBSUDZQ",
+        "premium-anual"
+      );
+    } else if (retries < maxRetries) {
+      retries++;
+      setTimeout(waitForPayPal, 300);
+    } else {
+      console.error("PayPal SDK no cargó a tiempo");
+    }
   };
+
+  waitForPayPal();
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900 flex flex-col items-center justify-center px-4 py-12">

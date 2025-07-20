@@ -1,3 +1,4 @@
+//C:\estrella\components\PlanSelector.tsx
 "use client";
 
 import { useEffect, useRef } from "react";
