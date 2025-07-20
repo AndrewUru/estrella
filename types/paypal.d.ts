@@ -1,3 +1,4 @@
+// C:\estrella\types\paypal.d.ts
 export {};
 
 declare global {

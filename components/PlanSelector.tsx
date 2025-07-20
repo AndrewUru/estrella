@@ -1,53 +1,27 @@
 //C:\estrella\components\PlanSelector.tsx
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 type PlanType = "gratis" | "premium-mensual" | "premium-anual";
 
 interface PlanSelectorProps {
   planType: PlanType;
   setPlanType: (value: PlanType) => void;
-  setSubscriptionId: (id: string) => void;
 }
-
-const PAYPAL_PLAN_IDS: Record<Exclude<PlanType, "gratis">, string> = {
-  "premium-mensual": "P-7PF96689L4734453RNBSUC2I",
-  "premium-anual": "P-9G192901S6962110GNBSUDZQ",
-};
 
 export default function PlanSelector({
   planType,
   setPlanType,
-  setSubscriptionId,
 }: PlanSelectorProps) {
-  const paypalContainerRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    if (!window?.paypal || planType === "gratis") return;
-
-    if (paypalContainerRef.current) {
-      paypalContainerRef.current.innerHTML = "";
+    if (planType !== "gratis") {
+      router.push("/upgrade");
     }
-
-    const plan_id = PAYPAL_PLAN_IDS[planType as keyof typeof PAYPAL_PLAN_IDS];
-
-    window.paypal
-      .Buttons({
-        style: {
-          shape: "rect",
-          color: "gold",
-          layout: "vertical",
-          label: "subscribe",
-        },
-        createSubscription: (_data, actions) =>
-          actions.subscription.create({ plan_id }),
-        onApprove: (data) => {
-          setSubscriptionId(data.subscriptionID);
-        },
-      })
-      .render("#paypal-button-container");
-  }, [planType, setSubscriptionId]);
+  }, [planType, router]);
 
   return (
     <div className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow border border-gray-300 dark:border-gray-600">
@@ -64,13 +38,10 @@ export default function PlanSelector({
         <option value="premium-anual">Premium (220 €/año)</option>
       </select>
 
-      {planType !== "gratis" && (
-        <div className="mt-4">
-          <div id="paypal-button-container" ref={paypalContainerRef} />
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-            Realiza el pago para activar el registro.
-          </p>
-        </div>
+      {planType === "gratis" && (
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+          Puedes continuar con el acceso gratuito.
+        </p>
       )}
     </div>
   );
