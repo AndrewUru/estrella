@@ -17,6 +17,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export function Navbar() {
   const [session, setSession] = useState<Session | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -24,18 +25,52 @@ export function Navbar() {
   const router = useRouter();
 
   const user = session?.user;
-  const avatar = user?.user_metadata?.avatar_url;
+  const avatar = avatarUrl || user?.user_metadata?.avatar_url;
   const initials = user?.email?.slice(0, 2).toUpperCase();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setSession(data.session));
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
+  const getSessionAndProfile = async () => {
+    const { data } = await supabase.auth.getSession();
+    const currentSession = data.session;
+    setSession(currentSession);
+
+    if (currentSession?.user) {
+      fetchAvatar(currentSession.user.id);
+    }
+  };
+
+  getSessionAndProfile();
+
+  const { data: listener } = supabase.auth.onAuthStateChange(
+    (_event, session) => {
+      setSession(session);
+      if (session?.user) {
+        fetchAvatar(session.user.id);
       }
-    );
-    return () => listener.subscription.unsubscribe();
-  }, []);
+    }
+  );
+
+  return () => listener.subscription.unsubscribe();
+}, []);
+
+const fetchAvatar = async (userId: string) => {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("avatar_url")
+    .eq("id", userId)
+    .single();
+
+  if (error) {
+    console.error("Error cargando avatar desde perfiles:", error.message);
+    return;
+  }
+
+  if (data?.avatar_url) {
+    setAvatarUrl(data.avatar_url);
+  }
+};
+
+
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
