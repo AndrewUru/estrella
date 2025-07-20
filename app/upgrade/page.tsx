@@ -1,24 +1,23 @@
 "use client";
 
-import { useState } from "react";
 import Script from "next/script";
-import { supabase } from "@/lib/supabase/client";
 import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { usePayPalButtons } from "@/hooks/usePayPalButtons";
 
 const PLANS = [
   {
-    id: "paypal-monthly",
+    containerId: "paypal-monthly",
     planId: "P-7PF96689L4734453RNBSUC2I",
-    type: "premium-mensual",
+    planType: "premium-mensual",
     label: "🌙 Plan Mensual",
     description: "Accede por solo 22 € al mes. Cancela cuando quieras.",
     delay: 0.2,
   },
   {
-    id: "paypal-annual",
+    containerId: "paypal-annual",
     planId: "P-9G192901S6962110GNBSUDZQ",
-    type: "premium-anual",
+    planType: "premium-anual",
     label: "🌞 Plan Anual",
     description: "Una sola vez al año: 77 €. Ahorra más del 70 %.",
     delay: 0.4,
@@ -26,74 +25,7 @@ const PLANS = [
 ];
 
 export default function UpgradePage() {
-  const [paypalReady, setPaypalReady] = useState(false);
-
-  const renderButton = (
-    containerId: string,
-    planId: string,
-    planType: string
-  ) => {
-    const paypal = typeof window !== "undefined" ? window.paypal : undefined;
-    const el = document.getElementById(containerId);
-
-    if (!paypal?.Buttons || !el) {
-      console.warn(`Botón PayPal no disponible para ${containerId}`);
-      return;
-    }
-
-    paypal
-      .Buttons({
-        style: {
-          shape: "rect",
-          color: "gold",
-          layout: "vertical",
-          label: "subscribe",
-        },
-        createSubscription: (_data, actions) =>
-          actions.subscription.create({ plan_id: planId }),
-        onApprove: async ({ subscriptionID }) => {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (!user) return;
-
-          const { error } = await supabase
-            .from("profiles")
-            .update({
-              subscription_id: subscriptionID,
-              plan: "premium",
-              plan_type: planType,
-            })
-            .eq("id", user.id);
-
-          if (error) {
-            console.error("Error al actualizar perfil:", error);
-            alert("Ocurrió un problema al activar tu plan. Contáctanos.");
-          } else {
-            alert("✨ Suscripción activada. Tu acceso premium ya está disponible.");
-            window.location.href = "/protected";
-          }
-        },
-      })
-      .render(`#${containerId}`);
-  };
-
-  const handlePaypalReady = () => {
-    const maxRetries = 10;
-    let retries = 0;
-
-    const waitForPayPal = () => {
-      if (window.paypal?.Buttons) {
-        setPaypalReady(true);
-        PLANS.forEach(({ id, planId, type }) => renderButton(id, planId, type));
-      } else if (retries < maxRetries) {
-        retries++;
-        setTimeout(waitForPayPal, 300);
-      } else {
-        console.error("PayPal SDK no cargó a tiempo");
-      }
-    };
-
-    waitForPayPal();
-  };
+  const { paypalReady, handlePaypalReady } = usePayPalButtons(PLANS);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900 flex flex-col items-center justify-center px-4 py-12">
@@ -111,9 +43,9 @@ export default function UpgradePage() {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
-          {PLANS.map(({ id, label, description, delay }) => (
+          {PLANS.map(({ containerId, label, description, delay }) => (
             <motion.div
-              key={id}
+              key={containerId}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay }}
@@ -124,7 +56,7 @@ export default function UpgradePage() {
               </h2>
               <p className="mb-4 text-gray-600 dark:text-gray-300">{description}</p>
               {paypalReady ? (
-                <div id={id} />
+                <div id={containerId} />
               ) : (
                 <div className="flex justify-center py-4 text-purple-500">
                   <Loader2 className="animate-spin" />
