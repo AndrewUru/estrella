@@ -1,27 +1,37 @@
+import { useEffect, useState } from "react";
 
-import { useState } from "react";
-import { supabase } from "@/lib/supabase/client";
+type PlanType = "premium-mensual" | "premium-anual";
 
 interface PayPalPlan {
   containerId: string;
   planId: string;
-  planType: string;
+  planType: PlanType;
 }
 
-export function usePayPalButtons(plans: PayPalPlan[]) {
+interface UsePayPalButtonsResult {
+  paypalReady: boolean;
+}
+
+export function usePayPalButtons(
+  plans: PayPalPlan[],
+  onSuccess: (planType: PlanType, subscriptionID: string) => void
+): UsePayPalButtonsResult {
   const [paypalReady, setPaypalReady] = useState(false);
 
-  const renderButton = (containerId: string, planId: string, planType: string) => {
-    const paypal = typeof window !== "undefined" ? window.paypal : undefined;
-    const el = document.getElementById(containerId);
+  useEffect(() => {
+    const maxRetries = 10;
+    let retries = 0;
 
-    if (!paypal?.Buttons || !el) {
-      console.warn(`Botón PayPal no disponible para ${containerId}`);
-      return;
-    }
+    const renderButton = ({ containerId, planId, planType }: PayPalPlan) => {
+      const paypal = window.paypal;
+      const el = document.getElementById(containerId);
 
-    paypal
-      .Buttons({
+      if (!paypal?.Buttons || !el) {
+        console.warn(`PayPal no disponible para ${containerId}`);
+        return;
+      }
+
+      paypal.Buttons({
         style: {
           shape: "rect",
           color: "gold",
@@ -30,51 +40,26 @@ export function usePayPalButtons(plans: PayPalPlan[]) {
         },
         createSubscription: (_data, actions) =>
           actions.subscription.create({ plan_id: planId }),
-        onApprove: async ({ subscriptionID }) => {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (!user) return;
-
-          const { error } = await supabase
-            .from("profiles")
-            .update({
-              subscription_id: subscriptionID,
-              plan: "premium",
-              plan_type: planType,
-            })
-            .eq("id", user.id);
-
-          if (error) {
-            console.error("Error al actualizar perfil:", error);
-            alert("Ocurrió un problema al activar tu plan. Contáctanos.");
-          } else {
-            alert("✨ Suscripción activada. Tu acceso premium ya está disponible.");
-            window.location.href = "/protected";
-          }
+        onApprove: (data: { subscriptionID: string }) => {
+          onSuccess(planType, data.subscriptionID);
         },
-      })
-      .render(`#${containerId}`);
-  };
+      }).render(`#${containerId}`);
+    };
 
-  const handlePaypalReady = () => {
-    const maxRetries = 10;
-    let retries = 0;
-
-    const waitForPayPal = () => {
+    const waitForPaypal = () => {
       if (window.paypal?.Buttons) {
         setPaypalReady(true);
-        plans.forEach(({ containerId, planId, planType }) =>
-          renderButton(containerId, planId, planType)
-        );
+        plans.forEach(renderButton);
       } else if (retries < maxRetries) {
         retries++;
-        setTimeout(waitForPayPal, 300);
+        setTimeout(waitForPaypal, 300);
       } else {
-        console.error("PayPal SDK no cargó a tiempo");
+        console.error("⚠️ PayPal SDK no cargó a tiempo");
       }
     };
 
-    waitForPayPal();
-  };
+    waitForPaypal();
+  }, [plans, onSuccess]);
 
-  return { paypalReady, handlePaypalReady };
+  return { paypalReady };
 }

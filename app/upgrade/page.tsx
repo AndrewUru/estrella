@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Script from "next/script";
+import { supabase } from "@/lib/supabase/client";
 import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { usePayPalButtons } from "@/hooks/usePayPalButtons";
@@ -9,7 +11,7 @@ const PLANS = [
   {
     containerId: "paypal-monthly",
     planId: "P-7PF96689L4734453RNBSUC2I",
-    planType: "premium-mensual",
+    planType: "premium-mensual" as const,
     label: "🌙 Plan Mensual",
     description: "Accede por solo 22 € al mes. Cancela cuando quieras.",
     delay: 0.2,
@@ -17,7 +19,7 @@ const PLANS = [
   {
     containerId: "paypal-annual",
     planId: "P-9G192901S6962110GNBSUDZQ",
-    planType: "premium-anual",
+    planType: "premium-anual" as const,
     label: "🌞 Plan Anual",
     description: "Una sola vez al año: 77 €. Ahorra más del 70 %.",
     delay: 0.4,
@@ -25,7 +27,32 @@ const PLANS = [
 ];
 
 export default function UpgradePage() {
-  const { paypalReady, handlePaypalReady } = usePayPalButtons(PLANS);
+  const [scriptLoaded, setScriptLoaded] = useState(false);
+
+  const { paypalReady } = usePayPalButtons(
+    scriptLoaded ? PLANS : [],
+    async (planType, subscriptionID) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          subscription_id: subscriptionID,
+          plan: "premium",
+          plan_type: planType,
+        })
+        .eq("id", user.id);
+
+      if (error) {
+        console.error("Error al actualizar perfil:", error);
+        alert("Ocurrió un problema al activar tu plan. Contáctanos.");
+      } else {
+        alert("✨ Suscripción activada. Tu acceso premium ya está disponible.");
+        window.location.href = "/protected";
+      }
+    }
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900 flex flex-col items-center justify-center px-4 py-12">
@@ -75,7 +102,7 @@ export default function UpgradePage() {
       <Script
         src="https://www.paypal.com/sdk/js?client-id=ASQix2Qu6atiH43_jrk18jeSMDjB_YdTjbfI8jrTJ7x5uagNzUhuNMXacO49ZxJWr_EMpBhrpVPbOvR_&components=buttons&vault=true&intent=subscription"
         strategy="afterInteractive"
-        onLoad={handlePaypalReady}
+        onLoad={() => setScriptLoaded(true)}
       />
     </div>
   );
