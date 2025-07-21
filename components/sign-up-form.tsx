@@ -4,6 +4,14 @@
 
 import { supabase } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -21,20 +29,39 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-12 p-6 bg-white dark:bg-gray-900 rounded-xl shadow-xl space-y-6">
-      <h1 className="text-2xl font-bold text-center">Crear Cuenta</h1>
-
-      <Button onClick={handleGoogleSignUp} className="w-full flex gap-2">
-        <Image src="/google-icon.svg" alt="Google" width={20} height={20} />
-        Registrarse con Google
-      </Button>
-
-      <p className="text-center text-sm">
-        ¿Ya tienes cuenta?{" "}
-        <Link href="/auth/login" className="text-violet-600 hover:underline">
-          Inicia sesión aquí
-        </Link>
-      </p>
-    </div>
+    <Card className="max-w-md mx-auto p-6 bg-white/90 dark:bg-gray-900/80 backdrop-blur-md border border-white/40 dark:border-gray-700/40 shadow-2xl rounded-3xl">
+      <CardHeader className="text-center space-y-1">
+        <CardTitle className="text-2xl font-bold">Crear Cuenta</CardTitle>
+        <CardDescription>Accede al curso con un solo clic</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Button
+          onClick={handleGoogleSignUp}
+          className="w-full flex gap-2 h-12 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white"
+        >
+          <Image
+            src="/google-icon.svg"
+            alt="Google"
+            width={20}
+            height={20}
+            className="dark:invert"
+          />
+          Registrarse con Google
+        </Button>
+      </CardContent>
+      <CardFooter className="flex flex-col gap-2">
+        <p className="text-center text-sm">
+          ¿Ya tienes cuenta?{" "}
+          <Link href="/auth/login" className="text-violet-600 hover:underline">
+            Inicia sesión
+          </Link>
+        </p>
+        <p className="text-center text-xs text-muted-foreground">
+          <Link href="/upgrade" className="hover:underline">
+            Conoce nuestros planes
+          </Link>
+        </p>
+      </CardFooter>
+    </Card>
   );
 }
