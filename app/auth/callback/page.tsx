@@ -24,17 +24,34 @@ export default function AuthCallback() {
         .eq("id", user.id)
         .maybeSingle();
 
-      if (!profile && !profileError) {
-        await supabase.from("profiles").insert({
-          id: user.id,
-          email: user.email,
-          is_active: true,
-          role: "alumna",
-          plan: "gratis",
-          plan_type: "7D",
-          start_date: new Date().toISOString().split("T")[0],
-        });
-      }
+      if (user.email) {
+  if (!profile && !profileError) {
+    // Si no existe el perfil, lo insertamos
+    await supabase.from("profiles").insert([
+      {
+        id: user.id,
+        email: user.email,
+        is_active: true,
+        role: "alumna",
+        plan: "gratis",
+        plan_type: "7D",
+        start_date: new Date().toISOString().split("T")[0],
+      },
+    ]);
+  } else {
+    // Si ya existe, lo actualizamos
+    await supabase.from("profiles").update({
+      email: user.email,
+      is_active: true,
+      role: "alumna",
+      plan: "gratis",
+      plan_type: "7D",
+      start_date: new Date().toISOString().split("T")[0],
+    }).eq("id", user.id);
+  }
+}
+
+
 
       const params = new URLSearchParams(window.location.search);
       const rawReturnTo = params.get("returnTo") ?? "";

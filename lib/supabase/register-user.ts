@@ -1,3 +1,4 @@
+// lib/supabase/register-user.ts
 import { supabase } from "./client";
 
 export async function registerUser({
@@ -13,19 +14,19 @@ export async function registerUser({
   planType: "gratis" | "premium-mensual" | "premium-anual";
   fullName: string;
 }) {
-  // Paso 1: Crear usuario en auth sin redirección ni confirmación por correo
+  // Paso 1: Crear usuario en auth con redirección correcta al callback
   const { data, error: signUpError } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      emailRedirectTo: 'null', // Evita redirección de email
+      emailRedirectTo: "https://www.estrelladelalba.com/auth/callback",
       data: {
         full_name: fullName,
         is_active: planType === "gratis",
         start_date: new Date().toISOString().split("T")[0],
         role: "alumna",
         subscription_id: subscriptionId,
-        plan: planType === "gratis" ? "gratis" : "pago",
+        plan: planType === "gratis" ? "gratis" : "premium",
         plan_type: planType,
       },
     },
@@ -43,18 +44,21 @@ export async function registerUser({
     throw new Error("No se pudo obtener el ID del usuario");
   }
 
-  // Paso 2: Crear entrada en la tabla "profiles"
-  const { error: profileError } = await supabase.from("profiles").insert({
-    id: user.id,
-    email,
-    full_name: fullName,
-    is_active: planType === "gratis",
-    start_date: new Date().toISOString().split("T")[0],
-    role: "alumna",
-    subscription_id: subscriptionId,
-    plan: planType === "gratis" ? "gratis" : "pago",
-    plan_type: planType,
-  });
+  // Paso 2: Crear entrada en la tabla "profiles" (con upsert por si existe)
+  const { error: profileError } = await supabase.from("profiles").upsert(
+    {
+      id: user.id,
+      email,
+      full_name: fullName,
+      is_active: planType === "gratis",
+      start_date: new Date().toISOString().split("T")[0],
+      role: "alumna",
+      subscription_id: subscriptionId,
+      plan: planType === "gratis" ? "gratis" : "premium",
+      plan_type: planType,
+    },
+    { onConflict: "id" }
+  );
 
   if (profileError) {
     console.error("❌ Error al insertar perfil:", profileError);
