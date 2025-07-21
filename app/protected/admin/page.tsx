@@ -69,7 +69,7 @@ export default function AdminPage() {
         </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-3">
         <a
           href="/protected/admin/usuarios"
           className="block bg-white rounded-xl shadow p-4 hover:bg-pink-50 transition"
@@ -81,6 +81,12 @@ export default function AdminPage() {
           className="block bg-white rounded-xl shadow p-4 hover:bg-pink-50 transition"
         >
           📚 Editar contenido del curso
+        </a>
+        <a
+          href="/protected/admin/planes"
+          className="block bg-white rounded-xl shadow p-4 hover:bg-pink-50 transition"
+        >
+          📝 Planes y suscripción
         </a>
       </div>
     </main>
