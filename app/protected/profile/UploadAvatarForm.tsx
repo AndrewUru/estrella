@@ -1,10 +1,12 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { Loader2 } from "lucide-react";
 
 export function UploadAvatarForm() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,6 +28,7 @@ export function UploadAvatarForm() {
     setMessage("");
 
     try {
+      setLoading(true);
       const res = await fetch("/api/upload-avatar", {
         method: "POST",
         body: formData,
@@ -40,6 +43,8 @@ export function UploadAvatarForm() {
     } catch (error) {
       console.error(error);
       setMessage("Error al subir la imagen");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,9 +64,10 @@ export function UploadAvatarForm() {
       {/* Botón para subir */}
       <button
         type="submit"
-        className="mt-2 px-4 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition"
+        disabled={loading}
+        className="mt-2 px-4 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition flex items-center justify-center gap-2 disabled:opacity-50"
       >
-        Guardar Imagen
+        {loading && <Loader2 className="w-4 h-4 animate-spin" />}Guardar Imagen
       </button>
 
       {message && <p className="text-sm text-red-500">{message}</p>}
