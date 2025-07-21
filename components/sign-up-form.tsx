@@ -28,7 +28,7 @@ export default function SignUpPage() {
       email,
       password,
       options: {
-        emailRedirectTo: `${baseUrl}/protected`,
+        emailRedirectTo: `${baseUrl}/auth/callback?returnTo=/protected`,
       },
     });
 
