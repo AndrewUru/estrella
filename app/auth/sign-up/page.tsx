@@ -1,7 +1,7 @@
 // app/auth/sign-up/page.tsx
 
 import Image from "next/image";
-import SignUpWithPayment from "@/components/sign-up-form";
+import SignUpForm from "@/components/sign-up-form";
 
 export default function Page() {
   return (
@@ -55,7 +55,7 @@ export default function Page() {
           <div className="relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/30 dark:border-gray-700/30">
             <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent dark:from-gray-700/20 rounded-2xl pointer-events-none" />
             <div className="relative">
-              <SignUpWithPayment />
+              <SignUpForm />
             </div>
           </div>
 
@@ -87,7 +87,7 @@ export default function Page() {
                   clipRule="evenodd"
                 />
               </svg>
-              <span>Pago verificado</span>
+              <span>Inicio con Google</span>
             </div>
             <div className="flex items-center">
               <svg
@@ -142,6 +142,9 @@ export default function Page() {
               claridad sin gurús ni estructuras rígidas? Esta experiencia es un
               camino directo a tu alma.
             </p>
+            <p className="text-lg text-violet-700 dark:text-violet-300 font-semibold">
+              Ingresa con Google y descubre tu potencial desde hoy.
+            </p>
 
             {/* Precio y propuesta de valor */}
             <div className="bg-gradient-to-r from-violet-500/10 to-purple-500/10 dark:from-violet-600/20 dark:to-purple-600/20 rounded-2xl p-6 border border-violet-200/30 dark:border-violet-700/30">
@@ -164,8 +167,8 @@ export default function Page() {
             {/* Nota final */}
             <div className="text-center lg:text-left">
               <p className="text-slate-500 dark:text-slate-400 text-sm xl:text-base">
-                Acceso inmediato a la plataforma y comunidad. Elige el plan que
-                mejor se alinee con tu camino.
+                Accede de inmediato a la plataforma y comunidad. Regístrate con
+                tu cuenta de Google para comenzar.
               </p>
             </div>
           </div>
@@ -180,7 +183,7 @@ export default function Page() {
             <div className="relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/30 dark:border-gray-700/30">
               <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent dark:from-gray-700/20 rounded-2xl pointer-events-none" />
               <div className="relative">
-                <SignUpWithPayment />
+                <SignUpForm />
               </div>
             </div>
 
@@ -212,7 +215,7 @@ export default function Page() {
                     clipRule="evenodd"
                   />
                 </svg>
-                <span>Pago verificado</span>
+                <span>Inicio con Google</span>
               </div>
               <div className="flex items-center">
                 <svg
