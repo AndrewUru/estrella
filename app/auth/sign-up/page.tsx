@@ -1,7 +1,7 @@
 // app/auth/sign-up/page.tsx
 
-import Image from "next/image";
-import SignUpWithPayment from "@/components/sign-up-form";
+
+import SignUpForm from "@/components/sign-up-form";
 
 export default function Page() {
   return (
@@ -55,7 +55,7 @@ export default function Page() {
           <div className="relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/30 dark:border-gray-700/30">
             <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent dark:from-gray-700/20 rounded-2xl pointer-events-none" />
             <div className="relative">
-              <SignUpWithPayment />
+              <SignUpForm />
             </div>
           </div>
 
@@ -87,7 +87,7 @@ export default function Page() {
                   clipRule="evenodd"
                 />
               </svg>
-              <span>Pago verificado</span>
+              <span>Inicio con Google</span>
             </div>
             <div className="flex items-center">
               <svg
@@ -109,28 +109,11 @@ export default function Page() {
         {/* Hero Section */}
         <div className="grid lg:grid-cols-2 gap-12 xl:gap-16 items-start">
           {/* Contenido principal - Columna izquierda */}
-          <div className="text-center lg:text-left space-y-8">
-            {/* Logo con efectos */}
-            <div className="inline-block relative mb-8">
-              <div className="absolute inset-0 bg-gradient-to-r from-violet-400 via-purple-400 to-indigo-400 dark:from-violet-500 dark:via-purple-500 dark:to-indigo-500 rounded-full blur-xl opacity-30 animate-pulse scale-125" />
-              <div
-                className="absolute inset-0 bg-gradient-to-r from-violet-600 to-purple-600 dark:from-violet-400 dark:to-purple-400 rounded-full blur-md opacity-20 animate-pulse scale-110"
-                style={{ animationDelay: "1s" }}
-              />
-              <div className="relative bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full p-4 shadow-2xl ring-1 ring-white/50 dark:ring-gray-700/50">
-                <Image
-                  src="/logo-estrella.png"
-                  alt="Logo Estrella"
-                  width={88}
-                  height={88}
-                  className="mx-auto rounded-full shadow-lg"
-                />
-              </div>
-            </div>
+          <div className="text-center lg:text-left space-y-8">      
 
             {/* Título principal */}
             <div className="space-y-4">
-              <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 dark:from-violet-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent leading-tight">
+              <h1 className="text-2xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 dark:from-violet-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent leading-tight">
                 Bienvenida a Estrella del Alba 7D
               </h1>
               <div className="w-24 h-1 bg-gradient-to-r from-violet-500 to-purple-500 rounded-full mx-auto lg:mx-0" />
@@ -141,6 +124,9 @@ export default function Page() {
               ¿Sientes que has perdido la conexión contigo misma? ¿Buscas
               claridad sin gurús ni estructuras rígidas? Esta experiencia es un
               camino directo a tu alma.
+            </p>
+            <p className="text-lg text-violet-700 dark:text-violet-300 font-semibold">
+              Ingresa con Google y descubre tu potencial desde hoy.
             </p>
 
             {/* Precio y propuesta de valor */}
@@ -164,8 +150,8 @@ export default function Page() {
             {/* Nota final */}
             <div className="text-center lg:text-left">
               <p className="text-slate-500 dark:text-slate-400 text-sm xl:text-base">
-                Acceso inmediato a la plataforma y comunidad. Elige el plan que
-                mejor se alinee con tu camino.
+                Accede de inmediato a la plataforma y comunidad. Regístrate con
+                tu cuenta de Google para comenzar.
               </p>
             </div>
           </div>
@@ -180,7 +166,7 @@ export default function Page() {
             <div className="relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/30 dark:border-gray-700/30">
               <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent dark:from-gray-700/20 rounded-2xl pointer-events-none" />
               <div className="relative">
-                <SignUpWithPayment />
+                <SignUpForm />
               </div>
             </div>
 
@@ -212,7 +198,7 @@ export default function Page() {
                     clipRule="evenodd"
                   />
                 </svg>
-                <span>Pago verificado</span>
+                <span>Inicio con Google</span>
               </div>
               <div className="flex items-center">
                 <svg

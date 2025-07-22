@@ -29,48 +29,46 @@ export function Navbar() {
   const initials = user?.email?.slice(0, 2).toUpperCase();
 
   useEffect(() => {
-  const getSessionAndProfile = async () => {
-    const { data } = await supabase.auth.getSession();
-    const currentSession = data.session;
-    setSession(currentSession);
+    const getSessionAndProfile = async () => {
+      const { data } = await supabase.auth.getSession();
+      const currentSession = data.session;
+      setSession(currentSession);
 
-    if (currentSession?.user) {
-      fetchAvatar(currentSession.user.id);
+      if (currentSession?.user) {
+        fetchAvatar(currentSession.user.id);
+      }
+    };
+
+    getSessionAndProfile();
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+        if (session?.user) {
+          fetchAvatar(session.user.id);
+        }
+      },
+    );
+
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  const fetchAvatar = async (userId: string) => {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("avatar_url")
+      .eq("id", userId)
+      .single();
+
+    if (error) {
+      console.error("Error cargando avatar desde perfiles:", error.message);
+      return;
+    }
+
+    if (data?.avatar_url) {
+      setAvatarUrl(data.avatar_url);
     }
   };
-
-  getSessionAndProfile();
-
-  const { data: listener } = supabase.auth.onAuthStateChange(
-    (_event, session) => {
-      setSession(session);
-      if (session?.user) {
-        fetchAvatar(session.user.id);
-      }
-    }
-  );
-
-  return () => listener.subscription.unsubscribe();
-}, []);
-
-const fetchAvatar = async (userId: string) => {
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("avatar_url")
-    .eq("id", userId)
-    .single();
-
-  if (error) {
-    console.error("Error cargando avatar desde perfiles:", error.message);
-    return;
-  }
-
-  if (data?.avatar_url) {
-    setAvatarUrl(data.avatar_url);
-  }
-};
-
-
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -83,6 +81,17 @@ const fetchAvatar = async (userId: string) => {
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMenuOpen(false);
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
   }, []);
 
   useEffect(() => {
@@ -129,7 +138,8 @@ const fetchAvatar = async (userId: string) => {
           {[
             { href: "/informacion", label: "Sobre el curso" },
             { href: "/preguntas", label: "Preguntas" },
-            { href: "/protected", label: "Mi espacio", highlight: true },
+            { href: "/upgrade", label: "Planes", highlight: true },
+            { href: "/protected", label: "Mi espacio" },
           ].map((item) => (
             <motion.div key={item.href} whileHover={{ y: -2 }}>
               <Link
@@ -274,10 +284,15 @@ const fetchAvatar = async (userId: string) => {
                 { href: "/informacion", label: "Sobre el curso", icon: "📚" },
                 { href: "/preguntas", label: "Preguntas", icon: "❓" },
                 {
+                  href: "/upgrade",
+                  label: "Planes",
+                  icon: "💎",
+                  highlight: true,
+                },
+                {
                   href: "/protected",
                   label: "Mi espacio",
                   icon: "✨",
-                  highlight: true,
                 },
               ].map((item, index) => (
                 <motion.div
