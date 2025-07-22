@@ -1,6 +1,6 @@
 // app/auth/sign-up/page.tsx
 
-import Image from "next/image";
+
 import SignUpForm from "@/components/sign-up-form";
 
 export default function Page() {
@@ -109,24 +109,7 @@ export default function Page() {
         {/* Hero Section */}
         <div className="grid lg:grid-cols-2 gap-12 xl:gap-16 items-start">
           {/* Contenido principal - Columna izquierda */}
-          <div className="text-center lg:text-left space-y-8">
-            {/* Logo con efectos */}
-            <div className="inline-block relative mb-8">
-              <div className="absolute inset-0 bg-gradient-to-r from-violet-400 via-purple-400 to-indigo-400 dark:from-violet-500 dark:via-purple-500 dark:to-indigo-500 rounded-full blur-xl opacity-30 animate-pulse scale-125" />
-              <div
-                className="absolute inset-0 bg-gradient-to-r from-violet-600 to-purple-600 dark:from-violet-400 dark:to-purple-400 rounded-full blur-md opacity-20 animate-pulse scale-110"
-                style={{ animationDelay: "1s" }}
-              />
-              <div className="relative bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full p-4 shadow-2xl ring-1 ring-white/50 dark:ring-gray-700/50">
-                <Image
-                  src="/logo-estrella.png"
-                  alt="Logo Estrella"
-                  width={33}
-                  height={33}
-                  className="mx-auto rounded-full shadow-lg"
-                />
-              </div>
-            </div>
+          <div className="text-center lg:text-left space-y-8">      
 
             {/* Título principal */}
             <div className="space-y-4">

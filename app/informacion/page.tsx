@@ -32,7 +32,7 @@ export default function InformacionPage() {
         </div>
         <div className="flex justify-center">
           <Link
-            href="/upgrade"
+            href="/app/upgrade"
             className="inline-block bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white text-sm font-semibold px-6 py-3 rounded-xl shadow-md transition-all duration-300"
           >
             💎 Acceder como Premium
