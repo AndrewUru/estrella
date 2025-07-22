@@ -66,7 +66,7 @@ export default function EditUsuarioPage() {
     cargarUsuario();
   }, [router, userId]);
 
-  const handleChange = (campo: keyof Usuario, valor: any) => {
+  const handleChange = <T extends keyof Usuario>(campo: T, valor: Usuario[T]) => {
     setUsuario((prev) => (prev ? { ...prev, [campo]: valor } : prev));
   };
 

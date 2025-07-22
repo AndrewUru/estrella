@@ -4,6 +4,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase/client";
 
@@ -70,18 +71,18 @@ export default function AdminPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <a
+        <Link
           href="/protected/admin/usuarios"
           className="block bg-white rounded-xl shadow p-4 hover:bg-pink-50 transition"
         >
           👥 Usuarias y planes
-        </a>
-        <a
+        </Link>
+        <Link
           href="/protected/admin/contenido"
           className="block bg-white rounded-xl shadow p-4 hover:bg-pink-50 transition"
         >
           📚 Editar contenido del curso
-        </a>
+        </Link>
       </div>
     </main>
   );

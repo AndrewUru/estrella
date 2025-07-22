@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { supabase } from "@/lib/supabase/client";
 
 interface Usuario {
@@ -140,12 +141,12 @@ export default function UsuariosPage() {
                   </button>
                 </td>
                 <td className="p-3 text-center">
-                  <a
+                  <Link
                     href={`/protected/admin/usuarios/${u.id}`}
                     className="text-blue-600 hover:underline"
                   >
                     Editar
-                  </a>
+                  </Link>
                 </td>
               </tr>
             ))}
