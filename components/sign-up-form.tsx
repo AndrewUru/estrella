@@ -1,5 +1,3 @@
-//C:\estrella\components\sign-up-form.tsx
-
 "use client";
 
 import { supabase } from "@/lib/supabase/client";
@@ -15,36 +13,10 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 
+
 export default function SignUpPage() {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
+  
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://estrelladelalba.com";
-
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${baseUrl}/protected`,
-      },
-    });
-
-    if (error) {
-      setError(error.message);
-    } else {
-      router.push("/check-email");
-    }
-
-    setLoading(false);
-  };
 
   const handleGoogleSignUp = async () => {
     await supabase.auth.signInWithOAuth({
