@@ -4,9 +4,17 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles } from "lucide-react";
 
+const isIosSafari = () => {
+  return (
+    /iPhone|iPad|iPod/.test(navigator.userAgent) &&
+    /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
+  );
+};
+
 export default function BotonInstalarPWA() {
   const [promptEvent, setPromptEvent] = useState<BeforeInstallPromptEvent | null>(null);
   const [visible, setVisible] = useState(false);
+  const [esIos, setEsIos] = useState(false);
   const esModoDesarrollo = process.env.NODE_ENV === "development";
 
   useEffect(() => {
@@ -22,6 +30,7 @@ export default function BotonInstalarPWA() {
     };
 
     window.addEventListener("beforeinstallprompt", handler);
+    setEsIos(isIosSafari());
     return () => window.removeEventListener("beforeinstallprompt", handler);
   }, []);
 
@@ -56,6 +65,19 @@ export default function BotonInstalarPWA() {
             <Sparkles className="w-4 h-4 text-purple-500" />
             Instalar App
           </button>
+        </motion.div>
+      )}
+      {!mostrarBoton && esIos && (
+        <motion.div
+          initial={{ opacity: 0, y: 60 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 60 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="fixed bottom-4 inset-x-0 flex justify-center z-50"
+        >
+          <div className="bg-white text-gray-800 border border-gray-300 px-4 py-2 rounded-xl shadow-md text-sm">
+            Para instalar esta app en tu iPhone, abre esta página en Safari y toca 'Compartir' &gt; 'Agregar a pantalla de inicio'
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
