@@ -1,5 +1,3 @@
-//C:\estrella\components\sign-up-form.tsx
-
 "use client";
 
 import { supabase } from "@/lib/supabase/client";
@@ -15,9 +13,10 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 
+
 export default function SignUpPage() {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL || "https://estrelladelalba.com";
+  
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://estrelladelalba.com";
 
   const handleGoogleSignUp = async () => {
     await supabase.auth.signInWithOAuth({
