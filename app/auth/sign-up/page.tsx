@@ -121,8 +121,8 @@ export default function Page() {
                 <Image
                   src="/logo-estrella.png"
                   alt="Logo Estrella"
-                  width={88}
-                  height={88}
+                  width={33}
+                  height={33}
                   className="mx-auto rounded-full shadow-lg"
                 />
               </div>
@@ -130,7 +130,7 @@ export default function Page() {
 
             {/* Título principal */}
             <div className="space-y-4">
-              <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 dark:from-violet-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent leading-tight">
+              <h1 className="text-2xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 dark:from-violet-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent leading-tight">
                 Bienvenida a Estrella del Alba 7D
               </h1>
               <div className="w-24 h-1 bg-gradient-to-r from-violet-500 to-purple-500 rounded-full mx-auto lg:mx-0" />
