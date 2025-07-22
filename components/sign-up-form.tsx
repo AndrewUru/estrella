@@ -1,3 +1,4 @@
+//C:\estrella\components\sign-up-form.tsx
 "use client";
 
 import { supabase } from "@/lib/supabase/client";

@@ -1,4 +1,4 @@
-// pages/auth/callback.tsx
+
 // pages/auth/callback.tsx
 "use client";
 
