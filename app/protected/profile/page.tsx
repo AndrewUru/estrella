@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { User, Mail, Crown, Shield, CheckCircle, XCircle } from "lucide-react";
-import Image from "next/image";
+import { AvatarImage } from "@/components/avatar-image";
 import { UserProfile } from "@/types/supabase";
 import { UploadAvatarForm } from "@/app/protected/profile/UploadAvatarForm";
 
@@ -121,18 +121,15 @@ export default async function ProfilePage() {
               </div>
             </div>
             <div className="px-6 py-4 text-center">
-              <div className="relative w-32 h-32 mx-auto rounded-full overflow-hidden">
-                <Image
-                  src={
-                    profile?.avatar_url?.trim() ||
-                    user.user_metadata?.avatar_url?.trim() ||
-                    "/default-avatar.png"
-                  }
-                  alt="Foto de perfil"
-                  fill
-                  className="object-cover"
-                />
-              </div>
+              <AvatarImage
+                src={
+                  profile?.avatar_url?.trim() ||
+                  user.user_metadata?.avatar_url?.trim() ||
+                  "/default-avatar.png"
+                }
+                alt="Foto de perfil"
+                fill
+              />
               <UploadAvatarForm />
             </div>
           </div>
