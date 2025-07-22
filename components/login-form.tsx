@@ -13,54 +13,35 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-//import { useAuthRedirect } from "@/lib/hooks/use-auth-redirect";
 import { useSearchParams } from "next/navigation";
 
 export function LoginForm({ className }: { className?: string }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   const searchParams = useSearchParams();
   const returnTo = searchParams.get("returnTo") ?? "/protected";
 
-  //useAuthRedirect(); // Redirige si ya está logueado
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleGoogleLogin = async () => {
     setIsLoading(true);
     setError(null);
 
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) throw error;
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback?returnTo=${encodeURIComponent(
+          returnTo
+        )}`,
+      },
+    });
 
-      // Redirige a página protegida y refresca el estado
-      router.push(returnTo);
-
-      router.refresh();
-    } catch (error: unknown) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : "Ha ocurrido un error al iniciar sesión."
-      );
-    } finally {
-      setIsLoading(false);
+    if (error) {
+      setError(error.message);
     }
-  };
 
-  const [showPassword, setShowPassword] = useState(false);
+    setIsLoading(false);
+  };
 
   return (
     <div className="relative overflow-hidden flex items-center justify-center">
@@ -124,24 +105,14 @@ export function LoginForm({ className }: { className?: string }) {
                   Iniciar Sesión
                 </CardTitle>
                 <CardDescription className="text-slate-600 dark:text-slate-400">
-                  Ingresa tus credenciales para acceder a tu cuenta
+                  Inicia sesión con tu cuenta de Google
                 </CardDescription>
 
                 <Button
                   variant="outline"
                   className="w-full flex items-center justify-center gap-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
-                  onClick={async () => {
-                    await supabase.auth.signInWithOAuth({
-                      provider: "google",
-                      options: {
-                        redirectTo: `${
-                          process.env.NEXT_PUBLIC_BASE_URL
-                        }/auth/callback?returnTo=${encodeURIComponent(
-                          returnTo
-                        )}`,
-                      },
-                    });
-                  }}
+                  onClick={handleGoogleLogin}
+                  disabled={isLoading}
                 >
                   <Image
                     src="/google-icon.svg"
@@ -150,225 +121,23 @@ export function LoginForm({ className }: { className?: string }) {
                     height={20}
                     className="dark:invert"
                   />
-                  Iniciar sesión con Google
+                  {isLoading ? "Redirigiendo..." : "Iniciar sesión con Google"}
                 </Button>
               </CardHeader>
-
-              <CardContent className="space-y-6">
-                <div className="space-y-6">
-                  {/* Campo Email */}
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="email"
-                      className="text-slate-700 dark:text-slate-300 font-medium"
-                    >
-                      Correo electrónico
-                    </Label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg
-                          className="w-5 h-5 text-slate-400 dark:text-slate-500"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
-                          />
-                        </svg>
-                      </div>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="tu@email.com"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="pl-10 h-12 bg-white/70 dark:bg-gray-800/70 border-white/20 dark:border-gray-700/20 focus:border-violet-300 dark:focus:border-violet-400 focus:ring-violet-200 dark:focus:ring-violet-600 rounded-xl transition-all duration-300 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Campo Contraseña */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label
-                        htmlFor="password"
-                        className="text-slate-700 dark:text-slate-300 font-medium"
-                      >
-                        Contraseña
-                      </Label>
-                      <Link
-                        href="/auth/forgot-password"
-                        className="text-sm text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 underline-offset-4 hover:underline transition-colors duration-200"
-                      >
-                        ¿Olvidaste tu contraseña?
-                      </Link>
-                    </div>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg
-                          className="w-5 h-5 text-slate-400 dark:text-slate-500"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                          />
-                        </svg>
-                      </div>
-                      <Input
-                        id="password"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="••••••••"
-                        required
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        aria-describedby={error ? "error-message" : undefined}
-                        className="pl-10 pr-10 h-12 bg-white/70 dark:bg-gray-800/70 border-white/20 dark:border-gray-700/20 focus:border-violet-300 dark:focus:border-violet-400 focus:ring-violet-200 dark:focus:ring-violet-600 rounded-xl transition-all duration-300 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword((prev) => !prev)}
-                        className="absolute right-3 inset-y-0 flex items-center text-slate-500 dark:text-slate-400 hover:text-violet-600 dark:hover:text-violet-300"
-                        aria-label={
-                          showPassword
-                            ? "Ocultar contraseña"
-                            : "Mostrar contraseña"
-                        }
-                      >
-                        {showPassword ? (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-5.05 0-9.29-3.17-11-8 1.23-3.29 3.61-5.97 6.59-7.41" />
-                            <path d="M1 1l22 22" />
-                          </svg>
-                        ) : (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                            <circle cx="12" cy="12" r="3" />
-                          </svg>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Mensaje de error */}
-                  {error && (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="p-3 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800/50 rounded-xl"
-                    >
-                      <div className="flex items-center gap-2">
-                        <svg
-                          className="w-5 h-5 text-red-500 dark:text-red-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z"
-                          />
-                        </svg>
-                        <p className="text-sm text-red-600 dark:text-red-400 font-medium">
-                          {error}
-                        </p>
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {/* Botón de envío */}
-                  <Button
-                    type="submit"
-                    onClick={handleLogin}
-                    className="w-full h-12 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 dark:from-violet-500 dark:to-purple-500 dark:hover:from-violet-600 dark:hover:to-purple-600 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                    disabled={isLoading}
+              <CardContent>
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="p-3 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800/50 rounded-xl mb-4"
                   >
-                    {isLoading ? (
-                      <div className="flex items-center justify-center gap-2">
-                        <svg
-                          className="w-5 h-5 animate-spin"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                            fill="none"
-                          />
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                          />
-                        </svg>
-                        <span>Ingresando...</span>
-                      </div>
-                    ) : (
-                      <span className="flex items-center justify-center gap-2">
-                        <svg
-                          className="w-5 h-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-                          />
-                        </svg>
-                        Entrar
-                      </span>
-                    )}
-                  </Button>
-
-                  {/* Enlace de registro */}
-                  <div className="text-center pt-4 border-t border-white/20 dark:border-gray-700/20">
-                    <p className="text-slate-600 dark:text-slate-400">
-                      ¿No tienes cuenta?{" "}
-                      <Link
-                        href="/auth/sign-up"
-                        className="font-medium text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 underline-offset-4 hover:underline transition-colors duration-200"
-                      >
-                        Regístrate aquí
-                      </Link>
+                    <p className="text-sm text-red-600 dark:text-red-400 font-medium text-center">
+                      {error}
                     </p>
-                  </div>
-                </div>
+                  </motion.div>
+                )}
               </CardContent>
+
             </Card>
           </motion.div>
 
