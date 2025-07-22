@@ -74,7 +74,7 @@ export default function AdminPage() {
           href="/protected/admin/usuarios"
           className="block bg-white rounded-xl shadow p-4 hover:bg-pink-50 transition"
         >
-          👥 Gestionar usuarias
+          👥 Usuarias y planes
         </a>
         <a
           href="/protected/admin/contenido"

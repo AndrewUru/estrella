@@ -10,10 +10,11 @@ interface Usuario {
   email: string;
   full_name: string;
   role: string;
-  plan?: string;
-  subscription_active: boolean | null; // <--- soporte para null
-  start_date?: string;
-  end_date?: string;
+  plan?: string | null;
+  plan_type?: string | null;
+  subscription_active: boolean | null;
+  start_date?: string | null;
+  end_date?: string | null;
 }
 
 export default function UsuariosPage() {
@@ -47,7 +48,7 @@ export default function UsuariosPage() {
       const { data, error } = await supabase
         .from("profiles")
         .select(
-          "id, email, full_name, role, plan, subscription_active, start_date, end_date"
+          "id, email, full_name, role, plan, plan_type, subscription_active, start_date, end_date"
         );
 
       if (error) {
@@ -98,9 +99,11 @@ export default function UsuariosPage() {
               <th className="p-3 font-semibold">Correo</th>
               <th className="p-3 font-semibold">Rol</th>
               <th className="p-3 font-semibold">Plan</th>
+              <th className="p-3 font-semibold">Tipo</th>
               <th className="p-3 font-semibold">Inicio</th>
               <th className="p-3 font-semibold">Vencimiento</th>
               <th className="p-3 text-center font-semibold">Suscripción</th>
+              <th className="p-3 text-center font-semibold">Editar</th>
             </tr>
           </thead>
           <tbody>
@@ -113,6 +116,7 @@ export default function UsuariosPage() {
                 <td className="p-3 text-muted-foreground">{u.email}</td>
                 <td className="p-3 capitalize">{u.role}</td>
                 <td className="p-3">{u.plan || "—"}</td>
+                <td className="p-3">{u.plan_type || "—"}</td>
                 <td className="p-3">
                   {u.start_date
                     ? new Date(u.start_date).toLocaleDateString()
@@ -134,6 +138,14 @@ export default function UsuariosPage() {
                   >
                     {u.subscription_active ? "Activa" : "Inactiva"}
                   </button>
+                </td>
+                <td className="p-3 text-center">
+                  <a
+                    href={`/protected/admin/usuarios/${u.id}`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    Editar
+                  </a>
                 </td>
               </tr>
             ))}
