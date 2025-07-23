@@ -1,5 +1,3 @@
-
-// pages/auth/callback.tsx
 "use client";
 
 import { useEffect } from "react";
@@ -18,48 +16,40 @@ export default function AuthCallback() {
 
       if (error || !user) return;
 
+      const { id, email, user_metadata } = user;
+      const full_name = user_metadata?.full_name || "";
+      const avatar_url = user_metadata?.avatar_url || "";
+
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("id")
-        .eq("id", user.id)
+        .eq("id", id)
         .maybeSingle();
 
-      if (user.email) {
-  if (!profile && !profileError) {
-    // Si no existe el perfil, lo insertamos
-    await supabase.from("profiles").insert([
-      {
-        id: user.id,
-        email: user.email,
+      const profileData = {
+        id,
+        email,
+        full_name,
+        avatar_url,
         is_active: true,
         role: "alumna",
         plan: "gratis",
         plan_type: "7D",
         start_date: new Date().toISOString().split("T")[0],
-      },
-    ]);
-  } else {
-    // Si ya existe, lo actualizamos
-    await supabase.from("profiles").update({
-      email: user.email,
-      is_active: true,
-      role: "alumna",
-      plan: "gratis",
-      plan_type: "7D",
-      start_date: new Date().toISOString().split("T")[0],
-    }).eq("id", user.id);
-  }
-}
+      };
 
-
+      if (!profile && !profileError) {
+        await supabase.from("profiles").insert([profileData]);
+      } else {
+        await supabase.from("profiles").update(profileData).eq("id", id);
+      }
 
       const params = new URLSearchParams(window.location.search);
       const rawReturnTo = params.get("returnTo") ?? "";
-const isSafePath = rawReturnTo.startsWith("/") && !rawReturnTo.startsWith("//");
-const safePath = isSafePath ? rawReturnTo : "/protected";
+      const isSafePath = rawReturnTo.startsWith("/") && !rawReturnTo.startsWith("//");
+      const safePath = isSafePath ? rawReturnTo : "/protected";
 
-router.replace(safePath);
-
+      router.replace(safePath);
     };
 
     syncUser();
