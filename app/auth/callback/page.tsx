@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { Sparkles } from "lucide-react";
 
 export default function AuthCallback() {
   const router = useRouter();
@@ -46,7 +48,8 @@ export default function AuthCallback() {
 
       const params = new URLSearchParams(window.location.search);
       const rawReturnTo = params.get("returnTo") ?? "";
-      const isSafePath = rawReturnTo.startsWith("/") && !rawReturnTo.startsWith("//");
+      const isSafePath =
+        rawReturnTo.startsWith("/") && !rawReturnTo.startsWith("//");
       const safePath = isSafePath ? rawReturnTo : "/protected";
 
       router.replace(safePath);
@@ -55,5 +58,23 @@ export default function AuthCallback() {
     syncUser();
   }, [router]);
 
-  return <p className="text-center mt-10">Autenticando...</p>;
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background text-foreground px-4">
+      <div className="flex flex-col items-center space-y-4 text-center">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
+          className="text-[hsl(var(--primary))]"
+        >
+          <Sparkles size={48} strokeWidth={1.5} />
+        </motion.div>
+        <p className="text-lg font-medium text-[hsl(var(--primary))]">
+          Autenticando...
+        </p>
+        <p className="text-sm text-muted-foreground">
+          Estamos alineando tu energía con tu perfil interior. Un momento...
+        </p>
+      </div>
+    </div>
+  );
 }

@@ -26,19 +26,19 @@ export function LoginForm() {
 
   return (
     <div className="flex items-center justify-center">
-      <Card className="w-full  shadow-2xl rounded-xl border border-white/30 dark:border-gray-700/30 p-6 space-y-6">
+      <Card className="w-full bg-card text-card-foreground shadow-2xl rounded-xl border border-border p-6 space-y-6">
         <CardHeader className="text-center space-y-2">
-          <CardTitle className="text-2xl font-bold ">
+          <CardTitle className="text-2xl font-bold text-[hsl(var(--primary))]">
             Accede a tu espacio sagrado
           </CardTitle>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-muted-foreground">
             Conecta con tu viaje interior desde cualquier parte del mundo.
           </p>
         </CardHeader>
         <CardContent className="flex flex-col gap-5">
           <Button
             onClick={handleGoogleLogin}
-            className="w-full flex items-center justify-center gap-3 h-12   text-sm font-medium rounded-full transition-all duration-200"
+            className="w-full flex items-center justify-center gap-3 h-12 bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary)/0.85)] text-[hsl(var(--primary-foreground))] text-sm font-medium rounded-full transition-all duration-200"
           >
             <Image
               src="/google-icon.svg"
@@ -49,9 +49,12 @@ export function LoginForm() {
             />
             Iniciar sesión con Google
           </Button>
-          <div className="text-center text-xs text-gray-400 pt-2">
+          <div className="text-center text-xs text-muted-foreground pt-2">
             Al ingresar, aceptas nuestro{" "}
-            <a href="/terminos" className="underline hover:text-[#7c3aed]">
+            <a
+              href="/terminos"
+              className="underline hover:text-[hsl(var(--primary))]"
+            >
               código ético y de integridad energética
             </a>
             .
