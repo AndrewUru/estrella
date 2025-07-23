@@ -1,4 +1,3 @@
-// C:\estrella\app\protected\admin\usuarios\page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -11,7 +10,7 @@ interface Usuario {
   full_name: string;
   role: string;
   plan?: string;
-  subscription_active: boolean | null; // <--- soporte para null
+  subscription_active: boolean | null;
   start_date?: string;
   end_date?: string;
 }
@@ -66,7 +65,7 @@ export default function UsuariosPage() {
     userId: string,
     estadoActual: boolean | null
   ) => {
-    const nuevoEstado = estadoActual !== true; // null o false → true
+    const nuevoEstado = estadoActual !== true;
     const { error } = await supabase
       .from("profiles")
       .update({ subscription_active: nuevoEstado })
@@ -77,6 +76,23 @@ export default function UsuariosPage() {
         prev.map((u) =>
           u.id === userId ? { ...u, subscription_active: nuevoEstado } : u
         )
+      );
+    }
+  };
+
+  const actualizarCampo = async (
+    userId: string,
+    campo: string,
+    valor: string
+  ) => {
+    const { error } = await supabase
+      .from("profiles")
+      .update({ [campo]: valor })
+      .eq("id", userId);
+
+    if (!error) {
+      setUsuarios((prev) =>
+        prev.map((u) => (u.id === userId ? { ...u, [campo]: valor } : u))
       );
     }
   };
@@ -101,6 +117,8 @@ export default function UsuariosPage() {
               <th className="p-3 font-semibold">Inicio</th>
               <th className="p-3 font-semibold">Vencimiento</th>
               <th className="p-3 text-center font-semibold">Suscripción</th>
+              <th className="p-3 text-center font-semibold">Cambiar rol</th>
+              <th className="p-3 text-center font-semibold">Cambiar plan</th>
             </tr>
           </thead>
           <tbody>
@@ -110,7 +128,7 @@ export default function UsuariosPage() {
                 className={i % 2 ? "bg-muted/40" : "bg-background"}
               >
                 <td className="p-3">{u.full_name || "—"}</td>
-                <td className="p-3 text-muted-foreground">{u.email}</td>
+                <td className="p-3 text-muted-foreground">{u.email || "—"}</td>
                 <td className="p-3 capitalize">{u.role}</td>
                 <td className="p-3">{u.plan || "—"}</td>
                 <td className="p-3">
@@ -134,6 +152,31 @@ export default function UsuariosPage() {
                   >
                     {u.subscription_active ? "Activa" : "Inactiva"}
                   </button>
+                </td>
+                <td className="p-3 text-center">
+                  <select
+                    value={u.role}
+                    onChange={(e) =>
+                      actualizarCampo(u.id, "role", e.target.value)
+                    }
+                    className="px-2 py-1 rounded border border-border bg-background text-sm"
+                  >
+                    <option value="alumna">alumna</option>
+                    <option value="admin">admin</option>
+                  </select>
+                </td>
+                <td className="p-3 text-center">
+                  <select
+                    value={u.plan || ""}
+                    onChange={(e) =>
+                      actualizarCampo(u.id, "plan", e.target.value)
+                    }
+                    className="px-2 py-1 rounded border border-border bg-background text-sm"
+                  >
+                    <option value="">—</option>
+                    <option value="gratis">gratis</option>
+                    <option value="premium">premium</option>
+                  </select>
                 </td>
               </tr>
             ))}
