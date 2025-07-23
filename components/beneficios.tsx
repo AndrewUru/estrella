@@ -112,7 +112,7 @@ export function Beneficios() {
             <div className="flex items-center gap-4 mb-8">
               <div className="relative">
                 <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
-                  <Sparkles className="w-6 h-6 text-white animate-spin" />
+                  <Sparkles className="w-6 h-6 text-white" />
                 </div>
                 <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full animate-pulse"></div>
               </div>
@@ -159,7 +159,7 @@ export function Beneficios() {
             </div>
           </div>
         </div>
-      </div>      
+      </div>
     </section>
   );
 }
