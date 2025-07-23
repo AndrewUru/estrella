@@ -6,7 +6,6 @@ import { Star, Users, Sparkles, Zap } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-
 export function Hero() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
@@ -39,12 +38,12 @@ export function Hero() {
           `,
         }}
         animate={{
-          backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"]
+          backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"],
         }}
         transition={{
           duration: 20,
           repeat: Infinity,
-          ease: "linear"
+          ease: "linear",
         }}
       />
 
@@ -53,21 +52,27 @@ export function Hero() {
         <motion.div
           key={i}
           className="absolute opacity-30"
-          initial={{ 
-            x: typeof window !== 'undefined' ? Math.random() * window.innerWidth : 0,
-            y: typeof window !== 'undefined' ? Math.random() * window.innerHeight : 0,
-            scale: 0
+          initial={{
+            x:
+              typeof window !== "undefined"
+                ? Math.random() * window.innerWidth
+                : 0,
+            y:
+              typeof window !== "undefined"
+                ? Math.random() * window.innerHeight
+                : 0,
+            scale: 0,
           }}
-          animate={{ 
+          animate={{
             x: mousePosition.x + (Math.random() - 0.5) * 100,
             y: mousePosition.y + (Math.random() - 0.5) * 100,
             scale: [0, 1, 0],
-            rotate: 360
+            rotate: 360,
           }}
           transition={{
             duration: 4,
             repeat: Infinity,
-            delay: i * 0.8
+            delay: i * 0.8,
           }}
         >
           <Sparkles className="text-violet-300 w-4 h-4" />
@@ -76,7 +81,6 @@ export function Hero() {
 
       {/* Main Content */}
       <div className="relative z-10 flex flex-col gap-8 max-w-4xl w-full">
-        
         {/* Badge */}
         <motion.div
           className="flex justify-center"
@@ -149,14 +153,17 @@ export function Hero() {
             </div>
             <div className="flex items-center gap-2">
               <Users className="w-4 h-4 text-violet-300" />
-              <span className="font-medium">+500 almas</span>
+              <span className="font-medium">+500 almas conectadas</span>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
             <div className="flex">
               {[1, 2, 3, 4, 5].map((i) => (
-                <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                <Star
+                  key={i}
+                  className="w-4 h-4 text-yellow-400 fill-current"
+                />
               ))}
             </div>
             <span className="font-medium">4.9 / 5</span>
@@ -177,7 +184,12 @@ export function Hero() {
               />
               <span className="relative z-10 flex items-center gap-2">
                 Iniciar Sesión
-                <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>→</motion.div>
+                <motion.div
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{ repeat: Infinity, duration: 1.5 }}
+                >
+                  →
+                </motion.div>
               </span>
             </motion.button>
           </Link>
@@ -199,8 +211,6 @@ export function Hero() {
             </motion.button>
           </Link>
         </div>
-       
-
       </div>
     </div>
   );
