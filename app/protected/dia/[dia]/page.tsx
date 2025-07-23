@@ -126,7 +126,7 @@ export default function DiaPage() {
     return (
       <div className="flex flex-col items-center mt-20 animate-pulse">
         <svg
-          className="w-12 h-12 text-blue-500 mb-4 animate-spin"
+          className="w-12 h-12 bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:bg-[hsl(var(--primary)/0.85)] mb-4 animate-spin"
           fill="none"
           viewBox="0 0 24 24"
         >
@@ -154,14 +154,16 @@ export default function DiaPage() {
     const mensaje =
       tipoPlan === "gratis" && dia > 1
         ? {
-            icon: <SparklesIcon className="w-12 h-12 text-purple-500 mb-4" />,
+            icon: (
+              <SparklesIcon className="w-12 h-12 text-[hsl(var(--accent))] mb-4" />
+            ),
             titulo: "Este contenido es parte del plan premium",
             descripcion:
               "Gracias por unirte al Día 1 de forma gratuita. Para seguir avanzando en tu viaje interior, puedes desbloquear todos los días del programa por solo 22 €.",
           }
         : {
             icon: (
-              <DocumentTextIcon className="w-12 h-12 text-yellow-400 mb-4" />
+              <DocumentTextIcon className="w-12 h-12 text-[hsl(var(--accent))] mb-4" />
             ),
             titulo: "Este contenido no está disponible aún.",
             descripcion:
@@ -171,7 +173,7 @@ export default function DiaPage() {
     return (
       <div className="flex flex-col items-center mt-20 px-4 text-center">
         {mensaje.icon}
-        <h2 className="text-2xl font-semibold mb-2 text-gray-800">
+        <h2 className="text-2xl font-semibold mb-2 text-[hsl(var(--foreground))]">
           {mensaje.titulo}
         </h2>
         <p className="text-gray-600 mb-6 max-w-md">{mensaje.descripcion}</p>
@@ -189,8 +191,8 @@ export default function DiaPage() {
   if (!entrega)
     return (
       <div className="flex flex-col items-center mt-20 px-4 text-center">
-        <DocumentTextIcon className="w-12 h-12 text-red-400 mb-4" />
-        <h2 className="text-2xl font-semibold mb-2 text-gray-800">
+        <DocumentTextIcon className="w-12 h-12 text-[hsl(var(--destructive)) mb-4" />
+        <h2 className="text-2xl font-semibold mb-2 text-[hsl(var(--foreground))]">
           Contenido no encontrado.
         </h2>
         <p className="text-gray-600 mb-6">
