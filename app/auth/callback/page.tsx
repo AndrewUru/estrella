@@ -24,24 +24,24 @@ export default function AuthCallback() {
 
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("id")
+        .select("id, role, plan, plan_type, start_date")
         .eq("id", id)
         .maybeSingle();
 
       const profileData = {
-        id,
         email,
         full_name,
         avatar_url,
         is_active: true,
-        role: "alumna",
-        plan: "gratis",
-        plan_type: "7D",
-        start_date: new Date().toISOString().split("T")[0],
+        role: profile?.role ?? "alumna",
+        plan: profile?.plan ?? "gratis",
+        plan_type: profile?.plan_type ?? "7D",
+        start_date:
+          profile?.start_date ?? new Date().toISOString().split("T")[0],
       };
 
       if (!profile && !profileError) {
-        await supabase.from("profiles").insert([profileData]);
+        await supabase.from("profiles").insert([{ id, ...profileData }]);
       } else {
         await supabase.from("profiles").update(profileData).eq("id", id);
       }
