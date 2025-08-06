@@ -74,7 +74,7 @@ export default function LoginPage() {
             <div className="absolute inset-0 bg-gradient-to-br from-white/80 to-white/60 dark:from-gray-800/60 dark:to-gray-700/40"></div>
 
             <div className="relative z-10 space-y-8">
-              <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-purple-200/40 dark:border-purple-700/30 rounded-2xl p-6 sm:p-8 shadow-lg">
+              <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-purple-200/40 dark:border-purple-700/30 rounded-2xl p-6 shadow-lg">
                 <Suspense
                   fallback={
                     <div className="text-center py-12">
@@ -95,7 +95,7 @@ export default function LoginPage() {
                 <div className="inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-white/50 dark:bg-gray-800/40 backdrop-blur-sm border border-purple-200/30 dark:border-purple-700/30">
                   <span className="text-sm text-gray-600 dark:text-gray-300 mr-2">¿Primera vez aquí?</span>
                   <a
-                    href="/auth/register"
+                    href="/auth/sign-up"
                     className="text-sm font-semibold text-purple-700 dark:text-purple-300 hover:text-pink-600 dark:hover:text-pink-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2 rounded-lg px-2 py-1"
                     aria-label="Crear una nueva cuenta"
                   >
