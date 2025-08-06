@@ -22,7 +22,7 @@ export default function LoginPage() {
       </div>
 
       {/* Contenido principal */}
-      <div className="">
+      <div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-2">
         <div className="w-full max-w-4xl grid lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden backdrop-blur-sm bg-white/60 dark:bg-gray-900/40 border border-purple-200/50 dark:border-purple-700/30 shadow-2xl hover:shadow-3xl transition-all duration-500">
           {/* Columna izquierda - Inspiracional */}
           <div className="hidden lg:flex flex-col justify-center items-start p-8 md:p-10 xl:p-16 relative overflow-hidden">
