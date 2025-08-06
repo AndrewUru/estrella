@@ -12,39 +12,32 @@ export default function LoginPage() {
         <div className="absolute top-20 left-10 w-32 h-32 bg-purple-300/10 rounded-full blur-xl animate-pulse"></div>
         <div className="absolute bottom-32 right-16 w-48 h-48 bg-purple-500/15 rounded-full blur-2xl animate-pulse delay-1000"></div>
         <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-violet-400/10 rounded-full blur-lg animate-pulse delay-500"></div>
-        <div className="absolute inset-0 opacity-10 dark:opacity-5" 
-             style={{
-               backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.1) 1px, transparent 0)`,
-               backgroundSize: '20px 20px'
-             }}>
-        </div>
+        <div
+          className="absolute inset-0 opacity-10 dark:opacity-5"
+          style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.1) 1px, transparent 0)`,
+            backgroundSize: "20px 20px",
+          }}
+        ></div>
       </div>
 
       {/* Contenido principal */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-2">
-        <div className="w-full max-w-7xl grid lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden backdrop-blur-sm bg-white/60 dark:bg-gray-900/40 border border-purple-200/50 dark:border-purple-700/30 shadow-2xl hover:shadow-3xl transition-all duration-500">
-
+      <div className="">
+        <div className="w-full max-w-4xl grid lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden backdrop-blur-sm bg-white/60 dark:bg-gray-900/40 border border-purple-200/50 dark:border-purple-700/30 shadow-2xl hover:shadow-3xl transition-all duration-500">
           {/* Columna izquierda - Inspiracional */}
-          <div className="hidden lg:flex flex-col justify-center items-start p-12 xl:p-16 relative overflow-hidden">
+          <div className="hidden lg:flex flex-col justify-center items-start p-8 md:p-10 xl:p-16 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-100/40 via-indigo-100/30 to-transparent dark:from-purple-800/20 dark:via-indigo-700/15 dark:to-purple-700/10"></div>
 
             <div className="relative z-10 space-y-8">
               <div className="space-y-6">
-                <h2 className="text-4xl xl:text-5xl font-bold leading-tight tracking-tight bg-gradient-to-br from-purple-800 to-violet-500 dark:from-purple-200 dark:to-violet-300 bg-clip-text text-transparent">
-                  Reconecta con tu{" "}
-                  <span className="relative inline-block">
-                    <span className="bg-gradient-to-r from-purple-500 to-pink-400 bg-clip-text text-transparent font-extrabold">
-                      alma
-                    </span>
-                    <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-300 rounded-full opacity-60"></div>
-                    <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-purple-400 to-pink-300 rounded-full"></div>
-                  </span>
+                <h2 className="text-3xl md:text-4xl xl:text-5xl font-bold leading-tight tracking-tight bg-gradient-to-br from-purple-800 to-violet-500 dark:from-purple-200 dark:to-violet-300 bg-clip-text text-transparent">
+                  Reconecta con tu <span className="font-extrabold">alma</span>
                 </h2>
 
-                <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed max-w-md font-medium">
-                  En solo 7 días, despierta tu 
-                  <span className="text-purple-600 dark:text-purple-300 font-semibold"> claridad energética</span>, 
-                  <span className="text-pink-600 dark:text-pink-300 font-semibold"> propósito espiritual</span> y 
+                <p className="text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed max-w-md font-medium">
+                  En solo 7 días, despierta tu
+                  <span className="text-purple-600 dark:text-purple-300 font-semibold"> claridad energética</span>,
+                  <span className="text-pink-600 dark:text-pink-300 font-semibold"> propósito espiritual</span> y
                   <span className="text-purple-600 dark:text-purple-300 font-semibold"> dones intuitivos</span>.
                 </p>
               </div>
@@ -60,7 +53,7 @@ export default function LoginPage() {
                   icon: "📓",
                   text: "PDF para acompañar tu proceso"
                 }].map((item, index) => (
-                  <div 
+                  <div
                     key={index}
                     className="flex items-center gap-4 p-3 rounded-2xl bg-purple-100/30 dark:bg-purple-800/20 backdrop-blur-sm border border-purple-200/30 dark:border-purple-700/30 hover:bg-purple-100/50 dark:hover:bg-purple-800/30 transition-all duration-200 group"
                   >
@@ -77,11 +70,11 @@ export default function LoginPage() {
           </div>
 
           {/* Columna derecha - Login */}
-          <div className="flex flex-col justify-center px-8 sm:px-12 lg:px-16 py-4 space-y-10 w-full relative">
+          <div className="flex flex-col justify-center px-4 sm:px-6 md:px-8 lg:px-12 py-6 w-full relative">
             <div className="absolute inset-0 bg-gradient-to-br from-white/80 to-white/60 dark:from-gray-800/60 dark:to-gray-700/40"></div>
 
-            <div className="relative z-10 space-y-10">
-              <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-purple-200/40 dark:border-purple-700/30 rounded-2xl p-8 shadow-lg">
+            <div className="relative z-10 space-y-8">
+              <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-purple-200/40 dark:border-purple-700/30 rounded-2xl p-6 sm:p-8 shadow-lg">
                 <Suspense
                   fallback={
                     <div className="text-center py-12">

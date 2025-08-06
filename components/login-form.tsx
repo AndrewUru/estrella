@@ -17,16 +17,14 @@ export function LoginForm() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${
-          process.env.NEXT_PUBLIC_BASE_URL
-        }/auth/callback?returnTo=${encodeURIComponent(returnTo)}`,
+        redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback?returnTo=${encodeURIComponent(returnTo)}`,
       },
     });
   };
 
   return (
-    <div className="flex items-center justify-center">
-      <Card className="w-full bg-card text-card-foreground shadow-2xl rounded-xl border border-border p-6 space-y-6">
+    
+      <Card className="bg-card text-card-foreground shadow-2xl rounded-xl border border-border">
         <CardHeader className="text-center space-y-2">
           <CardTitle className="text-2xl font-bold text-[hsl(var(--primary))]">
             Accede a tu espacio sagrado
@@ -61,6 +59,6 @@ export function LoginForm() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    
   );
 }
