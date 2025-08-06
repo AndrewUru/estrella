@@ -1,4 +1,7 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const faqs = [
   {
@@ -44,25 +47,65 @@ const faqs = [
 ];
 
 export default function PreguntasPage() {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  const toggleIndex = (index: number) => {
+    setActiveIndex(index === activeIndex ? null : index);
+  };
+
   return (
     <main className="max-w-3xl mx-auto py-12 px-6 pt-16 md:pt-20 lg:pt-24">
-      <h1 className="text-4xl font-bold mb-10 text-center text-purple-700 dark:text-purple-300">
+      <h1 className="text-4xl font-bold mb-10 text-center bg-gradient-to-r from-purple-700 via-violet-500 to-pink-500 dark:from-purple-300 dark:via-violet-200 dark:to-pink-300 bg-clip-text text-transparent">
         Preguntas Frecuentes
       </h1>
-      <div className="space-y-8">
+
+      <div className="space-y-4">
         {faqs.map((faq, idx) => (
           <div
             key={idx}
-            className="bg-white dark:bg-slate-800 shadow-md rounded-2xl p-6 border border-slate-200 dark:border-slate-700"
+            className="bg-purple-100/40 dark:bg-purple-900/20 shadow-md rounded-2xl border border-purple-200/30 dark:border-purple-700/30 overflow-hidden"
           >
-            <h2 className="text-xl font-semibold text-purple-800 dark:text-purple-300 mb-2">
+            <button
+              onClick={() => toggleIndex(idx)}
+              className="w-full text-left px-6 py-4 font-semibold text-purple-800 dark:text-purple-300 flex justify-between items-center"
+            >
               {faq.question}
-            </h2>
-            <p className="text-gray-700 dark:text-gray-200 leading-relaxed">
-              {faq.answer}
-            </p>
+              <motion.span
+                initial={{ rotate: 0 }}
+                animate={{ rotate: activeIndex === idx ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                ▼
+              </motion.span>
+            </button>
+            <AnimatePresence initial={false}>
+              {activeIndex === idx && (
+                <motion.div
+                  key="content"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="px-6 pb-6 text-gray-700 dark:text-gray-300"
+                >
+                  {faq.answer}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         ))}
+      </div>
+
+      <div className="mt-16 text-center">
+        <div className="inline-block bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-2xl shadow-lg">
+          ¿Tienes otra duda? Escríbenos a: {" "}
+          <a
+            href="mailto:Marketing@samariluz.com"
+            className="underline font-semibold"
+          >
+            Marketing@samariluz.com
+          </a>
+        </div>
       </div>
     </main>
   );
