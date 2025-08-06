@@ -2,9 +2,9 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { User, Mail, Crown, Shield, CheckCircle, XCircle } from "lucide-react";
+import { User, Mail, Crown, Shield, CheckCircle, XCircle, ExternalLink } from "lucide-react";
 import { AvatarImage } from "@/components/avatar-image";
-import { UserProfile } from "@/types/supabase";
+import type { UserProfile } from "@/types/supabase";
 import { UploadAvatarForm } from "@/app/protected/profile/UploadAvatarForm";
 
 export default async function ProfilePage() {
@@ -45,11 +45,11 @@ export default async function ProfilePage() {
   const getPlanColor = (planType: string) => {
     switch (planType?.toLowerCase()) {
       case "premium":
-        return "text-amber-700 bg-amber-50 border-amber-200 dark:text-amber-400 dark:bg-amber-900/20 dark:border-amber-800";
-      case "pro":
         return "text-purple-700 bg-purple-50 border-purple-200 dark:text-purple-400 dark:bg-purple-900/20 dark:border-purple-800";
+      case "pro":
+        return "text-violet-700 bg-violet-50 border-violet-200 dark:text-violet-400 dark:bg-violet-900/20 dark:border-violet-800";
       default:
-        return "text-blue-700 bg-blue-50 border-blue-200 dark:text-blue-400 dark:bg-blue-900/20 dark:border-blue-800";
+        return "text-indigo-700 bg-indigo-50 border-indigo-200 dark:text-indigo-400 dark:bg-indigo-900/20 dark:border-indigo-800";
     }
   };
 
@@ -70,8 +70,8 @@ export default async function ProfilePage() {
         <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-700 overflow-hidden">
           <div className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-700">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
-                <User className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              <div className="p-2 bg-purple-100 dark:bg-purple-900/20 rounded-lg">
+                <User className="w-5 h-5 text-purple-600 dark:text-purple-400" />
               </div>
               <h2 className="text-xl font-semibold text-zinc-900 dark:text-white">
                 Información Personal
@@ -108,12 +108,13 @@ export default async function ProfilePage() {
               </div>
             )}
           </div>
+
           {/* Foto de perfil */}
           <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-700 overflow-hidden">
             <div className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-700">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-indigo-100 dark:bg-indigo-900/20 rounded-lg">
-                  <User className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                <div className="p-2 bg-violet-100 dark:bg-violet-900/20 rounded-lg">
+                  <User className="w-5 h-5 text-violet-600 dark:text-violet-400" />
                 </div>
                 <h2 className="text-xl font-semibold text-zinc-900 dark:text-white">
                   Foto de Perfil
@@ -151,8 +152,6 @@ export default async function ProfilePage() {
 
             <div className="px-6 py-4 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Plan */}
-
                 <p className="text-sm">
                   <strong>Plan:</strong> {profile?.plan || "No definido"}
                 </p>
@@ -179,7 +178,6 @@ export default async function ProfilePage() {
                   )}
                 </div>
 
-                {/* Estado */}
                 <div className="p-3 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     {profile.is_active ? (
@@ -200,21 +198,32 @@ export default async function ProfilePage() {
                   </span>
                 </div>
               </div>
+              <div className="pt-2">
+                <a
+                  href="https://www.paypal.com/myaccount/autopay/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-sm font-medium text-purple-700 dark:text-purple-300 hover:underline"
+                >
+                  Cancelar suscripción desde PayPal
+                  <ExternalLink className="w-4 h-4 ml-1" />
+                </a>
+              </div>
             </div>
           </div>
         )}
 
         {/* Información adicional */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 border border-blue-200 dark:border-blue-800">
+        <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 border border-purple-200 dark:border-purple-800">
           <div className="flex items-start gap-3">
-            <div className="p-1 bg-blue-100 dark:bg-blue-900/40 rounded-lg">
-              <Shield className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+            <div className="p-1 bg-purple-100 dark:bg-purple-900/40 rounded-lg">
+              <Shield className="w-4 h-4 text-purple-600 dark:text-purple-400" />
             </div>
             <div className="flex-1">
-              <p className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1">
+              <p className="text-sm font-medium text-purple-900 dark:text-purple-100 mb-1">
                 Privacidad y Seguridad
               </p>
-              <p className="text-xs text-blue-700 dark:text-blue-300">
+              <p className="text-xs text-purple-700 dark:text-purple-300">
                 Tu información está protegida y encriptada. Solo tú puedes
                 acceder a estos datos.
               </p>
