@@ -1,23 +1,20 @@
-import { Suspense } from "react";
+// app/auth/login/page.tsx
+"use client";
 
+import { Suspense } from "react";
 import LoginContent from "./LoginContent";
 
 export default function LoginPage() {
   return (
     <div className="min-h-screen w-full relative overflow-hidden">
       {/* Fondo animado con gradientes */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-background/90">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/10 dark:from-primary/10 dark:to-accent/20"></div>
-        
-        {/* Elementos decorativos flotantes */}
-        <div className="absolute top-20 left-10 w-32 h-32 bg-primary/10 rounded-full blur-xl animate-pulse"></div>
-        <div className="absolute bottom-32 right-16 w-48 h-48 bg-accent/15 rounded-full blur-2xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-primary/5 rounded-full blur-lg animate-pulse delay-500"></div>
-        
-        {/* Patrón de puntos sutil */}
-        <div className="absolute inset-0 opacity-20 dark:opacity-10" 
+      <div className="absolute inset-0 bg-gradient-to-br from-violet-100 via-purple-100 to-indigo-100 dark:from-gray-950 dark:via-purple-950 dark:to-indigo-950">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-purple-300/10 rounded-full blur-xl animate-pulse"></div>
+        <div className="absolute bottom-32 right-16 w-48 h-48 bg-purple-500/15 rounded-full blur-2xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-violet-400/10 rounded-full blur-lg animate-pulse delay-500"></div>
+        <div className="absolute inset-0 opacity-10 dark:opacity-5" 
              style={{
-               backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0)`,
+               backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.1) 1px, transparent 0)`,
                backgroundSize: '20px 20px'
              }}>
         </div>
@@ -25,49 +22,52 @@ export default function LoginPage() {
 
       {/* Contenido principal */}
       <div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-2">
-        <div className="w-full max-w-7xl grid lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden backdrop-blur-sm bg-card/60 dark:bg-card/40 border border-border/50 shadow-2xl hover:shadow-3xl transition-all duration-500">
-          
+        <div className="w-full max-w-7xl grid lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden backdrop-blur-sm bg-white/60 dark:bg-gray-900/40 border border-purple-200/50 dark:border-purple-700/30 shadow-2xl hover:shadow-3xl transition-all duration-500">
+
           {/* Columna izquierda - Inspiracional */}
           <div className="hidden lg:flex flex-col justify-center items-start p-12 xl:p-16 relative overflow-hidden">
-            {/* Fondo con gradiente mejorado */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/5 to-transparent dark:from-primary/20 dark:via-accent/15 dark:to-primary/5"></div>
-          
-                        
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-100/40 via-indigo-100/30 to-transparent dark:from-purple-800/20 dark:via-indigo-700/15 dark:to-purple-700/10"></div>
+
             <div className="relative z-10 space-y-8">
               <div className="space-y-6">
-                <h2 className="text-4xl xl:text-5xl font-bold leading-tight tracking-tight bg-gradient-to-br from-foreground to-foreground/80 bg-clip-text text-transparent">
+                <h2 className="text-4xl xl:text-5xl font-bold leading-tight tracking-tight bg-gradient-to-br from-purple-800 to-violet-500 dark:from-purple-200 dark:to-violet-300 bg-clip-text text-transparent">
                   Reconecta con tu{" "}
                   <span className="relative inline-block">
-                    <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent font-extrabold">
+                    <span className="bg-gradient-to-r from-purple-500 to-pink-400 bg-clip-text text-transparent font-extrabold">
                       alma
                     </span>
-                    <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-primary to-accent rounded-full opacity-60"></div>
-                    <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-primary to-accent rounded-full"></div>
+                    <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-300 rounded-full opacity-60"></div>
+                    <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-purple-400 to-pink-300 rounded-full"></div>
                   </span>
                 </h2>
-                
-                <p className="text-lg text-muted-foreground leading-relaxed max-w-md font-medium">
+
+                <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed max-w-md font-medium">
                   En solo 7 días, despierta tu 
-                  <span className="text-primary font-semibold"> claridad energética</span>, 
-                  <span className="text-accent font-semibold"> propósito espiritual</span> y 
-                  <span className="text-primary font-semibold"> dones intuitivos</span>.
+                  <span className="text-purple-600 dark:text-purple-300 font-semibold"> claridad energética</span>, 
+                  <span className="text-pink-600 dark:text-pink-300 font-semibold"> propósito espiritual</span> y 
+                  <span className="text-purple-600 dark:text-purple-300 font-semibold"> dones intuitivos</span>.
                 </p>
               </div>
 
               <div className="space-y-4">
-                {[
-                  { icon: "🌟", text: "Acceso inmediato a prácticas vibracionales", color: "text-yellow-500" },
-                  { icon: "🎧", text: "Playlist ceremonial para tu viaje interior", color: "text-purple-500" },
-                  { icon: "📓", text: "PDF para acompañar tu proceso", color: "text-blue-500" }
-                ].map((item, index) => (
+                {[{
+                  icon: "🌟",
+                  text: "Acceso inmediato a prácticas vibracionales"
+                }, {
+                  icon: "🎧",
+                  text: "Playlist ceremonial para tu viaje interior"
+                }, {
+                  icon: "📓",
+                  text: "PDF para acompañar tu proceso"
+                }].map((item, index) => (
                   <div 
                     key={index}
-                    className="flex items-center gap-4 p-3 rounded-2xl bg-background/30 backdrop-blur-sm border border-border/30 hover:bg-background/50 transition-all duration-200 group"
+                    className="flex items-center gap-4 p-3 rounded-2xl bg-purple-100/30 dark:bg-purple-800/20 backdrop-blur-sm border border-purple-200/30 dark:border-purple-700/30 hover:bg-purple-100/50 dark:hover:bg-purple-800/30 transition-all duration-200 group"
                   >
-                    <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors duration-200">
+                    <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-xl bg-purple-200/40 group-hover:bg-purple-300/40 dark:bg-purple-700/40 dark:group-hover:bg-purple-600/40 transition-colors duration-200">
                       <span className="text-lg">{item.icon}</span>
                     </div>
-                    <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors duration-200">
+                    <span className="text-sm font-medium text-gray-800 dark:text-gray-200 group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors duration-200">
                       {item.text}
                     </span>
                   </div>
@@ -78,21 +78,17 @@ export default function LoginPage() {
 
           {/* Columna derecha - Login */}
           <div className="flex flex-col justify-center px-8 sm:px-12 lg:px-16 py-4 space-y-10 w-full relative">
-            {/* Fondo sutil para el formulario */}
-            <div className="absolute inset-0 bg-gradient-to-br from-background/80 to-background/60 dark:from-background/60 dark:to-background/40"></div>
-            
-            <div className="relative z-10 space-y-10">
-              {/* Header mejorado */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/80 to-white/60 dark:from-gray-800/60 dark:to-gray-700/40"></div>
 
-              {/* Formulario con Suspense */}
-              <div className="bg-background/40 backdrop-blur-sm border border-border/50 rounded-2xl p-8 shadow-lg">
+            <div className="relative z-10 space-y-10">
+              <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-purple-200/40 dark:border-purple-700/30 rounded-2xl p-8 shadow-lg">
                 <Suspense
                   fallback={
                     <div className="text-center py-12">
-                      <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/20 mb-4 animate-pulse">
-                        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                      <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-purple-500/20 mb-4 animate-pulse">
+                        <div className="w-6 h-6 border-2 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
                       </div>
-                      <p className="text-primary font-medium animate-pulse">
+                      <p className="text-purple-600 dark:text-purple-300 font-medium animate-pulse">
                         Preparando tu experiencia...
                       </p>
                     </div>
@@ -102,13 +98,12 @@ export default function LoginPage() {
                 </Suspense>
               </div>
 
-              {/* Footer mejorado */}
               <div className="text-center">
-                <div className="inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-background/50 backdrop-blur-sm border border-border/30">
-                  <span className="text-sm text-muted-foreground mr-2">¿Primera vez aquí?</span>
+                <div className="inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-white/50 dark:bg-gray-800/40 backdrop-blur-sm border border-purple-200/30 dark:border-purple-700/30">
+                  <span className="text-sm text-gray-600 dark:text-gray-300 mr-2">¿Primera vez aquí?</span>
                   <a
                     href="/auth/register"
-                    className="text-sm font-semibold text-primary hover:text-accent transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 rounded-lg px-2 py-1"
+                    className="text-sm font-semibold text-purple-700 dark:text-purple-300 hover:text-pink-600 dark:hover:text-pink-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2 rounded-lg px-2 py-1"
                     aria-label="Crear una nueva cuenta"
                   >
                     Crea tu cuenta →
@@ -122,9 +117,9 @@ export default function LoginPage() {
 
       {/* Versión móvil del contenido inspiracional */}
       <div className="lg:hidden relative z-10 px-4 pb-8">
-        <div className="max-w-md mx-auto text-center space-y-4 bg-card/60 backdrop-blur-sm rounded-2xl p-6 border border-border/50">
-          <p className="text-sm text-muted-foreground">
-            <span className="font-semibold text-primary">✨ Transformación en 7 días:</span> Despierta tu claridad energética y propósito espiritual
+        <div className="max-w-md mx-auto text-center space-y-4 bg-white/60 dark:bg-gray-900/40 backdrop-blur-sm rounded-2xl p-6 border border-purple-200/50 dark:border-purple-700/30">
+          <p className="text-sm text-gray-700 dark:text-gray-300">
+            <span className="font-semibold text-purple-700 dark:text-purple-300">✨ Transformación en 7 días:</span> Despierta tu claridad energética y propósito espiritual
           </p>
         </div>
       </div>
