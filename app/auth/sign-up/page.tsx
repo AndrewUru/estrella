@@ -114,14 +114,13 @@ export default function Page() {
             {/* Título principal */}
             <div className="space-y-4">
               <h1 className="text-2xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 dark:from-violet-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent leading-tight">
-                Bienvenida a Estrella del Alba 7D
-              </h1>
+                Bienvenid@ a Estrella del Alba</h1>
               <div className="w-24 h-1 bg-gradient-to-r from-violet-500 to-purple-500 rounded-full mx-auto lg:mx-0" />
             </div>
 
             {/* Descripción principal */}
             <p className="text-lg xl:text-xl text-slate-600 dark:text-slate-300 leading-relaxed font-light">
-              ¿Sientes que has perdido la conexión contigo misma? ¿Buscas
+              ¿Sientes que has perdido la conexión contigo? ¿Buscas
               claridad sin gurús ni estructuras rígidas? Esta experiencia es un
               camino directo a tu alma.
             </p>

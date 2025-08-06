@@ -12,7 +12,7 @@ const faqs = [
   {
     question: "✨ ¿Debo haber hecho YADI® antes?",
     answer:
-      "¡No! Este programa es para todas, con o sin experiencia previa. Si ya conoces YADI®, te ayudará a profundizar. Si es tu primera vez, será una introducción poderosa.",
+      "¡No! Este programa es para tod@s, con o sin experiencia previa. Si ya conoces YADI®, te ayudará a profundizar. Si es tu primera vez, será una introducción poderosa.",
   },
   {
     question: "🔮 ¿Qué hace único a este programa?",

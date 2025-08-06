@@ -20,7 +20,7 @@ export default function InformacionPage() {
             ¿Cómo funciona Estrella del Alba 7D?
           </h1>
           <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed mb-4">
-            Como suscriptora premium, desbloqueas día a día una experiencia
+            Con la suscripción premium, desbloqueas día a día una experiencia
             guiada de 7 días: audio canalizado + guía práctica PDF, todo desde
             un mismo lugar.
           </p>

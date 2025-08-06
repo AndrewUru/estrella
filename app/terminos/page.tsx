@@ -4,7 +4,7 @@ export default function TerminosPage() {
         <h1 className="text-3xl font-bold mb-6">Términos y Condiciones</h1>
   
         <p className="mb-4">
-          Bienvenida a <strong>Estrella del Alba</strong>. Al acceder y utilizar nuestra plataforma,
+          Bienvenid@ a <strong>Estrella del Alba</strong>. Al acceder y utilizar nuestra plataforma,
           aceptas los siguientes términos que rigen la relación entre tú y este espacio de reconexión.
         </p>
   
@@ -16,7 +16,7 @@ export default function TerminosPage() {
   
         <h2 className="text-xl font-semibold mt-8 mb-2">2. Acceso y suscripción</h2>
         <p className="mb-4">
-          Algunas secciones están disponibles solo para suscriptoras premium. Al suscribirte, aceptas nuestros precios, condiciones
+          Algunas secciones están disponibles solo para suscriptores premium. Al suscribirte, aceptas nuestros precios, condiciones
           y política de cancelación.
         </p>
   

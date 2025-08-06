@@ -3,7 +3,7 @@ export default function BienvenidaPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-purple-900 to-indigo-900 text-white p-8 text-center">
       <h1 className="text-3xl font-bold mb-4">
-        ✨ Bienvenid@ a Estrella del Alba 7D ✨
+        ✨Bienvenid@ a Estrella del Alba✨
       </h1>
       <p className="text-lg mb-6 max-w-xl">
         Tu camino de reconexión contigo comienza aquí. Disfruta de los
