@@ -7,7 +7,10 @@ export default function LoginPage() {
     <div className="min-h-screen w-full flex items-center justify-center px-4 bg-background text-foreground">
       <div className="w-full max-w-6xl grid md:grid-cols-2 gap-6 shadow-2xl rounded-2xl overflow-hidden bg-card text-card-foreground border border-border">
         {/* Columna izquierda - Inspiracional */}
-        <div className="hidden md:flex flex-col justify-center items-start p-10 bg-gradient-to-b from-[hsl(280,65%,90%)] to-[hsl(38,100%,98%)] text-[hsl(var(--accent-foreground))] space-y-6">
+        <div className="hidden md:flex flex-col justify-center items-start p-10 
+  bg-gradient-to-b from-[hsl(var(--accent)/0.1)] to-[hsl(var(--background))] 
+  dark:from-[hsl(var(--accent)/0.2)] dark:to-[hsl(var(--background))] 
+  text-foreground space-y-6">
           <h2 className="text-4xl font-bold leading-snug">
             Reconecta con tu{" "}
             <span className="text-[hsl(var(--primary))]">alma</span>
@@ -30,12 +33,6 @@ export default function LoginPage() {
         {/* Columna derecha - Login */}
         <div className="flex flex-col justify-center px-6 sm:px-10 py-10 space-y-6 w-full">
           <div className="text-center space-y-2">
-            <h1 className="text-2xl font-semibold text-[hsl(var(--primary))]">
-              Bienvenida de nuevo
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Ingresa para continuar tu viaje sagrado con Estrella del Alba.
-            </p>
           </div>
           <Suspense
             fallback={
