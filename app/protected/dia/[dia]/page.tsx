@@ -210,14 +210,14 @@ export default function DiaPage() {
     );
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 px-6 rounded-2xl shadow-xl py-10 transition-all duration-300 bg-gradient-to-br from-background via-card to-secondary/20 border border-border">
+    <div className="max-w-4xl mx-auto mt-10 px-6 rounded-2xl shadow-xl py-10 transition-all duration-300 bg-gradient-to-br from-purple-50/80 via-purple-100/60 to-violet-100/40 dark:from-purple-950 dark:via-violet-950/60 dark:to-gray-900 border border-purple-200 dark:border-purple-800">
       {/* Header con mejor jerarquía visual */}
       <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-3 bg-gradient-to-r from-primary to-accent text-primary-foreground px-6 py-2 rounded-full text-sm font-medium mb-4">
-          <span className="w-2 h-2 bg-primary-foreground rounded-full animate-pulse"></span>
+        <div className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full text-sm font-medium mb-4">
+          <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
           Canalización de Samarí Luz
         </div>
-        <h1 className="text-4xl font-extrabold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+        <h1 className="text-4xl font-extrabold mb-4 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
           Día {entrega.dia}{" "}
           <span className="text-2xl font-normal text-muted-foreground">|</span>{" "}
           <span className="block md:inline text-3xl mt-2 md:mt-0">
@@ -233,16 +233,16 @@ export default function DiaPage() {
       <div className="grid md:grid-cols-2 gap-8 mb-10">
         {/* Sección PDF */}
         {entrega.archivo_pdf && (
-          <div className="bg-card rounded-xl p-6 shadow-lg border border-border hover:shadow-xl transition-all duration-300 group">
+          <div className="bg-white dark:bg-zinc-900 rounded-xl p-6 shadow-lg border border-purple-200 dark:border-purple-700 hover:shadow-xl transition-all duration-300 group">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center">
-                <DocumentTextIcon className="w-6 h-6 text-primary-foreground" />
+              <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                <DocumentTextIcon className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="font-semibold text-card-foreground">
+                <h3 className="font-semibold text-zinc-900 dark:text-white">
                   Guía Energética
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">
                   Material complementario en PDF
                 </p>
               </div>
@@ -251,21 +251,8 @@ export default function DiaPage() {
               href={entrega.archivo_pdf}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 w-full justify-center px-4 py-3 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-lg hover:opacity-90 transition-all duration-300 font-medium group-hover:scale-105"
+              className="inline-flex items-center gap-2 w-full justify-center px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:opacity-90 transition-all duration-300 font-medium group-hover:scale-105"
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
               Descargar PDF
             </a>
           </div>
@@ -273,11 +260,11 @@ export default function DiaPage() {
 
         {/* Sección Audio */}
         {entrega.audio_url && (
-          <div className="bg-card rounded-xl p-6 shadow-lg border border-border hover:shadow-xl transition-all duration-300">
+          <div className="bg-white dark:bg-zinc-900 rounded-xl p-6 shadow-lg border border-purple-200 dark:border-purple-700 hover:shadow-xl transition-all duration-300">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-accent to-primary rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
                 <svg
-                  className="w-6 h-6 text-primary-foreground"
+                  className="w-6 h-6 text-white"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -291,15 +278,15 @@ export default function DiaPage() {
                 </svg>
               </div>
               <div>
-                <h3 className="font-semibold text-card-foreground">
+                <h3 className="font-semibold text-zinc-900 dark:text-white">
                   Meditación Canalizada
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">
                   Audio guiado por Samarí Luz
                 </p>
               </div>
             </div>
-            <div className="bg-secondary/30 p-4 rounded-lg">
+            <div className="bg-purple-100/30 dark:bg-purple-900/30 p-4 rounded-lg">
               <audio
                 controls
                 src={entrega.audio_url}
@@ -318,10 +305,10 @@ export default function DiaPage() {
       </div>
 
       {/* Sección de integración mejorada */}
-      <div className="bg-gradient-to-r from-secondary/40 to-accent/20 rounded-xl p-8 text-center border border-border">
-        <div className="w-16 h-16 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4">
+      <div className="bg-gradient-to-br from-purple-50 via-purple-100 to-pink-50 dark:from-zinc-900 dark:via-purple-950 dark:to-pink-950 rounded-xl p-8 text-center border border-purple-200 dark:border-purple-700">
+        <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
           <svg
-            className="w-8 h-8 text-primary-foreground"
+            className="w-8 h-8 text-white dark:text-purple-100"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -335,30 +322,30 @@ export default function DiaPage() {
           </svg>
         </div>
 
-        <h3 className="text-xl font-semibold text-foreground mb-3">
+        <h3 className="text-xl font-semibold text-purple-900 dark:text-purple-100 mb-3">
           Momento de Integración
         </h3>
-        <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-          Tómate el tiempo que necesites para sentir y integrar la energía de
-          esta meditación en tu ser.
+        <p className="text-sm text-purple-700 dark:text-purple-300 mb-6 max-w-md mx-auto">
+          Tómate el tiempo que necesites para sentir y asimilar la energía de
+          esta canalización.
         </p>
 
         <button
           onClick={avanzarDia}
-          className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-full hover:opacity-90 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+          className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-500 text-white dark:text-purple-100 rounded-full hover:opacity-90 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1"
         >
           <span>Completar Día</span>
           <SparklesIcon className="w-6 h-6" />
         </button>
 
         {/* Navegación mejorada */}
-        <div className="mt-8 pt-6 border-t border-border">
+        <div className="mt-8 pt-6 border-t border-purple-200 dark:border-purple-700">
           <a
             href="/protected"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-card text-card-foreground rounded-full hover:bg-secondary/20 transition-all duration-300 shadow-md hover:shadow-lg font-medium border border-border"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-white/80 dark:bg-zinc-800 text-purple-800 dark:text-purple-200 rounded-full hover:bg-purple-100 dark:hover:bg-zinc-700 transition-all duration-300 shadow-md hover:shadow-lg font-medium border border-purple-200 dark:border-purple-600"
           >
             <ArrowLeftIcon className="w-5 h-5" />
-            Volver al dashboard
+            Volver a Mi espacio
           </a>
         </div>
       </div>
