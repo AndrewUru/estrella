@@ -47,7 +47,7 @@ export function Navbar() {
         if (session?.user) {
           fetchAvatar(session.user.id);
         }
-      },
+      }
     );
 
     return () => listener.subscription.unsubscribe();
@@ -136,7 +136,7 @@ export function Navbar() {
 
         <nav className="hidden sm:flex items-center gap-8 text-sm">
           {[
-            { href: "/informacion", label: "Sobre el curso" },
+            { href: "/informacion", label: "¿Cómo funciona?" },
             { href: "/preguntas", label: "Preguntas" },
             { href: "/upgrade", label: "Planes", highlight: true },
             { href: "/protected", label: "Mi espacio" },
@@ -281,7 +281,7 @@ export function Navbar() {
             <div className="px-4 py-4 space-y-3">
               {[
                 { href: "/", label: "Inicio", icon: "🏠" },
-                { href: "/informacion", label: "Sobre el curso", icon: "📚" },
+                { href: "/informacion", label: "¿Cómo funciona?", icon: "📚" },
                 { href: "/preguntas", label: "Preguntas", icon: "❓" },
                 {
                   href: "/upgrade",
