@@ -10,20 +10,12 @@ import { usePayPalButtons } from "@/hooks/usePayPalButtons";
 
 const PLANS = [
   {
-    containerId: "paypal-monthly",
-    planId: "P-7PF96689L4734453RNBSUC2I",
-    planType: "premium-mensual" as const,
-    label: "🌙 Plan Mensual",
-    description: "Accede por solo 22 € al mes. Cancela cuando quieras.",
-    delay: 0.2,
-  },
-  {
     containerId: "paypal-annual",
-    planId: "P-9G192901S6962110GNBSUDZQ",
+    planId: "P-4BW16214L45789006NDHMBHY",
     planType: "premium-anual" as const,
     label: "🌞 Plan Anual",
     description: "Una sola vez al año: 77 €. Ahorra más del 70 %.",
-    delay: 0.4,
+    delay: 0.2,
   },
 ];
 
@@ -33,7 +25,9 @@ export default function UpgradePage() {
   const { paypalReady } = usePayPalButtons(
     scriptLoaded ? PLANS : [],
     async (planType, subscriptionID) => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return;
 
       const { error } = await supabase
@@ -67,7 +61,7 @@ export default function UpgradePage() {
           Desbloquea tu Estrella Completa ✨
         </h1>
         <p className="text-gray-700 dark:text-gray-300 text-lg">
-          Elige cómo quieres acceder a todo el programa: suscripción mensual o anual.
+          Accede al programa completo con una única suscripción anual.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
@@ -82,7 +76,9 @@ export default function UpgradePage() {
               <h2 className="text-xl font-semibold text-purple-700 dark:text-purple-200 mb-2">
                 {label}
               </h2>
-              <p className="mb-4 text-gray-600 dark:text-gray-300">{description}</p>
+              <p className="mb-4 text-gray-600 dark:text-gray-300">
+                {description}
+              </p>
               {paypalReady ? (
                 <div id={containerId} />
               ) : (
