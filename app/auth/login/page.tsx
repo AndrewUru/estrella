@@ -36,23 +36,39 @@ export default function LoginPage() {
 
                 <p className="text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed max-w-md font-medium">
                   En solo 7 días, despierta tu
-                  <span className="text-purple-600 dark:text-purple-300 font-semibold"> claridad energética</span>,
-                  <span className="text-pink-600 dark:text-pink-300 font-semibold"> propósito espiritual</span> y
-                  <span className="text-purple-600 dark:text-purple-300 font-semibold"> dones intuitivos</span>.
+                  <span className="text-purple-600 dark:text-purple-300 font-semibold">
+                    {" "}
+                    claridad energética
+                  </span>
+                  ,
+                  <span className="text-pink-600 dark:text-pink-300 font-semibold">
+                    {" "}
+                    propósito espiritual
+                  </span>{" "}
+                  y
+                  <span className="text-purple-600 dark:text-purple-300 font-semibold">
+                    {" "}
+                    dones intuitivos
+                  </span>
+                  .
                 </p>
               </div>
 
               <div className="space-y-4">
-                {[{
-                  icon: "🌟",
-                  text: "Acceso inmediato a prácticas vibracionales"
-                }, {
-                  icon: "🎧",
-                  text: "Playlist ceremonial para tu viaje interior"
-                }, {
-                  icon: "📓",
-                  text: "PDF para acompañar tu proceso"
-                }].map((item, index) => (
+                {[
+                  {
+                    icon: "🌟",
+                    text: "Acceso inmediato a prácticas vibracionales",
+                  },
+                  {
+                    icon: "🎧",
+                    text: "Playlist ceremonial para tu viaje interior",
+                  },
+                  {
+                    icon: "📓",
+                    text: "PDF para acompañar tu proceso",
+                  },
+                ].map((item, index) => (
                   <div
                     key={index}
                     className="flex items-center gap-4 p-3 rounded-2xl bg-purple-100/30 dark:bg-purple-800/20 backdrop-blur-sm border border-purple-200/30 dark:border-purple-700/30 hover:bg-purple-100/50 dark:hover:bg-purple-800/30 transition-all duration-200 group"
@@ -74,7 +90,7 @@ export default function LoginPage() {
             <div className="absolute inset-0 bg-gradient-to-br from-white/80 to-white/60 dark:from-gray-800/60 dark:to-gray-700/40"></div>
 
             <div className="relative z-10 space-y-8">
-              <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-purple-200/40 dark:border-purple-700/30 rounded-2xl p-6 shadow-lg">
+              <div className="">
                 <Suspense
                   fallback={
                     <div className="text-center py-12">
@@ -93,7 +109,9 @@ export default function LoginPage() {
 
               <div className="text-center">
                 <div className="inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-white/50 dark:bg-gray-800/40 backdrop-blur-sm border border-purple-200/30 dark:border-purple-700/30">
-                  <span className="text-sm text-gray-600 dark:text-gray-300 mr-2">¿Primera vez aquí?</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-300 mr-2">
+                    ¿Primera vez aquí?
+                  </span>
                   <a
                     href="/auth/sign-up"
                     className="text-sm font-semibold text-purple-700 dark:text-purple-300 hover:text-pink-600 dark:hover:text-pink-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2 rounded-lg px-2 py-1"
@@ -112,7 +130,10 @@ export default function LoginPage() {
       <div className="lg:hidden relative z-10 px-4 pb-8">
         <div className="max-w-md mx-auto text-center space-y-4 bg-white/60 dark:bg-gray-900/40 backdrop-blur-sm rounded-2xl p-6 border border-purple-200/50 dark:border-purple-700/30">
           <p className="text-sm text-gray-700 dark:text-gray-300">
-            <span className="font-semibold text-purple-700 dark:text-purple-300">✨ Transformación en 7 días:</span> Despierta tu claridad energética y propósito espiritual
+            <span className="font-semibold text-purple-700 dark:text-purple-300">
+              ✨ Transformación en 7 días:
+            </span>{" "}
+            Despierta tu claridad energética y propósito espiritual
           </p>
         </div>
       </div>
