@@ -7,6 +7,7 @@ import Link from "next/link";
 import { SparklesIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useUserProfile } from "@/lib/hooks/useUserProfile";
+import PracticesGallery from "@/components/PracticesGallery";
 
 // Tipos estrictos
 export type ProgresoItem = {
@@ -401,6 +402,7 @@ export default function DashboardPage() {
           ))}
         </div>
       </div>
+      <PracticesGallery />
 
       <style jsx>{`
         @keyframes fadeInUp {

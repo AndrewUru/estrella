@@ -6,6 +6,7 @@ import { Stats } from "@/components/stats";
 import { Beneficios } from "@/components/beneficios";
 import ProcesoSection from "@/components/proceso";
 
+
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center bg-gradient-to-br from-background via-background to-primary/5 text-foreground overflow-hidden">
