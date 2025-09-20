@@ -12,6 +12,7 @@ import {
   Trash2,
   Filter,
   Search,
+  Crown,
 } from "lucide-react";
 
 // Tipos
@@ -31,6 +32,8 @@ export type Practice = {
   visibility: "public" | "private" | "unlisted";
   created_by: string | null;
   created_at: string | null;
+  // NUEVO: plan de acceso
+  plan: "free" | "premium" | null;
 };
 
 export default function PracticasAdminPage() {
@@ -42,6 +45,10 @@ export default function PracticasAdminPage() {
   const [visibility, setVisibility] = useState<
     "all" | "public" | "private" | "unlisted"
   >("all");
+  // NUEVO: filtro por plan
+  const [planFilter, setPlanFilter] = useState<"all" | "free" | "premium">(
+    "all"
+  );
 
   useEffect(() => {
     async function bootstrap() {
@@ -79,18 +86,22 @@ export default function PracticasAdminPage() {
     const k: Practice["kind"] | undefined = kind === "all" ? undefined : kind;
     const v: Practice["visibility"] | undefined =
       visibility === "all" ? undefined : visibility;
+    const p: Practice["plan"] | undefined =
+      planFilter === "all" ? undefined : (planFilter as Practice["plan"]);
+
     return items.filter((it) => {
       const matchK = k ? it.kind === k : true;
       const matchV = v ? it.visibility === v : true;
+      const matchP = p ? (it.plan ?? "free") === p : true;
       const query = q.trim().toLowerCase();
       const matchQ = query
         ? it.title?.toLowerCase().includes(query) ||
           it.description?.toLowerCase().includes(query) ||
           it.tags?.join(",").toLowerCase().includes(query)
         : true;
-      return matchK && matchV && matchQ;
+      return matchK && matchV && matchP && matchQ;
     });
-  }, [items, kind, visibility, q]);
+  }, [items, kind, visibility, planFilter, q]);
 
   async function toggleVisibility(id: string, current: Practice["visibility"]) {
     const next: Practice["visibility"] =
@@ -103,6 +114,21 @@ export default function PracticasAdminPage() {
       setItems((xs) =>
         xs.map((x) => (x.id === id ? { ...x, visibility: next } : x))
       );
+    }
+  }
+
+  // NUEVO: actualizar plan (gratis/premium)
+  async function updatePlan(id: string, plan: "free" | "premium") {
+    // Optimista
+    setItems((xs) => xs.map((x) => (x.id === id ? { ...x, plan } : x)));
+    const { error } = await supabase
+      .from("practices")
+      .update({ plan })
+      .eq("id", id);
+    if (error) {
+      // revertir si falla
+      await load();
+      alert("No se pudo actualizar el plan. Inténtalo de nuevo.");
     }
   }
 
@@ -142,8 +168,8 @@ export default function PracticasAdminPage() {
       </header>
 
       {/* Controles */}
-      <section className="bg-card border border-border rounded-2xl p-4 grid grid-cols-1 md:grid-cols-3 gap-3">
-        <div className="relative">
+      <section className="bg-card border border-border rounded-2xl p-4 grid grid-cols-1 md:grid-cols-4 gap-3">
+        <div className="relative md:col-span-2">
           <input
             className="w-full rounded-2xl border border-border p-3 pr-10 bg-background"
             placeholder="Buscar por título, descripción o tags"
@@ -166,7 +192,7 @@ export default function PracticasAdminPage() {
             <option value="channeling">Canalizaciones</option>
           </select>
         </div>
-        <div>
+        <div className="grid grid-cols-2 gap-3">
           <select
             className="w-full rounded-2xl border border-border p-3 bg-background"
             value={visibility}
@@ -181,11 +207,24 @@ export default function PracticasAdminPage() {
             <option value="private">Privadas</option>
             <option value="unlisted">No listadas</option>
           </select>
+          {/* NUEVO: filtro por plan */}
+          <select
+            className="w-full rounded-2xl border border-border p-3 bg-background"
+            value={planFilter}
+            onChange={(e) =>
+              setPlanFilter(e.target.value as "all" | "free" | "premium")
+            }
+          >
+            <option value="all">Todos los planes</option>
+            <option value="free">Gratis</option>
+            <option value="premium">Premium</option>
+          </select>
         </div>
       </section>
 
       {/* Formulario de creación */}
       <section className="bg-card border border-border rounded-2xl p-5">
+        {/* NOTA: Si tu NewPracticeForm ya maneja el campo `plan`, lo respetará al crear. */}
         <NewPracticeForm onCreated={load} />
       </section>
 
@@ -216,6 +255,24 @@ export default function PracticasAdminPage() {
                       <span>{it.duration_minutes} min</span>
                     </>
                   ) : null}
+                  {/* NUEVO: insignia de plan */}
+                  <span>•</span>
+                  <span
+                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border ${
+                      (it.plan ?? "free") === "premium"
+                        ? "border-amber-300 text-amber-700 bg-amber-50"
+                        : "border-emerald-300 text-emerald-700 bg-emerald-50"
+                    }`}
+                    title="Plan de acceso"
+                  >
+                    {(it.plan ?? "free") === "premium" ? (
+                      <>
+                        <Crown className="w-3 h-3" /> Premium
+                      </>
+                    ) : (
+                      <>Gratis</>
+                    )}
+                  </span>
                 </div>
                 <h3 className="font-medium truncate">{it.title}</h3>
                 {it.description && (
@@ -235,7 +292,23 @@ export default function PracticasAdminPage() {
                   )}
                 </div>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 w-40">
+                {/* NUEVO: selector de plan */}
+                <label className="text-xs text-muted-foreground">Plan</label>
+                <select
+                  className="rounded-xl border border-border p-2 bg-background text-sm"
+                  value={(it.plan ?? "free") as "free" | "premium"}
+                  onChange={(e) =>
+                    updatePlan(
+                      it.id,
+                      e.target.value as unknown as "free" | "premium"
+                    )
+                  }
+                >
+                  <option value="free">Gratis</option>
+                  <option value="premium">Premium</option>
+                </select>
+
                 <button
                   className="inline-flex items-center gap-1 rounded-xl border border-border px-3 py-2 text-sm"
                   onClick={() => toggleVisibility(it.id, it.visibility)}
