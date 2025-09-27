@@ -11,9 +11,10 @@ import {
   Crown,
   Star,
   Lock,
+  Timer,
+  AlertCircle,
 } from "lucide-react";
 
-// Tipos
 interface Practice {
   id: string;
   title: string;
@@ -25,8 +26,17 @@ interface Practice {
   visibility: "public" | "private" | "unlisted";
   duration_minutes: number | null;
   plan: "free" | "premium" | null;
-  created_by?: string | null; // para permitir acceso al creador
+  created_by?: string | null;
 }
+
+const kindFilters: Array<{
+  value: "all" | "meditation" | "channeling";
+  label: string;
+}> = [
+  { value: "all", label: "Todo" },
+  { value: "meditation", label: "Meditaciones" },
+  { value: "channeling", label: "Canalizaciones" },
+];
 
 export default function PracticesGallery() {
   const [loadingItems, setLoadingItems] = useState(true);
@@ -34,27 +44,29 @@ export default function PracticesGallery() {
   const [items, setItems] = useState<Practice[]>([]);
   const [q, setQ] = useState("");
   const [kind, setKind] = useState<"all" | "meditation" | "channeling">("all");
-
   const [userId, setUserId] = useState<string | null>(null);
   const [userPlan, setUserPlan] = useState<"free" | "premium">("free");
 
-  // Cargar usuario + perfil (plan)
   useEffect(() => {
     let ignore = false;
+
     async function fetchUserAndPlan() {
       try {
         const { data: auth } = await supabase.auth.getUser();
         const uid = auth.user?.id ?? null;
         if (!ignore) setUserId(uid);
+
         if (!uid) {
           if (!ignore) setUserPlan("free");
           return;
         }
+
         const { data: profile } = await supabase
           .from("profiles")
           .select("plan")
           .eq("id", uid)
           .single();
+
         if (!ignore && profile?.plan) {
           setUserPlan((profile.plan as "free" | "premium") ?? "free");
         }
@@ -62,15 +74,17 @@ export default function PracticesGallery() {
         if (!ignore) setLoadingProfile(false);
       }
     }
+
     fetchUserAndPlan();
+
     return () => {
       ignore = true;
     };
   }, []);
 
-  // Cargar prácticas
   useEffect(() => {
     let ignore = false;
+
     async function fetchPractices() {
       const { data: auth } = await supabase.auth.getUser();
       const uid = auth.user?.id ?? null;
@@ -89,221 +103,285 @@ export default function PracticesGallery() {
       }
 
       const { data, error } = await query;
-      if (!error && data && !ignore) setItems(data as Practice[]);
+      if (!error && data && !ignore) {
+        setItems(data as Practice[]);
+      }
       if (!ignore) setLoadingItems(false);
     }
+
     fetchPractices();
+
     return () => {
       ignore = true;
     };
   }, []);
 
+  const loading = loadingItems || loadingProfile;
+
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
-    return items.filter((it) => {
-      const matchKind = kind === "all" ? true : it.kind === kind;
+    return items.filter((item) => {
+      const matchKind = kind === "all" ? true : item.kind === kind;
       const matchQ = query
-        ? it.title.toLowerCase().includes(query) ||
-          (it.description ?? "").toLowerCase().includes(query)
+        ? item.title.toLowerCase().includes(query) ||
+          (item.description ?? "").toLowerCase().includes(query)
         : true;
       return matchKind && matchQ;
     });
   }, [items, q, kind]);
 
-  const loading = loadingItems || loadingProfile;
+  const totalCount = items.length;
+  const filteredCount = filtered.length;
+  const premiumCount = useMemo(
+    () => items.filter((item) => item.plan === "premium").length,
+    [items]
+  );
+  const freeCount = useMemo(
+    () => items.filter((item) => item.plan !== "premium").length,
+    [items]
+  );
 
-  if (loading) {
-    return (
-      <div className="flex items-center gap-2 text-muted-foreground p-6">
-        <Loader2 className="w-4 h-4 animate-spin" /> Cargando prácticas…
-      </div>
-    );
-  }
+  const planLabel = userPlan === "premium" ? "Premium" : "Free";
+  const planMessage = userPlan === "premium"
+    ? "Disfruta de acceso completo a las practicas premium."
+    : "Algunas practicas son premium. Actualiza tu plan para desbloquearlas.";
+
+  const skeletonCards = Array.from({ length: 6 });
 
   return (
-    <section className="space-y-6">
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h2 className="text-2xl font-semibold flex items-center gap-2">
-          <Music className="w-5 h-5 text-indigo-600" />
-          Meditaciones y Canalizaciones
-        </h2>
-
-        <div className="flex gap-3 w-full md:w-auto">
-          <div className="relative flex-1">
-            <input
-              className="w-full rounded-2xl border border-border p-3 pr-10 bg-background"
-              placeholder="Buscar prácticas…"
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-            />
-            <Search className="w-4 h-4 absolute right-3 top-3.5 text-muted-foreground" />
+    <section id="practices-gallery" className="space-y-8">
+      <div className="rounded-3xl border border-white/60 bg-white/80 p-8 shadow-sm backdrop-blur dark:border-white/10 dark:bg-black/30">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <div className="inline-flex items-center gap-2 text-sm font-semibold text-purple-600 dark:text-purple-300">
+              <Music className="h-5 w-5" />
+              <span>Practicas guiadas</span>
+            </div>
+            <h2 className="mt-2 text-2xl font-semibold text-gray-900 dark:text-white sm:text-3xl">
+              Meditaciones y Canalizaciones
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm text-gray-600 dark:text-gray-300">
+              Explora sesiones seleccionadas para acompanar tu proceso. Filtra por tipo o busca por titulo para encontrar lo que necesitas hoy.
+            </p>
           </div>
 
-          <select
-            className="rounded-2xl border border-border p-3 bg-background"
-            value={kind}
-            onChange={(e) =>
-              setKind(e.target.value as "all" | "meditation" | "channeling")
-            }
-          >
-            <option value="all">Todos</option>
-            <option value="meditation">Meditaciones</option>
-            <option value="channeling">Canalizaciones</option>
-          </select>
+          <div className="min-w-[220px] rounded-2xl border border-purple-200 bg-purple-50/70 p-4 text-sm text-purple-800 shadow-sm dark:border-purple-400/30 dark:bg-purple-950/40 dark:text-purple-200">
+            <p className="font-semibold">Plan actual</p>
+            <p className="mt-1 flex items-center gap-2">
+              {loadingProfile ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <span className="inline-flex items-center gap-1 rounded-full bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-purple-700 dark:bg-purple-900/30 dark:text-purple-100">
+                  {planLabel}
+                </span>
+              )}
+            </p>
+            <p className="mt-2 text-xs leading-relaxed opacity-80">{planMessage}</p>
+          </div>
         </div>
-      </header>
 
-      {filtered.length === 0 ? (
-        <div className="text-sm text-muted-foreground p-6 text-center border border-dashed border-border rounded-2xl">
-          No hay prácticas disponibles en este momento.
+        <div className="mt-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-wrap items-center gap-3 text-xs text-gray-600 dark:text-gray-300">
+            <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 dark:bg-gray-800/70">
+              Total: {totalCount}
+            </span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200">
+              Free: {freeCount}
+            </span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1 text-amber-700 dark:bg-amber-900/50 dark:text-amber-200">
+              Premium: {premiumCount}
+            </span>
+            {filteredCount !== totalCount && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-purple-100 px-3 py-1 text-purple-700 dark:bg-purple-900/40 dark:text-purple-200">
+                Resultado: {filteredCount}
+              </span>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="relative w-full sm:w-72">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <input
+                value={q}
+                onChange={(event) => setQ(event.target.value)}
+                placeholder="Buscar practicas..."
+                className="w-full rounded-full border border-gray-200 bg-white/80 py-2.5 pl-9 pr-4 text-sm text-gray-800 shadow-sm transition focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-200 dark:border-white/10 dark:bg-black/40 dark:text-gray-100 dark:focus:border-purple-400"
+              />
+            </div>
+
+            <div className="flex items-center gap-2">
+              {kindFilters.map((option) => {
+                const isActive = kind === option.value;
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setKind(option.value)}
+                    className={`rounded-full px-4 py-2 text-xs font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500 ${
+                      isActive
+                        ? "bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow"
+                        : "border border-gray-200/80 bg-white/70 text-gray-600 hover:border-purple-200 hover:text-purple-600 dark:border-white/10 dark:bg-black/40 dark:text-gray-300 dark:hover:border-purple-400"
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((p) => {
-            const plan = p.plan ?? "free";
-            const isPremium = plan === "premium";
-            const isFree = plan === "free";
-            const canAccess =
-              isFree ||
-              userPlan === "premium" ||
-              (p.created_by && p.created_by === userId);
 
-            return (
-              <article
-                key={p.id}
-                className="bg-card border border-border rounded-2xl shadow-sm overflow-hidden group"
-              >
-                <div className="relative">
-                  <Image
-                    src={p.cover_url ?? "/placeholder.svg"}
-                    alt={p.title}
-                    width={400}
-                    height={160}
-                    className={
-                      "w-full h-40 object-cover " +
-                      (!canAccess && isPremium ? "opacity-80 blur-[1px]" : "")
-                    }
-                    priority
-                  />
+        <div className="mt-8">
+          {loading ? (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              {skeletonCards.map((_, index) => (
+                <div
+                  key={`skeleton-${index}`}
+                  className="animate-pulse rounded-3xl border border-gray-200/70 bg-white/70 p-5 shadow-sm dark:border-white/10 dark:bg-black/30"
+                >
+                  <div className="h-40 w-full rounded-2xl bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-800 dark:to-gray-700" />
+                  <div className="mt-5 space-y-3">
+                    <div className="h-3 w-1/4 rounded-full bg-gray-200 dark:bg-gray-700" />
+                    <div className="h-4 w-2/3 rounded-full bg-gray-200 dark:bg-gray-700" />
+                    <div className="h-3 w-full rounded-full bg-gray-200 dark:bg-gray-700" />
+                    <div className="h-3 w-3/5 rounded-full bg-gray-200 dark:bg-gray-700" />
+                    <div className="h-10 w-full rounded-xl bg-gray-200 dark:bg-gray-700" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="flex flex-col items-center justify-center gap-4 rounded-3xl border border-dashed border-gray-300 bg-white/70 p-16 text-center text-sm text-gray-600 shadow-sm dark:border-white/20 dark:bg-black/40 dark:text-gray-300">
+              <AlertCircle className="h-8 w-8 text-purple-400" />
+              <div className="space-y-1">
+                <p className="text-base font-semibold text-gray-800 dark:text-white">
+                  No encontramos practicas con ese criterio
+                </p>
+                <p className="text-sm opacity-80">
+                  Ajusta los filtros o busca otro termino para continuar explorando.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              {filtered.map((practice, index) => {
+                const isPremium = practice.plan === "premium";
+                const isFree = practice.plan === "free" || !practice.plan;
+                const canAccess =
+                  !isPremium || userPlan === "premium" || practice.created_by === userId;
 
-                  {/* Insignias de plan */}
-                  {isPremium && (
-                    <div
-                      className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full border border-amber-300 bg-amber-50/95 text-amber-800 px-2 py-1 text-[11px] font-medium shadow-sm"
-                      title="Recurso Premium"
-                    >
-                      <Crown className="w-3.5 h-3.5" /> Premium
+                return (
+                  <article
+                    key={practice.id}
+                    className="group flex h-full flex-col overflow-hidden rounded-3xl border border-gray-200/80 bg-white/80 shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:border-white/10 dark:bg-black/40"
+                  >
+                    <div className="relative h-44 w-full overflow-hidden">
+                      {practice.cover_url ? (
+                        <Image
+                          src={practice.cover_url}
+                          alt={practice.title}
+                          fill
+                          className={`object-cover transition duration-500 ${
+                            canAccess ? "group-hover:scale-105" : "opacity-70"
+                          } ${
+                            !canAccess && isPremium ? "blur-[1.5px]" : ""
+                          }`}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          priority={index < 2}
+                        />
+                      ) : (
+                        <div className="h-full w-full bg-gradient-to-br from-purple-200 to-pink-200 dark:from-purple-800 dark:to-pink-700" />
+                      )}
+
+                      {isPremium && (
+                        <div className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full border border-amber-300 bg-amber-50/95 px-2.5 py-1 text-[11px] font-medium text-amber-800 shadow-sm dark:border-amber-400/40 dark:bg-amber-900/70 dark:text-amber-100">
+                          <Crown className="h-3.5 w-3.5" /> Premium
+                        </div>
+                      )}
+                      {isFree && (
+                        <div className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50/95 px-2.5 py-1 text-[11px] font-medium text-emerald-700 shadow-sm dark:border-emerald-400/40 dark:bg-emerald-900/60 dark:text-emerald-100">
+                          <Star className="h-3.5 w-3.5" /> Free
+                        </div>
+                      )}
+
+                      {isPremium && !canAccess && (
+                        <div className="absolute inset-0 grid place-items-center bg-black/15 backdrop-blur-sm">
+                          <div className="inline-flex items-center gap-1 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-amber-700 shadow-sm dark:bg-black/70 dark:text-amber-200">
+                            <Lock className="h-3.5 w-3.5" /> Contenido premium
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
-                  {isFree && (
-                    <div
-                      className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50/95 text-emerald-700 px-2 py-1 text-[11px] font-medium shadow-sm"
-                      title="Recurso Gratis"
-                    >
-                      <Star className="w-3.5 h-3.5" /> Gratis
-                    </div>
-                  )}
-                  {/* Candado si no hay acceso */}
-                  {isPremium && !canAccess && (
-                    <div className="absolute inset-0 grid place-items-center bg-black/10">
-                      <div className="inline-flex items-center gap-1 rounded-full bg-white/90 text-amber-700 px-3 py-1 text-xs border border-amber-200">
-                        <Lock className="w-3.5 h-3.5" /> Contenido Premium
+
+                    <div className="flex flex-1 flex-col gap-4 p-6">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                          <span>{practice.kind === "meditation" ? "Meditacion" : "Canalizacion"}</span>
+                          {practice.duration_minutes ? (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-1 text-[10px] text-gray-500 dark:bg-gray-800/70 dark:text-gray-300">
+                              <Timer className="h-3 w-3" /> {practice.duration_minutes} min
+                            </span>
+                          ) : null}
+                        </div>
+
+                        <h3 className="text-lg font-semibold text-gray-900 line-clamp-2 dark:text-white" title={practice.title}>
+                          {practice.title}
+                        </h3>
+
+                        {practice.description && (
+                          <p className="text-sm text-gray-600 line-clamp-3 dark:text-gray-300">
+                            {practice.description}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="mt-auto space-y-3 text-sm">
+                        {practice.audio_url ? (
+                          canAccess ? (
+                            <audio controls src={practice.audio_url} className="w-full rounded-xl bg-gray-100/60 p-1 dark:bg-gray-800/60" />
+                          ) : (
+                            <p className="flex items-center gap-2 text-xs font-semibold text-amber-600 dark:text-amber-300">
+                              <Lock className="h-3.5 w-3.5" /> Audio disponible con Premium
+                            </p>
+                          )
+                        ) : (
+                          <p className="text-xs text-gray-500 dark:text-gray-400">Sin audio disponible</p>
+                        )}
+
+                        {practice.pdf_url && (
+                          canAccess ? (
+                            <a
+                              href={practice.pdf_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 text-xs font-semibold text-indigo-600 transition hover:text-indigo-700 hover:underline dark:text-indigo-300 dark:hover:text-indigo-200"
+                            >
+                              <FileText className="h-4 w-4" /> Abrir PDF
+                            </a>
+                          ) : (
+                            <p className="flex items-center gap-2 text-xs font-semibold text-amber-600 dark:text-amber-300">
+                              <Lock className="h-3.5 w-3.5" /> PDF disponible con Premium
+                            </p>
+                          )
+                        )}
+
+                        {isPremium && !canAccess && (
+                          <a
+                            href="/upgrade"
+                            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-500 px-4 py-2 text-sm font-semibold text-white shadow transition hover:from-purple-700 hover:to-pink-600"
+                          >
+                            Desbloquear con Premium
+                          </a>
+                        )}
                       </div>
                     </div>
-                  )}
-                </div>
-
-                <div className="p-4 space-y-2">
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span className="uppercase tracking-wide">
-                      {p.kind === "meditation" ? "Meditación" : "Canalización"}
-                    </span>
-                    {/* Chip de plan junto al tipo */}
-                    {isPremium && (
-                      <>
-                        <span>•</span>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border border-amber-300 bg-amber-50 text-amber-700">
-                          <Crown className="w-3 h-3" /> Premium
-                        </span>
-                      </>
-                    )}
-                    {isFree && (
-                      <>
-                        <span>•</span>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border border-emerald-300 bg-emerald-50 text-emerald-700">
-                          <Star className="w-3 h-3" /> Gratis
-                        </span>
-                      </>
-                    )}
-                  </div>
-
-                  <h3 className="font-semibold truncate" title={p.title}>
-                    {p.title}
-                  </h3>
-
-                  {p.description && (
-                    <p className="text-sm text-muted-foreground line-clamp-2">
-                      {p.description}
-                    </p>
-                  )}
-
-                  {p.duration_minutes && (
-                    <p className="text-xs text-muted-foreground">
-                      ⏱ {p.duration_minutes} min
-                    </p>
-                  )}
-
-                  {/* AUDIO: gating */}
-                  {p.audio_url ? (
-                    !canAccess ? (
-                      <p className="text-xs text-amber-600 mt-2 flex items-center gap-1">
-                        <Lock className="w-3.5 h-3.5" /> Audio disponible solo
-                        para Premium
-                      </p>
-                    ) : (
-                      <audio
-                        controls
-                        src={p.audio_url}
-                        className="w-full mt-2"
-                      />
-                    )
-                  ) : (
-                    <p className="text-xs text-muted-foreground">Sin audio</p>
-                  )}
-
-                  {/* PDF: gating */}
-                  {p.pdf_url &&
-                    (!canAccess ? (
-                      <p className="text-xs text-amber-600 mt-2 flex items-center gap-1">
-                        <Lock className="w-3.5 h-3.5" /> PDF disponible solo
-                        para Premium
-                      </p>
-                    ) : (
-                      <a
-                        href={p.pdf_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-xs text-indigo-600 hover:underline mt-2"
-                      >
-                        <FileText className="w-4 h-4" /> Ver PDF
-                      </a>
-                    ))}
-
-                  {/* CTA si no puede acceder */}
-                  {isPremium && !canAccess && (
-                    <a
-                      href="/premium"
-                      className="mt-2 inline-flex items-center justify-center rounded-xl bg-amber-600 text-white px-3 py-2 text-sm hover:bg-amber-700 transition-colors"
-                    >
-                      Desbloquear con Premium
-                    </a>
-                  )}
-                </div>
-              </article>
-            );
-          })}
+                  </article>
+                );
+              })}
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </section>
   );
 }
