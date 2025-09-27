@@ -1,19 +1,39 @@
-//C:\estrella\components\Navbar.tsx
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import { Session } from "@supabase/supabase-js";
 import Image from "next/image";
 import { ThemeSwitcher } from "@/components/theme-switcher";
+import { Bars3Icon, XMarkIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
+import { AnimatePresence, motion } from "framer-motion";
 import {
-  Bars3Icon,
-  XMarkIcon,
-  Cog6ToothIcon,
-} from "@heroicons/react/24/outline";
-import { motion, AnimatePresence } from "framer-motion";
+  Home,
+  HelpCircle,
+  Gem,
+  Sparkles as SparklesIcon,
+  Map,
+  User2,
+  LogOut,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+
+type NavLink = {
+  href: string;
+  label: string;
+  icon: LucideIcon;
+  highlight?: boolean;
+};
+
+const navLinks: NavLink[] = [
+  { href: "/", label: "Inicio", icon: Home },
+  { href: "/informacion", label: "Como funciona?", icon: Map },
+  { href: "/preguntas", label: "Preguntas", icon: HelpCircle },
+  { href: "/upgrade", label: "Planes", icon: Gem, highlight: true },
+  { href: "/protected", label: "Mi espacio", icon: SparklesIcon },
+];
 
 export function Navbar() {
   const [session, setSession] = useState<Session | null>(null);
@@ -23,10 +43,14 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   const user = session?.user;
   const avatar = avatarUrl || user?.user_metadata?.avatar_url;
-  const initials = user?.email?.slice(0, 2).toUpperCase();
+  const initials = useMemo(
+    () => user?.email?.slice(0, 2)?.toUpperCase() ?? "",
+    [user?.email]
+  );
 
   useEffect(() => {
     const getSessionAndProfile = async () => {
@@ -42,16 +66,56 @@ export function Navbar() {
     getSessionAndProfile();
 
     const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-        if (session?.user) {
-          fetchAvatar(session.user.id);
+      (_event, nextSession) => {
+        setSession(nextSession);
+        if (nextSession?.user) {
+          fetchAvatar(nextSession.user.id);
+        } else {
+          setAvatarUrl(null);
         }
       }
     );
 
     return () => listener.subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    const handler = (event: MouseEvent) => {
+      if (!userMenuRef.current) return;
+      if (!userMenuRef.current.contains(event.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  useEffect(() => {
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+        setUserMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 12);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setMenuOpen(false);
+    setUserMenuOpen(false);
+  }, [pathname]);
 
   const fetchAvatar = async (userId: string) => {
     const { data, error } = await supabase
@@ -70,140 +134,130 @@ export function Navbar() {
     }
   };
 
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (
-        userMenuRef.current &&
-        !userMenuRef.current.contains(e.target as Node)
-      ) {
-        setUserMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
+  const desktopLinks = navLinks.filter((link) => link.href !== "/");
+  const mobileLinks = navLinks;
 
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setMenuOpen(false);
-        setUserMenuOpen(false);
-      }
-    };
-    document.addEventListener("keydown", handleKey);
-    return () => document.removeEventListener("keydown", handleKey);
-  }, []);
+  const matchPath = (href: string) => {
+    if (href === "/") {
+      return pathname === "/";
+    }
+    return pathname?.startsWith(href) ?? false;
+  };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 0);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const headerClasses = `sticky top-0 z-50 w-full border-b transition-all duration-300 ${
+    scrolled
+      ? "bg-white/80 dark:bg-gray-950/85 backdrop-blur-xl border-white/30 dark:border-purple-900/40 shadow-[0_16px_45px_rgba(124,58,237,0.22)]"
+      : "bg-transparent border-transparent"
+  }`;
 
   return (
     <motion.header
-      className={`sticky top-0 w-full z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-white/80 dark:bg-black/80 backdrop-blur-md shadow-lg border-b border-zinc-200/50 dark:border-zinc-800/50"
-          : "bg-white dark:bg-black border-b border-zinc-200 dark:border-zinc-800"
-      }`}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
+      className={headerClasses}
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
     >
-      <div className="max-w-6xl mx-auto flex justify-between items-center h-16 px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-2 group">
+      <div className="absolute inset-x-0 top-0 -z-10 h-full bg-gradient-to-b from-purple-500/10 via-white/0 to-transparent dark:from-purple-900/35" />
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:h-[4.5rem] sm:px-6 lg:px-8">
+        <Link href="/" className="flex items-center gap-3 rounded-full px-2 py-1 transition hover:scale-[1.02]">
           <motion.div
             whileHover={{ rotate: 360 }}
             transition={{ duration: 0.8 }}
             className="relative"
           >
+            <span className="absolute inset-0 rounded-full bg-gradient-to-tr from-purple-500/50 to-pink-500/40 blur-md" />
             <Image
               src="/logo-estrella.png"
-              alt="Logo"
-              width={32}
-              height={32}
+              alt="Estrella del Alba"
+              width={38}
+              height={38}
               priority
-              className="transition-all duration-300 group-hover:drop-shadow-lg"
+              className="relative z-10 rounded-full"
             />
           </motion.div>
-          <span className="text-lg font-bold bg-gradient-to-r from-purple-600 to-purple-800 dark:from-purple-400 dark:to-purple-600 bg-clip-text text-transparent transition-all duration-300">
-            Estrella del Alba
-          </span>
+          <div className="flex flex-col text-left">
+            <span className="text-sm font-semibold uppercase tracking-[0.3em] text-purple-500/80 dark:text-purple-300/80">
+              Estrella
+            </span>
+            <span className="-mt-1 bg-gradient-to-r from-purple-600 via-pink-500 to-indigo-500 bg-clip-text text-base font-bold text-transparent dark:from-purple-300 dark:via-pink-300 dark:to-indigo-300">
+              del Alba
+            </span>
+          </div>
         </Link>
 
-        <nav className="hidden sm:flex items-center gap-8 text-sm">
-          {[
-            { href: "/informacion", label: "¿Cómo funciona?" },
-            { href: "/preguntas", label: "Preguntas" },
-            { href: "/upgrade", label: "Planes", highlight: true },
-            { href: "/protected", label: "Mi espacio" },
-          ].map((item) => (
-            <motion.div key={item.href} whileHover={{ y: -2 }}>
-              <Link
-                href={item.href}
-                className={`relative px-3 py-2 rounded-lg transition-all duration-300 ${
-                  item.highlight
-                    ? "text-purple-600 dark:text-purple-400 font-semibold hover:bg-purple-50 dark:hover:bg-purple-950/30"
-                    : "text-zinc-700 dark:text-zinc-300 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
-                }`}
-              >
-                {item.label}
-                <motion.div
-                  className="absolute bottom-0 left-0 h-0.5 bg-purple-600 dark:bg-purple-400"
-                  initial={{ width: 0 }}
-                  whileHover={{ width: "100%" }}
-                  transition={{ duration: 0.3 }}
-                />
-              </Link>
-            </motion.div>
-          ))}
+        <nav className="hidden items-center gap-6 sm:flex">
+          {desktopLinks.map((item) => {
+            const isActive = matchPath(item.href);
+            return (
+              <motion.div key={item.href} whileHover={{ y: -2 }}>
+                <Link
+                  href={item.href}
+                  className={`group relative overflow-hidden rounded-full px-4 py-2 text-sm font-semibold transition ${
+                    item.highlight
+                      ? "text-purple-600 dark:text-purple-300"
+                      : "text-zinc-700 dark:text-zinc-200"
+                  }`}
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-pill"
+                      className="absolute inset-0 -z-10 rounded-full bg-gradient-to-r from-purple-500/20 via-purple-500/10 to-transparent dark:from-purple-500/40 dark:via-pink-500/20"
+                      transition={{ type: "spring", stiffness: 320, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative flex items-center gap-2">
+                    <span>{item.label}</span>
+                    <span className="h-[2px] w-6 rounded-full bg-gradient-to-r from-purple-500/40 to-pink-500/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  </span>
+                </Link>
+              </motion.div>
+            );
+          })}
+
+          <ThemeSwitcher />
 
           {user ? (
-            <div className="relative flex items-center gap-2" ref={userMenuRef}>
-              <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-purple-600 shadow">
-                {avatar ? (
-                  <Image
-                    src={avatar}
-                    alt="Avatar"
-                    width={40}
-                    height={40}
-                    className="rounded-full"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-purple-600 text-white font-bold text-xs">
-                    {initials}
-                  </div>
-                )}
+            <div className="relative flex items-center gap-3" ref={userMenuRef}>
+              <div className="relative h-11 w-11">
+                <span className="absolute inset-0 -z-10 rounded-full bg-gradient-to-br from-purple-500/60 via-pink-500/40 to-indigo-500/40 blur" />
+                <div className="relative h-full w-full overflow-hidden rounded-full border border-purple-400/40 bg-purple-500/20 shadow-inner shadow-purple-500/30">
+                  {avatar ? (
+                    <Image src={avatar} alt="Avatar" fill className="object-cover" />
+                  ) : (
+                    <div className="grid h-full w-full place-items-center text-sm font-semibold text-white">
+                      {initials}
+                    </div>
+                  )}
+                </div>
               </div>
+
               <button
-                onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-700 text-purple-600 dark:text-purple-300"
+                onClick={() => setUserMenuOpen((prev) => !prev)}
+                className="rounded-full p-2 text-purple-600 transition hover:bg-purple-50 dark:text-purple-200 dark:hover:bg-purple-950/40"
+                aria-label="Abrir menu de cuenta"
               >
-                <Cog6ToothIcon className="w-5 h-5" />
+                <Cog6ToothIcon className="h-5 w-5" />
               </button>
 
               <AnimatePresence>
                 {userMenuOpen && (
                   <motion.div
-                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    initial={{ opacity: 0, y: -6, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                    className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-zinc-200 dark:border-zinc-700 overflow-hidden"
+                    exit={{ opacity: 0, y: -6, scale: 0.98 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute right-0 top-14 w-60 overflow-hidden rounded-2xl border border-purple-200/40 bg-gradient-to-br from-white/95 via-white/90 to-purple-50/90 p-2 shadow-xl dark:from-gray-950/95 dark:via-gray-950/90 dark:to-purple-950/80"
                   >
-                    <div className="px-4 py-3 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-950/50 dark:to-purple-900/50 border-b border-zinc-200 dark:border-zinc-700">
-                      <p className="text-sm font-medium text-zinc-800 dark:text-white truncate">
-                        {user.email}
-                      </p>
+                    <div className="rounded-xl bg-purple-500/10 px-4 py-3 text-xs uppercase tracking-[0.2em] text-purple-500 dark:text-purple-200">
+                      {user.email}
                     </div>
                     <Link
                       href="/protected/profile"
                       onClick={() => setUserMenuOpen(false)}
-                      className="block px-4 py-3 text-sm text-zinc-800 dark:text-white hover:bg-purple-50 dark:hover:bg-zinc-700 transition-colors duration-200"
+                      className="mt-2 flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-zinc-700 transition hover:bg-purple-500/10 dark:text-zinc-100 dark:hover:bg-purple-900/40"
                     >
-                      👤 Perfil
+                      <User2 className="h-4 w-4 text-purple-500" />
+                      Ver perfil
                     </Link>
                     <button
                       onClick={async () => {
@@ -211,9 +265,10 @@ export function Navbar() {
                         await supabase.auth.signOut();
                         router.push("/");
                       }}
-                      className="w-full text-left px-4 py-3 text-sm text-zinc-800 dark:text-white hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors duration-200 border-t border-zinc-200 dark:border-zinc-700"
+                      className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-red-500 transition hover:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-900/30"
                     >
-                      🚪 Cerrar sesión
+                      <LogOut className="h-4 w-4" />
+                      Cerrar sesion
                     </button>
                   </motion.div>
                 )}
@@ -223,44 +278,42 @@ export function Navbar() {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link
                 href="/auth/login"
-                className="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-2 rounded-lg font-semibold hover:from-purple-700 hover:to-purple-800 transition-all duration-300 shadow-lg hover:shadow-xl"
+                className="rounded-full bg-gradient-to-r from-purple-600 to-pink-500 px-4 py-2 text-sm font-semibold text-white shadow-lg transition hover:shadow-purple-500/40"
               >
                 Entrar
               </Link>
             </motion.div>
           )}
-
-          <ThemeSwitcher />
         </nav>
 
-        <div className="sm:hidden flex items-center gap-3">
+        <div className="flex items-center gap-3 sm:hidden">
           <ThemeSwitcher />
           <motion.button
-            onClick={() => setMenuOpen(!menuOpen)}
-            whileTap={{ scale: 0.9 }}
-            className="p-2 rounded-lg text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors duration-200"
-            aria-label="Menú móvil"
+            onClick={() => setMenuOpen((prev) => !prev)}
+            whileTap={{ scale: 0.92 }}
+            className="rounded-xl p-2 text-zinc-700 transition hover:bg-purple-50 dark:text-zinc-200 dark:hover:bg-purple-950/40"
+            aria-label="Abrir menu principal"
           >
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait" initial={false}>
               {menuOpen ? (
                 <motion.div
                   key="close"
-                  initial={{ rotate: -90 }}
-                  animate={{ rotate: 0 }}
-                  exit={{ rotate: 90 }}
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <XMarkIcon className="w-6 h-6" />
+                  <XMarkIcon className="h-6 w-6" />
                 </motion.div>
               ) : (
                 <motion.div
                   key="open"
-                  initial={{ rotate: 90 }}
-                  animate={{ rotate: 0 }}
-                  exit={{ rotate: -90 }}
+                  initial={{ rotate: 90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: -90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Bars3Icon className="w-6 h-6" />
+                  <Bars3Icon className="h-6 w-6" />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -268,69 +321,55 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Menú móvil */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="sm:hidden bg-white dark:bg-black border-t border-zinc-200 dark:border-zinc-800 shadow-lg"
+            transition={{ duration: 0.28, ease: "easeInOut" }}
+            className="sm:hidden border-t border-purple-200/30 bg-white/95 shadow-lg backdrop-blur dark:border-purple-900/40 dark:bg-gray-950/95"
           >
-            <div className="px-4 py-4 space-y-3">
-              {[
-                { href: "/", label: "Inicio", icon: "🏠" },
-                { href: "/informacion", label: "¿Cómo funciona?", icon: "📚" },
-                { href: "/preguntas", label: "Preguntas", icon: "❓" },
-                {
-                  href: "/upgrade",
-                  label: "Planes",
-                  icon: "💎",
-                  highlight: true,
-                },
-                {
-                  href: "/protected",
-                  label: "Mi espacio",
-                  icon: "✨",
-                },
-              ].map((item, index) => (
-                <motion.div
-                  key={item.href}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Link
-                    href={item.href}
-                    onClick={() => setMenuOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-                      item.highlight
-                        ? "bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 font-semibold"
-                        : "text-zinc-800 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800"
-                    }`}
+            <div className="space-y-3 px-4 py-6">
+              {mobileLinks.map((item, index) => {
+                const Icon = item.icon;
+                const isActive = matchPath(item.href);
+                return (
+                  <motion.div
+                    key={item.href}
+                    initial={{ opacity: 0, x: -12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.08 }}
                   >
-                    <span className="text-lg">{item.icon}</span>
-                    {item.label}
-                  </Link>
-                </motion.div>
-              ))}
+                    <Link
+                      href={item.href}
+                      className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-base font-medium transition ${
+                        isActive
+                          ? "bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-600 dark:text-purple-200"
+                          : "text-zinc-700 hover:bg-purple-500/10 dark:text-zinc-100 dark:hover:bg-purple-900/30"
+                      }`}
+                    >
+                      <Icon className="h-5 w-5" />
+                      {item.label}
+                    </Link>
+                  </motion.div>
+                );
+              })}
 
-              <div className="border-t border-zinc-200 dark:border-zinc-800 pt-3 mt-3">
+              <div className="mt-4 border-t border-purple-200/30 pt-4 dark:border-purple-900/40">
                 {user ? (
                   <>
                     <motion.div
-                      initial={{ opacity: 0, x: -20 }}
+                      initial={{ opacity: 0, x: -12 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.3 }}
+                      transition={{ delay: 0.35 }}
                     >
                       <Link
                         href="/protected/profile"
-                        onClick={() => setMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-800 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors duration-200"
+                        className="flex items-center gap-3 rounded-2xl px-4 py-3 text-base font-medium text-zinc-700 transition hover:bg-purple-500/10 dark:text-zinc-100 dark:hover:bg-purple-900/30"
                       >
-                        <span className="text-lg">👤</span>
-                        Perfil
+                        <User2 className="h-5 w-5 text-purple-500" />
+                        Ver perfil
                       </Link>
                     </motion.div>
                     <motion.button
@@ -339,28 +378,27 @@ export function Navbar() {
                         await supabase.auth.signOut();
                         router.push("/");
                       }}
-                      initial={{ opacity: 0, x: -20 }}
+                      initial={{ opacity: 0, x: -12 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.4 }}
-                      className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors duration-200"
+                      transition={{ delay: 0.43 }}
+                      className="mt-2 flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-base font-semibold text-red-500 transition hover:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-900/30"
                     >
-                      <span className="text-lg">🚪</span>
-                      Cerrar sesión
+                      <LogOut className="h-5 w-5" />
+                      Cerrar sesion
                     </motion.button>
                   </>
                 ) : (
                   <motion.div
-                    initial={{ opacity: 0, x: -20 }}
+                    initial={{ opacity: 0, x: -12 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.3 }}
+                    transition={{ delay: 0.35 }}
                   >
                     <Link
                       href="/auth/login"
-                      onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold hover:from-purple-700 hover:to-purple-800 transition-all duration-200"
+                      className="flex items-center gap-3 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-500 px-4 py-3 text-base font-semibold text-white shadow-lg transition hover:shadow-purple-500/40"
                     >
-                      <span className="text-lg">🔐</span>
-                      Inicia sesión
+                      <SparklesIcon className="h-5 w-5" />
+                      Iniciar sesion
                     </Link>
                   </motion.div>
                 )}
