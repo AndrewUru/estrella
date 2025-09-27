@@ -37,12 +37,12 @@ const faqs = [
   {
     question: "🔐 ¿El acceso caduca?",
     answer:
-      "Depende del plan. Si eliges una suscripción mensual o anual, el acceso estará disponible mientras tu suscripción esté activa. En el caso de acceso gratuito, podrás acceder mientras la plataforma esté en funcionamiento.",
+      "Depende del plan. Si eliges una suscripción  anual, el acceso estará disponible mientras tu suscripción esté activa. En el caso de acceso gratuito, podrás acceder mientras la plataforma esté en funcionamiento.",
   },
   {
     question: "💸 ¿Es un pago único o suscripción?",
     answer:
-      "Es una suscripción. Puedes elegir entre un plan mensual de 22 € o un plan anual de 77 €. Puedes cancelar en cualquier momento desde tu perfil.",
+      "Es una suscripción. Un plan anual de 77 €. Puedes cancelar en cualquier momento desde tu perfil.",
   },
 ];
 
@@ -98,7 +98,7 @@ export default function PreguntasPage() {
 
       <div className="mt-16 text-center">
         <div className="inline-block bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-2xl shadow-lg">
-          ¿Tienes otra duda? Escríbenos a: {" "}
+          ¿Tienes otra duda? Escríbenos a:{" "}
           <a
             href="mailto:Marketing@samariluz.com"
             className="underline font-semibold"
