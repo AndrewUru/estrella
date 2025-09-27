@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import { supabase } from "@/lib/supabase/client";
 import {
   Loader2,
@@ -163,7 +164,9 @@ export default function PracticesGallery() {
             const isPremium = plan === "premium";
             const isFree = plan === "free";
             const canAccess =
-              isFree || userPlan === "premium" || p.created_by === userId;
+              isFree ||
+              userPlan === "premium" ||
+              (p.created_by && p.created_by === userId);
 
             return (
               <article
@@ -171,14 +174,18 @@ export default function PracticesGallery() {
                 className="bg-card border border-border rounded-2xl shadow-sm overflow-hidden group"
               >
                 <div className="relative">
-                  <img
+                  <Image
                     src={p.cover_url ?? "/placeholder.svg"}
                     alt={p.title}
+                    width={400}
+                    height={160}
                     className={
                       "w-full h-40 object-cover " +
                       (!canAccess && isPremium ? "opacity-80 blur-[1px]" : "")
                     }
+                    priority
                   />
+
                   {/* Insignias de plan */}
                   {isPremium && (
                     <div
