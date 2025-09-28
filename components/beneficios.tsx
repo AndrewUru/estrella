@@ -5,15 +5,15 @@ import { motion } from "framer-motion";
 import { AlertCircle, Sparkles, Check, ArrowRight } from "lucide-react";
 
 const beforeItems = [
-  "Sensacion de desconexion con tu proposito interior",
-  "Confusion tras anios de camino espiritual",
-  "Alta sensibilidad sin herramientas de contencion",
-  "Falta de direccion energetica para avanzar",
+  "Sensación de desconexión con tu propósito interior",
+  "Confusión tras años de camino espiritual",
+  "Alta sensibilidad sin herramientas de contención",
+  "Falta de dirección energética para avanzar",
 ];
 
 const afterItems = [
-  "Claridad energetica restaurada",
-  "Canal intuitivo disponible cada dia",
+  "Claridad energética restaurada",
+  "Canal intuitivo disponible cada día",
   "Ritmo interno alineado con tus decisiones",
   "Compromiso amoroso con tu alma",
 ];
@@ -27,7 +27,7 @@ export function Beneficios() {
         id: "before" as const,
         icon: AlertCircle,
         title: "Antes de Estrella",
-        subtitle: "Cuando la energia esta dispersa",
+        subtitle: "Cuando la energía está dispersa",
         items: beforeItems,
         gradient: "from-red-500/15 via-orange-500/10 to-amber-500/15",
         badgeClass: "border-red-400/40 text-red-500/80",
@@ -36,12 +36,12 @@ export function Beneficios() {
       {
         id: "after" as const,
         icon: Sparkles,
-        title: "Despues de 7 dias",
-        subtitle: "Claridad y direccion energetica",
+        title: "Después de 7 días",
+        subtitle: "Claridad y dirección energética",
         items: afterItems,
         gradient: "from-purple-500/15 via-pink-500/10 to-indigo-500/15",
         badgeClass: "border-purple-400/40 text-purple-500/80",
-        badgeText: "Estado destino: armonia",
+        badgeText: "Estado destino: armonía",
       },
     ],
     []
@@ -69,7 +69,8 @@ export function Beneficios() {
           Que cambia cuando caminas Estrella del Alba
         </h2>
         <p className="mt-4 text-base text-gray-600 sm:text-lg dark:text-gray-300">
-          Observa la diferencia energetica al vivir una semana en contencion consciente. De la inquietud a la claridad tangible.
+          Observa la diferencia energética al vivir una semana en contención
+          consciente. De la inquietud a la claridad tangible.
         </p>
       </motion.div>
 
@@ -77,7 +78,8 @@ export function Beneficios() {
         {columns.map((column, index) => {
           const Icon = column.icon;
           const isActive = hovered === column.id;
-          const orderClasses = index === 0 ? "order-1 lg:order-1" : "order-3 lg:order-3";
+          const orderClasses =
+            index === 0 ? "order-1 lg:order-1" : "order-3 lg:order-3";
 
           return (
             <motion.article
@@ -86,11 +88,17 @@ export function Beneficios() {
               onMouseLeave={() => setHovered(null)}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.15, ease: "easeOut" }}
+              transition={{
+                duration: 0.6,
+                delay: index * 0.15,
+                ease: "easeOut",
+              }}
               viewport={{ once: true, amount: 0.3 }}
               className={`relative overflow-hidden rounded-3xl border border-white/40 bg-white/80 p-[1px] shadow-xl backdrop-blur dark:border-purple-900/40 dark:bg-gray-950/80 ${orderClasses}`}
             >
-              <div className={`rounded-3xl bg-gradient-to-br ${column.gradient} p-6 sm:p-8`}>
+              <div
+                className={`rounded-3xl bg-gradient-to-br ${column.gradient} p-6 sm:p-8`}
+              >
                 <div className="flex items-center gap-3">
                   <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-white/70 text-purple-600 shadow-md dark:bg-purple-950/70">
                     <Icon className="h-6 w-6" />
@@ -119,7 +127,11 @@ export function Beneficios() {
                       }}
                     >
                       <span className="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-xs font-semibold text-white shadow">
-                        {index === 0 ? itemIndex + 1 : <Check className="h-4 w-4" />}
+                        {index === 0 ? (
+                          itemIndex + 1
+                        ) : (
+                          <Check className="h-4 w-4" />
+                        )}
                       </span>
                       <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
                         {item}
@@ -128,7 +140,9 @@ export function Beneficios() {
                   ))}
                 </div>
 
-                <div className={`mt-6 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] ${column.badgeClass}`}>
+                <div
+                  className={`mt-6 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] ${column.badgeClass}`}
+                >
                   {column.badgeText}
                 </div>
               </div>
@@ -146,14 +160,14 @@ export function Beneficios() {
           <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-r from-purple-500 to-pink-500 shadow-2xl">
             <Sparkles className="h-10 w-10 text-white" />
             <span className="absolute -bottom-5 text-xs font-semibold uppercase tracking-[0.35em] text-purple-200">
-              7 dias
+              7 días
             </span>
           </div>
           <ArrowRight className="h-8 w-8 text-purple-400" />
           <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-r from-pink-500 to-indigo-500 shadow-2xl">
             <Check className="h-10 w-10 text-white" />
             <span className="absolute -bottom-5 text-xs font-semibold uppercase tracking-[0.35em] text-purple-200">
-              Transformacion
+              Transformación
             </span>
           </div>
         </motion.div>
@@ -171,7 +185,8 @@ export function Beneficios() {
           Recordatorio para el viaje
         </div>
         <p className="text-lg font-semibold text-gray-900 dark:text-white">
-          El proceso es personal, pero nunca estas sola. La practica diaria, la comunidad y la guia sostienen tu ritmo mientras integras cada leccion.
+          El proceso es personal, pero nunca estás sola. La práctica diaria, la
+          comunidad y la guía sostienen tu ritmo mientras integras cada lección.
         </p>
       </motion.div>
     </section>

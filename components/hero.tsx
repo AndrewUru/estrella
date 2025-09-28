@@ -22,9 +22,9 @@ import Link from "next/link";
 type Pointer = { x: number; y: number };
 
 const featureList = [
-  "Practicas guiadas en audio y PDF",
+  "Prácticas guiadas en audio y PDF",
   "Rituales diarios para integrar con calma",
-  "Acompanamiento en vivo cada semana",
+  "Acompañamiento en vivo cada semana",
   "Espacios protegidos solo para miembros",
 ];
 
@@ -127,8 +127,8 @@ export function Hero() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <Zap className="h-4 w-4 text-yellow-300" />7 dias de reconexion
-            energetica
+            <Zap className="h-4 w-4 text-yellow-300" />7 días de reconexión
+            energética
           </motion.div>
 
           <motion.div
@@ -140,12 +140,12 @@ export function Hero() {
             <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl">
               Reconecta con tu
               <span className="block bg-gradient-to-r from-violet-200 via-white to-cyan-200 bg-clip-text text-transparent">
-                universo interior
+                Universo interior
               </span>
             </h1>
             <p className="mx-auto max-w-2xl text-base text-white/80 sm:text-lg lg:mx-0">
               Vive una experiencia ceremonial diaria para volver a sentir tu
-              energia. Cada sesion combina meditacion guiada, respiracion y
+              energía. Cada sesión combina meditación guiada, respiración y
               rituales sencillos para integrar en tu rutina.
             </p>
           </motion.div>
@@ -186,7 +186,7 @@ export function Hero() {
               className="inline-flex items-center justify-center gap-2 rounded-full border border-white/40 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
             >
               <PlayCircle className="h-5 w-5" />
-              Ver una sesion de muestra
+              Ver una sesión de muestra
             </Link>
           </motion.div>
 
@@ -248,14 +248,14 @@ export function Hero() {
             <div className="relative flex h-full flex-col justify-between">
               <div className="space-y-4 text-white">
                 <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white/70">
-                  Ritual del dia
+                  Ritual del día
                 </span>
                 <h3 className="text-2xl font-semibold leading-snug">
-                  Respira, integra y anota tu energia del presente
+                  Respira, integra y anota tu energía del presente
                 </h3>
                 <p className="text-sm text-white/70">
-                  Accede a practicas en audio, journaling guiado y activaciones
-                  energeticas para sostener tu proceso.
+                  Accede a prácticas en audio, journaling guiado y activaciones
+                  energéticas para sostener tu proceso.
                 </p>
               </div>
 
@@ -269,7 +269,7 @@ export function Hero() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                 <div className="absolute bottom-4 left-4 flex items-center gap-2 text-sm font-medium text-white">
-                  <PlayCircle className="h-5 w-5" /> 15 min de practica
+                  <PlayCircle className="h-5 w-5" /> 15 min de práctica
                 </div>
               </div>
             </div>
