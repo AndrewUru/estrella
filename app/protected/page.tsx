@@ -87,7 +87,8 @@ export default function DashboardPage() {
 
         const metadata = (user.user_metadata ?? {}) as Record<string, unknown>;
         const profileUsername =
-          (pData && typeof (pData as { username?: unknown }).username === "string"
+          pData &&
+          typeof (pData as { username?: unknown }).username === "string"
             ? (pData as { username?: string }).username ?? null
             : typeof metadata.username === "string"
             ? (metadata.username as string)
@@ -97,7 +98,7 @@ export default function DashboardPage() {
             ? (metadata.preferred_username as string)
             : typeof user.email === "string"
             ? user.email.split("@")[0] ?? null
-            : null);
+            : null;
 
         const [
           { data: entregas, error: entErr },
@@ -188,7 +189,8 @@ export default function DashboardPage() {
               Hola, {greetingName}
             </h1>
             <p className="mt-4 text-base text-gray-600 dark:text-gray-300 sm:text-lg">
-              Acompana tu proceso con calma. Retoma el programa donde lo dejaste y usa las practicas como guia diaria.
+              Acompaña tu proceso con calma. Retoma el programa donde lo dejaste
+              y usa las prácticas como guía diaria.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               {loadingProgreso ? (
@@ -199,7 +201,7 @@ export default function DashboardPage() {
                   className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-600 to-pink-500 px-5 py-3 text-sm font-semibold text-white shadow transition hover:from-purple-700 hover:to-pink-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500"
                   aria-label={`Continuar con el dia ${nextUnlockedDay.dia}`}
                 >
-                  <span>Continuar con el dia {nextUnlockedDay.dia}</span>
+                  <span>Continuar con el día {nextUnlockedDay.dia}</span>
                   <SparklesIcon className="h-4 w-4" />
                 </Link>
               ) : (
@@ -207,7 +209,7 @@ export default function DashboardPage() {
                   href="#practicas"
                   className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-600 to-pink-500 px-5 py-3 text-sm font-semibold text-white shadow transition hover:from-purple-700 hover:to-pink-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500"
                 >
-                  <span>Explorar practicas</span>
+                  <span>Explorar prácticas</span>
                   <SparklesIcon className="h-4 w-4" />
                 </Link>
               )}
@@ -243,13 +245,17 @@ export default function DashboardPage() {
                 </p>
                 <p className="truncate text-lg font-semibold">{profileName}</p>
                 {perfil?.username && (
-                  <p className="truncate text-xs text-white/80">@{perfil.username}</p>
+                  <p className="truncate text-xs text-white/80">
+                    @{perfil.username}
+                  </p>
                 )}
               </div>
             </div>
 
             <div className="space-y-2">
-              <p className="text-xs uppercase tracking-wide text-white/70">Progreso total</p>
+              <p className="text-xs uppercase tracking-wide text-white/70">
+                Progreso total
+              </p>
               <p className="text-4xl font-semibold">
                 {loadingProgreso ? "--" : `${progresoPercent}%`}
               </p>
@@ -288,7 +294,8 @@ export default function DashboardPage() {
         {esGratis && (
           <div className="mt-6 flex flex-col gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-6 py-5 text-amber-900 shadow-sm dark:border-amber-400/30 dark:bg-amber-950/40 dark:text-amber-200 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm">
-              Tu plan actual es gratuito. Solo el dia 1 esta disponible. Actualiza para desbloquear el resto del recorrido.
+              Tu plan actual es gratuito. Solo el día 1 está disponible.
+              Actualiza para desbloquear el resto del recorrido.
             </p>
             <Link
               href="/upgrade"
@@ -306,19 +313,21 @@ export default function DashboardPage() {
                 Tu recorrido
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-300">
-                Revisa cada dia y avanza a tu ritmo. Las sesiones se desbloquean conforme avanzas.
+                Revisa cada día y avanza a tu ritmo. Las sesiones se desbloquean
+                conforme avanzas.
               </p>
             </div>
             {completadosCount > 0 && (
               <span className="rounded-full border border-green-200 bg-green-50 px-4 py-1.5 text-xs font-semibold text-green-700 dark:border-green-400/30 dark:bg-green-950/40 dark:text-green-300">
-                {completadosCount} dias completados
+                {completadosCount} días completados
               </span>
             )}
           </div>
 
           {!loadingProgreso && progreso.length === 0 ? (
             <div className="mt-10 rounded-3xl border border-dashed border-gray-300 bg-white/70 p-12 text-center text-sm text-gray-600 dark:border-white/20 dark:bg-black/40 dark:text-gray-300">
-              Aun no hay practicas disponibles. Cuando se publiquen, las veras aqui.
+              Aún no hay prácticas disponibles. Cuando se publiquen, las verás
+              aquí.
             </div>
           ) : (
             <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -416,21 +425,25 @@ export default function DashboardPage() {
                           <Link
                             href={`/protected/dia/${p?.dia ?? ""}`}
                             className="group/btn flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-4 text-sm font-semibold text-white shadow-lg transition hover:scale-[1.02] hover:from-purple-600 hover:to-pink-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500"
-                            aria-label={`Abrir dia ${p?.dia ?? ""}`}
+                            aria-label={`Abrir día ${p?.dia ?? ""}`}
                           >
-                            <span>Acceder al dia</span>
+                            <span>Acceder al día</span>
                             <SparklesIcon className="h-5 w-5 transition-transform duration-300 group-hover/btn:rotate-12" />
                           </Link>
                         ) : (
                           <div className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gray-300 px-6 py-4 text-sm font-medium text-gray-700 dark:bg-gray-600 dark:text-gray-300">
-                            <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                            <svg
+                              className="h-4 w-4"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
                               <path
                                 fillRule="evenodd"
                                 d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
                                 clipRule="evenodd"
                               />
                             </svg>
-                            <span>Proximamente</span>
+                            <span>Próximamente</span>
                           </div>
                         )}
                       </div>
