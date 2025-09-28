@@ -48,8 +48,13 @@ const ThemeSwitcher = () => {
 
   const activeTheme = useMemo(() => {
     if (!mounted) return themeOptions[0];
-    const currentValue = (theme ?? resolvedTheme ?? "light") as typeof themeOptions[number]["value"];
-    return themeOptions.find((option) => option.value === currentValue) ?? themeOptions[0];
+    const currentValue = (theme ??
+      resolvedTheme ??
+      "light") as (typeof themeOptions)[number]["value"];
+    return (
+      themeOptions.find((option) => option.value === currentValue) ??
+      themeOptions[0]
+    );
   }, [mounted, theme, resolvedTheme]);
 
   if (!mounted) {
@@ -69,7 +74,7 @@ const ThemeSwitcher = () => {
         >
           <span className="absolute inset-x-2 -bottom-1 h-px bg-gradient-to-r from-transparent via-purple-400/40 to-transparent transition-opacity group-hover:opacity-100" />
           <Icon size={ICON_SIZE} className="text-purple-200 drop-shadow" />
-          <span className="hidden text-[11px] uppercase tracking-[0.18em] text-purple-100 sm:inline">
+          <span className="hidden text-[11px] uppercase tracking-[0.18em] text-black-700 sm:inline">
             {activeTheme.label}
           </span>
           <Sparkles className="h-3.5 w-3.5 text-purple-200/80 transition-transform duration-500 group-hover:rotate-12" />
@@ -87,26 +92,35 @@ const ThemeSwitcher = () => {
           </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="my-2 h-px bg-purple-500/30" />
-        <DropdownMenuRadioGroup value={theme ?? resolvedTheme ?? "light"} onValueChange={(value) => setTheme(value)}>
-          {themeOptions.map(({ value, label, description, Icon: OptionIcon }) => (
-            <DropdownMenuRadioItem
-              key={value}
-              value={value}
-              className="group flex items-start gap-3 rounded-xl px-3 py-2.5 text-sm text-purple-50 data-[state=checked]:bg-white/10 data-[state=checked]:shadow-inner"
-            >
-              <div className="mt-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-purple-200">
-                <OptionIcon size={ICON_SIZE} />
-              </div>
-              <div className="flex flex-col gap-0.5 text-left">
-                <span className="font-semibold text-purple-50">{label}</span>
-                <span className="text-xs text-purple-200/70">{description}</span>
-              </div>
-            </DropdownMenuRadioItem>
-          ))}
+        <DropdownMenuRadioGroup
+          value={theme ?? resolvedTheme ?? "light"}
+          onValueChange={(value) => setTheme(value)}
+        >
+          {themeOptions.map(
+            ({ value, label, description, Icon: OptionIcon }) => (
+              <DropdownMenuRadioItem
+                key={value}
+                value={value}
+                className="group flex items-start gap-3 rounded-xl px-3 py-2.5 text-sm text-purple-50 data-[state=checked]:bg-white/10 data-[state=checked]:shadow-inner"
+              >
+                <div className="mt-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-purple-200">
+                  <OptionIcon size={ICON_SIZE} />
+                </div>
+                <div className="flex flex-col gap-0.5 text-left">
+                  <span className="font-semibold text-purple-50">{label}</span>
+                  <span className="text-xs text-purple-200/70">
+                    {description}
+                  </span>
+                </div>
+              </DropdownMenuRadioItem>
+            )
+          )}
         </DropdownMenuRadioGroup>
         <DropdownMenuSeparator className="my-2 h-px bg-purple-500/20" />
         <DropdownMenuItem className="text-[11px] uppercase tracking-[0.2em] text-purple-200/70 focus:bg-transparent">
-          {activeTheme.value === "system" ? "Siguiendo el pulso del dispositivo" : "Sincronizado con tu eleccion"}
+          {activeTheme.value === "system"
+            ? "Siguiendo el pulso del dispositivo"
+            : "Sincronizado con tu eleccion"}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
