@@ -17,7 +17,7 @@ export type ProgresoItem = {
 
 export type Perfil = {
   start_date: string | null;
-  plan: "gratis" | "membresia" | "vip" | string;
+  plan: "gratis" | "membresia" | "premium" | string;
   full_name: string | null;
   avatar_url?: string | null;
   username?: string | null;
@@ -79,11 +79,25 @@ export default function DashboardPage() {
 
         const { data: pData, error: pErr } = await supabase
           .from("profiles")
-          .select("start_date, plan, full_name, avatar_url, username")
+          .select("start_date, plan, full_name, avatar_url")
           .eq("id", user.id)
           .single();
 
         if (pErr) console.error("profiles error", pErr.message);
+
+        const metadata = (user.user_metadata ?? {}) as Record<string, unknown>;
+        const profileUsername =
+          (pData && typeof (pData as { username?: unknown }).username === "string"
+            ? (pData as { username?: string }).username ?? null
+            : typeof metadata.username === "string"
+            ? (metadata.username as string)
+            : typeof metadata.user_name === "string"
+            ? (metadata.user_name as string)
+            : typeof metadata.preferred_username === "string"
+            ? (metadata.preferred_username as string)
+            : typeof user.email === "string"
+            ? user.email.split("@")[0] ?? null
+            : null);
 
         const [
           { data: entregas, error: entErr },
@@ -98,21 +112,34 @@ export default function DashboardPage() {
 
         const startDate = pData?.start_date ? new Date(pData.start_date) : null;
         const diasDesdeInicio = startDate
-          ? Math.floor((Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 24))
+          ? Math.floor(
+              (Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+            )
           : 0;
 
         const completadosSet = new Set((completados ?? []).map((p) => p.dia));
 
-        const progresoFormateado: ProgresoItem[] = (entregas || []).map((e) => ({
-          dia: e.dia,
-          completado: completadosSet.has(e.dia),
-          desbloqueado:
-            pData?.plan === "gratis" ? e.dia === 1 : e.dia <= diasDesdeInicio + 1,
-          imagen_url: e.imagen_url || null,
-        }));
+        const progresoFormateado: ProgresoItem[] = (entregas || []).map(
+          (e) => ({
+            dia: e.dia,
+            completado: completadosSet.has(e.dia),
+            desbloqueado:
+              pData?.plan === "gratis"
+                ? e.dia === 1
+                : e.dia <= diasDesdeInicio + 1,
+            imagen_url: e.imagen_url || null,
+          })
+        );
 
         if (isMounted) {
-          setPerfil((pData as Perfil) ?? null);
+          setPerfil(
+            pData
+              ? ({
+                  ...pData,
+                  username: profileUsername,
+                } as Perfil)
+              : null
+          );
           setProgreso(progresoFormateado);
         }
       } catch (error) {
