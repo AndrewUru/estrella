@@ -10,7 +10,7 @@ const steps = [
     title: "Anclar la intencion",
     description:
       "Conecta con un objetivo claro para tu semana y abre el portal energetico que te guiara.",
-    image: "/images/proceso-intencion.png",
+    image: "/images/canalizaciones.webp",
   },
   {
     id: "02",
