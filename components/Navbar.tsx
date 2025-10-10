@@ -188,7 +188,7 @@ export function Navbar() {
             <span className="text-sm font-semibold uppercase tracking-[0.3em] text-purple-500/80 dark:text-purple-300/80">
               Estrella
             </span>
-            <span className="-mt-1 bg-gradient-to-r from-purple-600 via-pink-500 to-indigo-500 bg-clip-text text-base font-bold text-transparent dark:from-purple-300 dark:via-pink-300 dark:to-indigo-300">
+            <span className="-mt-1 bg-gradient-to-r from-purple-600 via-pink-500 to-indigo-500 bg-clip-text text-sm font-bold text-transparent dark:from-purple-300 dark:via-pink-300 dark:to-indigo-300">
               del Alba
             </span>
           </div>
@@ -201,7 +201,7 @@ export function Navbar() {
               <motion.div key={item.href} whileHover={{ y: -2 }}>
                 <Link
                   href={item.href}
-                  className={`group relative overflow-hidden rounded-full px-4 py-2 text-sm font-semibold transition ${
+                  className={`group relative overflow-hidden rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
                     item.highlight
                       ? "text-purple-600 dark:text-purple-300"
                       : "text-zinc-700 dark:text-zinc-200"
@@ -361,7 +361,7 @@ export function Navbar() {
                   >
                     <Link
                       href={item.href}
-                      className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-base font-medium transition ${
+                      className={`flex items-center gap-3 rounded-2xl px-4 py-2.5 text-sm font-medium transition ${
                         isActive
                           ? "bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-600 dark:text-purple-200"
                           : "text-zinc-700 hover:bg-purple-500/10 dark:text-zinc-100 dark:hover:bg-purple-900/30"
@@ -384,7 +384,7 @@ export function Navbar() {
                     >
                       <Link
                         href="/protected/profile"
-                        className="flex items-center gap-3 rounded-2xl px-4 py-3 text-base font-medium text-zinc-700 transition hover:bg-purple-500/10 dark:text-zinc-100 dark:hover:bg-purple-900/30"
+                        className="flex items-center gap-3 rounded-2xl px-4 py-2.5 text-sm font-medium text-zinc-700 transition hover:bg-purple-500/10 dark:text-zinc-100 dark:hover:bg-purple-900/30"
                       >
                         <User2 className="h-5 w-5 text-purple-500" />
                         Ver perfil
@@ -399,7 +399,7 @@ export function Navbar() {
                       initial={{ opacity: 0, x: -12 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.43 }}
-                      className="mt-2 flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-base font-semibold text-red-500 transition hover:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-900/30"
+                      className="mt-2 flex w-full items-center gap-3 rounded-2xl px-4 py-2.5 text-sm font-semibold text-red-500 transition hover:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-900/30"
                     >
                       <LogOut className="h-5 w-5" />
                       Cerrar sesion
@@ -413,7 +413,7 @@ export function Navbar() {
                   >
                     <Link
                       href="/auth/login"
-                      className="flex items-center gap-3 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-500 px-4 py-3 text-base font-semibold text-white shadow-lg transition hover:shadow-purple-500/40"
+                      className="flex items-center gap-3 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:shadow-purple-500/40"
                     >
                       <SparklesIcon className="h-5 w-5" />
                       Iniciar sesion
