@@ -45,6 +45,7 @@ type ProgressPost = {
   avatar_url: string | null;
   likes_count: number;
   comments_count: number;
+  liked_by_user?: boolean;
 };
 
 type ProgressPostRecord = {
@@ -72,6 +73,16 @@ type ComposerFeedback = {
   message: string;
 };
 
+type ProgressComment = {
+  id: string;
+  update_id: string;
+  content: string;
+  created_at: string;
+  user_id: string;
+  full_name: string | null;
+  avatar_url: string | null;
+};
+
 const moodOptions: Array<{ value: string; label: string; emoji: string }> = [
   { value: "gratitud", label: "Gratitud", emoji: ":)" },
   { value: "inspiracion", label: "Inspiracion", emoji: "*" },
@@ -93,6 +104,20 @@ export default function SocialPage() {
   const [submittingUpdate, setSubmittingUpdate] = useState<boolean>(false);
   const [composerFeedback, setComposerFeedback] =
     useState<ComposerFeedback | null>(null);
+  const [likedPosts, setLikedPosts] = useState<Record<string, boolean>>({});
+  const [likePending, setLikePending] = useState<Record<string, boolean>>({});
+  const [openComments, setOpenComments] = useState<Record<string, boolean>>({});
+  const [loadingComments, setLoadingComments] =
+    useState<Record<string, boolean>>({});
+  const [commentsByPost, setCommentsByPost] = useState<
+    Record<string, ProgressComment[]>
+  >({});
+  const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>(
+    {},
+  );
+  const [commentFeedback, setCommentFeedback] = useState<
+    Record<string, ComposerFeedback | null>
+  >({});
 
   const isMountedRef = useRef(true);
 
@@ -125,6 +150,7 @@ export default function SocialPage() {
         avatar_url: profileData?.avatar_url ?? null,
         likes_count: record.likes_count ?? 0,
         comments_count: record.comments_count ?? 0,
+        liked_by_user: false,
       };
     },
     [],
@@ -167,6 +193,22 @@ export default function SocialPage() {
     },
     [mapRecordToPost, safeSetFeed, safeSetState],
   );
+
+  const refreshLikes = useCallback(async () => {
+    if (!currentUserId) return;
+    const { data, error } = await supabase
+      .from("progress_update_likes")
+      .select("update_id")
+      .eq("user_id", currentUserId);
+
+    if (!error && data && isMountedRef.current) {
+      const likedMap: Record<string, boolean> = {};
+      data.forEach((row) => {
+        likedMap[row.update_id as string] = true;
+      });
+      setLikedPosts(likedMap);
+    }
+  }, [currentUserId]);
 
   const handleCreateUpdate = useCallback(async () => {
     if (!currentUserId) {
@@ -223,9 +265,224 @@ export default function SocialPage() {
     if (isMountedRef.current) setSubmittingUpdate(false);
   }, [currentUserId, mapRecordToPost, mood, newUpdate]);
 
+  const handleToggleLike = useCallback(
+    async (postId: string) => {
+      if (!currentUserId) {
+        setComposerFeedback({
+          type: "error",
+          message: "Necesitas iniciar sesión para interactuar.",
+        });
+        return;
+      }
+
+      if (likePending[postId]) return;
+      setLikePending((prev) => ({ ...prev, [postId]: true }));
+
+      const isLiked = likedPosts[postId] ?? false;
+
+      if (isLiked) {
+        const { error } = await supabase
+          .from("progress_update_likes")
+          .delete()
+          .eq("update_id", postId)
+          .eq("user_id", currentUserId);
+
+        if (!error && isMountedRef.current) {
+          setLikedPosts((prev) => {
+            const next = { ...prev };
+            delete next[postId];
+            return next;
+          });
+          setFeed((current) =>
+            current.map((post) =>
+              post.id === postId
+                ? {
+                    ...post,
+                    likes_count: Math.max(0, post.likes_count - 1),
+                    liked_by_user: false,
+                  }
+                : post,
+            ),
+          );
+        }
+      } else {
+        const { error } = await supabase
+          .from("progress_update_likes")
+          .insert({
+            update_id: postId,
+            user_id: currentUserId,
+          });
+
+        if (!error && isMountedRef.current) {
+          setLikedPosts((prev) => ({ ...prev, [postId]: true }));
+          setFeed((current) =>
+            current.map((post) =>
+              post.id === postId
+                ? {
+                    ...post,
+                    likes_count: post.likes_count + 1,
+                    liked_by_user: true,
+                  }
+                : post,
+            ),
+          );
+        }
+      }
+
+      if (isMountedRef.current) {
+        setLikePending((prev) => ({ ...prev, [postId]: false }));
+      }
+    },
+    [currentUserId, likePending, likedPosts],
+  );
+
+  const loadCommentsForPost = useCallback(
+    async (postId: string) => {
+      if (loadingComments[postId]) return;
+      setLoadingComments((prev) => ({ ...prev, [postId]: true }));
+
+      const { data, error } = await supabase
+        .from("progress_update_comments")
+        .select(
+          "id, update_id, content, created_at, user_id, profiles(full_name, avatar_url)",
+        )
+        .eq("update_id", postId)
+        .order("created_at", { ascending: false })
+        .limit(50);
+
+      if (!error && isMountedRef.current) {
+        const normalized =
+          data?.map((comment) => {
+            const rawProfile =
+              comment.profiles as
+                | { full_name: string | null; avatar_url: string | null }
+                | Array<{ full_name: string | null; avatar_url: string | null }>
+                | null;
+            const profile = Array.isArray(rawProfile)
+              ? rawProfile[0] ?? null
+              : rawProfile;
+            return {
+              id: comment.id as string,
+              update_id: comment.update_id as string,
+              content: comment.content as string,
+              created_at: comment.created_at as string,
+              user_id: comment.user_id as string,
+              full_name: profile?.full_name ?? null,
+              avatar_url: profile?.avatar_url ?? null,
+            } as ProgressComment;
+          }) ?? [];
+        setCommentsByPost((prev) => ({ ...prev, [postId]: normalized }));
+      }
+
+      if (isMountedRef.current) {
+        setLoadingComments((prev) => ({ ...prev, [postId]: false }));
+      }
+    },
+    [loadingComments],
+  );
+
+  const handleSubmitComment = useCallback(
+    async (postId: string) => {
+      if (!currentUserId) {
+        setCommentFeedback((prev) => ({
+          ...prev,
+          [postId]: {
+            type: "error",
+            message: "Necesitas iniciar sesión para comentar.",
+          },
+        }));
+        return;
+      }
+
+      const draft = commentDrafts[postId]?.trim() ?? "";
+      if (!draft) {
+        setCommentFeedback((prev) => ({
+          ...prev,
+          [postId]: {
+            type: "error",
+            message: "Escribe un comentario antes de publicar.",
+          },
+        }));
+        return;
+      }
+
+      setCommentFeedback((prev) => ({ ...prev, [postId]: null }));
+      setLoadingComments((prev) => ({ ...prev, [postId]: true }));
+
+      const { data, error } = await supabase
+        .from("progress_update_comments")
+        .insert({
+          update_id: postId,
+          content: draft,
+          user_id: currentUserId,
+        })
+        .select(
+          "id, update_id, content, created_at, user_id, profiles(full_name, avatar_url)",
+        )
+        .single();
+
+      if (error) {
+        if (isMountedRef.current) {
+          setCommentFeedback((prev) => ({
+            ...prev,
+            [postId]: {
+              type: "error",
+              message: "No se pudo publicar el comentario.",
+            },
+          }));
+          setLoadingComments((prev) => ({ ...prev, [postId]: false }));
+        }
+        return;
+      }
+
+      if (!isMountedRef.current) return;
+
+      const rawProfile =
+        data.profiles as
+          | { full_name: string | null; avatar_url: string | null }
+          | Array<{ full_name: string | null; avatar_url: string | null }>
+          | null;
+      const profile = Array.isArray(rawProfile)
+        ? rawProfile[0] ?? null
+        : rawProfile;
+      const normalized: ProgressComment = {
+        id: data.id as string,
+        update_id: data.update_id as string,
+        content: data.content as string,
+        created_at: data.created_at as string,
+        user_id: data.user_id as string,
+        full_name: profile?.full_name ?? null,
+        avatar_url: profile?.avatar_url ?? null,
+      };
+
+      setCommentsByPost((prev) => ({
+        ...prev,
+        [postId]: [normalized, ...(prev[postId] ?? [])],
+      }));
+      setCommentDrafts((prev) => ({ ...prev, [postId]: "" }));
+      setFeed((current) =>
+        current.map((post) =>
+          post.id === postId
+            ? { ...post, comments_count: post.comments_count + 1 }
+            : post,
+        ),
+      );
+      setCommentFeedback((prev) => ({
+        ...prev,
+        [postId]: {
+          type: "success",
+          message: "Comentario publicado.",
+        },
+      }));
+      setLoadingComments((prev) => ({ ...prev, [postId]: false }));
+    },
+    [commentDrafts, currentUserId],
+  );
+
   const handleRefreshFeed = useCallback(async () => {
     await fetchFeed("refresh");
-  }, [fetchFeed]);
+    await refreshLikes();
+  }, [fetchFeed, refreshLikes]);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -245,6 +502,7 @@ export default function SocialPage() {
       }
 
       await fetchFeed("initial");
+      await refreshLikes();
     };
 
     bootstrap();
@@ -252,7 +510,7 @@ export default function SocialPage() {
     return () => {
       isMountedRef.current = false;
     };
-  }, [fetchFeed, router]);
+  }, [fetchFeed, refreshLikes, router]);
 
   const moodStats = useMemo(() => {
     const total = feed.length;
@@ -534,8 +792,10 @@ export default function SocialPage() {
                   </CardContent>
                 </Card>
               ) : (
-                feed.map((post) => {
+              feed.map((post) => {
                   const moodMeta = getMoodMeta(post.mood);
+                  const liked =
+                    likedPosts[post.id] ?? post.liked_by_user ?? false;
                   return (
                     <Card
                       key={post.id}
@@ -579,16 +839,142 @@ export default function SocialPage() {
                         <p className="whitespace-pre-line text-sm leading-relaxed text-foreground/90">
                           {post.content}
                         </p>
-                        <div className="flex items-center gap-5 text-xs text-muted-foreground">
-                          <span className="inline-flex items-center gap-1.5">
-                            <Heart className="h-3.5 w-3.5" />
+                        <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className={`gap-1.5 border border-border/60 px-3 py-1 text-xs ${
+                              liked ? "bg-primary/10 text-primary" : ""
+                            }`}
+                            disabled={likePending[post.id]}
+                            onClick={() => handleToggleLike(post.id)}
+                          >
+                            <Heart
+                              className={`h-3.5 w-3.5 ${
+                                liked ? "fill-current" : ""
+                              }`}
+                            />
                             {post.likes_count}
-                          </span>
-                          <span className="inline-flex items-center gap-1.5">
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="gap-1.5 border border-border/60 px-3 py-1 text-xs"
+                            onClick={async () => {
+                              setOpenComments((prev) => ({
+                                ...prev,
+                                [post.id]: !prev[post.id],
+                              }));
+                              if (!openComments[post.id]) {
+                                await loadCommentsForPost(post.id);
+                              }
+                            }}
+                          >
                             <MessageCircle className="h-3.5 w-3.5" />
                             {post.comments_count}
-                          </span>
+                          </Button>
                         </div>
+                        {openComments[post.id] ? (
+                          <div className="mt-4 space-y-3 rounded-2xl border border-border/60 bg-background/60 p-4">
+                            <div className="space-y-2">
+                              <Textarea
+                                value={commentDrafts[post.id] ?? ""}
+                                onChange={(event) =>
+                                  setCommentDrafts((prev) => ({
+                                    ...prev,
+                                    [post.id]: event.target.value,
+                                  }))
+                                }
+                                placeholder="Escribe un comentario de apoyo..."
+                                rows={3}
+                              />
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs text-muted-foreground">
+                                  Comparte desde el respeto y la escucha.
+                                </span>
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  className="gap-2"
+                                  onClick={() => handleSubmitComment(post.id)}
+                                  disabled={loadingComments[post.id]}
+                                >
+                                  {loadingComments[post.id] ? (
+                                    <>
+                                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                      Publicando...
+                                    </>
+                                  ) : (
+                                    "Comentar"
+                                  )}
+                                </Button>
+                              </div>
+                              {commentFeedback[post.id] ? (
+                                <p
+                                  className={`text-xs ${
+                                    commentFeedback[post.id]?.type === "success"
+                                      ? "text-emerald-600"
+                                      : "text-destructive"
+                                  }`}
+                                >
+                                  {commentFeedback[post.id]?.message}
+                                </p>
+                              ) : null}
+                            </div>
+
+                            <div className="space-y-3">
+                              {loadingComments[post.id] &&
+                              !(commentsByPost[post.id]?.length ?? 0) ? (
+                                <p className="text-xs text-muted-foreground">
+                                  Cargando comentarios...
+                                </p>
+                              ) : commentsByPost[post.id]?.length ? (
+                                commentsByPost[post.id]?.map((comment) => (
+                                  <div
+                                    key={comment.id}
+                                    className="flex items-start gap-3 rounded-xl bg-card/80 p-3"
+                                  >
+                                    <div className="relative h-8 w-8 overflow-hidden rounded-full bg-primary/10">
+                                      {comment.avatar_url ? (
+                                        <Image
+                                          src={comment.avatar_url}
+                                          alt={comment.full_name ?? "Integrante"}
+                                          width={32}
+                                          height={32}
+                                          className="h-full w-full object-cover"
+                                          unoptimized
+                                        />
+                                      ) : (
+                                        <span className="flex h-full w-full items-center justify-center text-xs font-semibold text-primary">
+                                          {getInitials(comment.full_name)}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <div className="flex-1 space-y-1">
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-xs font-semibold text-foreground">
+                                          {comment.full_name ?? "Integrante"}
+                                        </span>
+                                        <span className="text-[10px] text-muted-foreground">
+                                          {formatRelativeTime(comment.created_at)}
+                                        </span>
+                                      </div>
+                                      <p className="text-xs text-muted-foreground">
+                                        {comment.content}
+                                      </p>
+                                    </div>
+                                  </div>
+                                ))
+                              ) : (
+                                <p className="text-xs text-muted-foreground">
+                                  Aún no hay comentarios. Deja el primero.
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        ) : null}
                       </CardContent>
                     </Card>
                   );
