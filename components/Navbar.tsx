@@ -17,6 +17,7 @@ import {
   Map,
   User2,
   LogOut,
+  Users,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -30,6 +31,7 @@ type NavLink = {
 const navLinks: NavLink[] = [
   { href: "/", label: "Inicio", icon: Home },
   { href: "/informacion", label: "Como funciona?", icon: Map },
+  { href: "/social", label: "Comunidad", icon: Users },
   { href: "/preguntas", label: "Preguntas", icon: HelpCircle },
   { href: "/upgrade", label: "Planes", icon: Gem, highlight: true },
   { href: "/protected", label: "Mi espacio", icon: SparklesIcon },
@@ -410,3 +412,4 @@ export function Navbar() {
     </motion.header>
   );
 }
+

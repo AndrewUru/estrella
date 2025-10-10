@@ -5,6 +5,7 @@ import { Hero } from "@/components/hero";
 import { Stats } from "@/components/stats";
 import { Beneficios } from "@/components/beneficios";
 import ProcesoSection from "@/components/proceso";
+import SocialLandingSection from "@/components/social";
 
 export default function Home() {
   return (
@@ -21,6 +22,8 @@ export default function Home() {
         <ProcesoSection />
 
         <Stats />
+
+        <SocialLandingSection />
 
         <Beneficios />
 
