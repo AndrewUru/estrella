@@ -7,7 +7,11 @@ import { supabase } from "@/lib/supabase/client";
 import { Session } from "@supabase/supabase-js";
 import Image from "next/image";
 import { ThemeSwitcher } from "@/components/theme-switcher";
-import { Bars3Icon, XMarkIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
+import {
+  Bars3Icon,
+  XMarkIcon,
+  Cog6ToothIcon,
+} from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Home,
@@ -31,7 +35,7 @@ type NavLink = {
 const navLinks: NavLink[] = [
   { href: "/", label: "Inicio", icon: Home },
   { href: "/informacion", label: "Como funciona?", icon: Map },
-  { href: "/social", label: "Comunidad", icon: Users },
+  { href: "/protected/social", label: "Comunidad", icon: Users },
   { href: "/preguntas", label: "Preguntas", icon: HelpCircle },
   { href: "/upgrade", label: "Planes", icon: Gem, highlight: true },
   { href: "/protected", label: "Mi espacio", icon: SparklesIcon },
@@ -161,7 +165,10 @@ export function Navbar() {
     >
       <div className="absolute inset-x-0 top-0 -z-10 h-full bg-gradient-to-b from-purple-500/10 via-white/0 to-transparent dark:from-purple-900/35" />
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:h-[4.5rem] sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-3 rounded-full px-2 py-1 transition hover:scale-[1.02]">
+        <Link
+          href="/"
+          className="flex items-center gap-3 rounded-full px-2 py-1 transition hover:scale-[1.02]"
+        >
           <motion.div
             whileHover={{ rotate: 360 }}
             transition={{ duration: 0.8 }}
@@ -204,7 +211,11 @@ export function Navbar() {
                     <motion.span
                       layoutId="nav-pill"
                       className="absolute inset-0 -z-10 rounded-full bg-gradient-to-r from-purple-500/20 via-purple-500/10 to-transparent dark:from-purple-500/40 dark:via-pink-500/20"
-                      transition={{ type: "spring", stiffness: 320, damping: 30 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 320,
+                        damping: 30,
+                      }}
                     />
                   )}
                   <span className="relative flex items-center gap-2">
@@ -224,7 +235,12 @@ export function Navbar() {
                 <span className="absolute inset-0 -z-10 rounded-full bg-gradient-to-br from-purple-500/60 via-pink-500/40 to-indigo-500/40 blur" />
                 <div className="relative h-full w-full overflow-hidden rounded-full border border-purple-400/40 bg-purple-500/20 shadow-inner shadow-purple-500/30">
                   {avatar ? (
-                    <Image src={avatar} alt="Avatar" fill className="object-cover" />
+                    <Image
+                      src={avatar}
+                      alt="Avatar"
+                      fill
+                      className="object-cover"
+                    />
                   ) : (
                     <div className="grid h-full w-full place-items-center text-sm font-semibold text-white">
                       {initials}
@@ -412,4 +428,3 @@ export function Navbar() {
     </motion.header>
   );
 }
-
