@@ -17,14 +17,14 @@ const steps = [
     title: "Practicas guiadas",
     description:
       "Recibe meditaciones canalizadas, breathwork y activaciones para sostener tu proceso diario.",
-    image: "/images/proceso-practicas.png",
+    image: "/images/anclar.webp",
   },
   {
     id: "03",
     title: "Integracion consciente",
     description:
       "Registra lo que sientes, comparte en comunidad y permite que la transformacion se asiente en ti.",
-    image: "/images/proceso-integracion.png",
+    image: "/images/integracion.webp",
   },
 ];
 
