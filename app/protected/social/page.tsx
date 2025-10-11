@@ -33,6 +33,8 @@ import {
   Bookmark,
   MessageSquare,
   Sparkles,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 
 type ProgressPost = {
@@ -81,6 +83,8 @@ type ProgressComment = {
   user_id: string;
   full_name: string | null;
   avatar_url: string | null;
+  likes_count: number;
+  liked_by_user?: boolean;
 };
 
 const moodOptions: Array<{ value: string; label: string; emoji: string }> = [
@@ -117,6 +121,18 @@ export default function SocialPage() {
   );
   const [commentFeedback, setCommentFeedback] = useState<
     Record<string, ComposerFeedback | null>
+  >({});
+  const [commentLikePending, setCommentLikePending] = useState<
+    Record<string, boolean>
+  >({});
+  const [commentEditing, setCommentEditing] = useState<
+    Record<string, boolean>
+  >({});
+  const [commentEditDrafts, setCommentEditDrafts] = useState<
+    Record<string, string>
+  >({});
+  const [commentActionPending, setCommentActionPending] = useState<
+    Record<string, boolean>
   >({});
 
   const isMountedRef = useRef(true);
@@ -351,7 +367,7 @@ export default function SocialPage() {
         .limit(50);
 
       if (!error && isMountedRef.current) {
-        const normalized =
+        let normalized =
           data?.map((comment) => {
             const rawProfile =
               comment.profiles as
@@ -369,8 +385,48 @@ export default function SocialPage() {
               user_id: comment.user_id as string,
               full_name: profile?.full_name ?? null,
               avatar_url: profile?.avatar_url ?? null,
+              likes_count: 0,
+              liked_by_user: false,
             } as ProgressComment;
           }) ?? [];
+
+        if (normalized.length > 0) {
+          const commentIds = normalized.map((comment) => comment.id);
+          if (commentIds.length > 0) {
+            const { data: likeRows, error: likesError } = await supabase
+              .from("progress_update_comment_likes")
+              .select("comment_id, user_id")
+              .in("comment_id", commentIds);
+
+            if (!likesError && likeRows) {
+              const likeCountMap = new Map<string, number>();
+              const likedByUserSet = new Set<string>();
+
+              likeRows.forEach((row) => {
+                const commentId = row.comment_id as string;
+                likeCountMap.set(
+                  commentId,
+                  (likeCountMap.get(commentId) ?? 0) + 1,
+                );
+                if (
+                  currentUserId &&
+                  (row.user_id as string) === currentUserId
+                ) {
+                  likedByUserSet.add(commentId);
+                }
+              });
+
+              normalized = normalized.map((comment) => ({
+                ...comment,
+                likes_count: likeCountMap.get(comment.id) ?? comment.likes_count,
+                liked_by_user: currentUserId
+                  ? likedByUserSet.has(comment.id)
+                  : false,
+              }));
+            }
+          }
+        }
+
         setCommentsByPost((prev) => ({ ...prev, [postId]: normalized }));
       }
 
@@ -378,7 +434,7 @@ export default function SocialPage() {
         setLoadingComments((prev) => ({ ...prev, [postId]: false }));
       }
     },
-    [loadingComments],
+    [loadingComments, currentUserId],
   );
 
   const handleSubmitComment = useCallback(
@@ -453,6 +509,8 @@ export default function SocialPage() {
         user_id: data.user_id as string,
         full_name: profile?.full_name ?? null,
         avatar_url: profile?.avatar_url ?? null,
+        likes_count: 0,
+        liked_by_user: false,
       };
 
       setCommentsByPost((prev) => ({
@@ -477,6 +535,274 @@ export default function SocialPage() {
       setLoadingComments((prev) => ({ ...prev, [postId]: false }));
     },
     [commentDrafts, currentUserId],
+  );
+
+  const handleToggleCommentLike = useCallback(
+    async (postId: string, commentId: string) => {
+      if (!currentUserId) {
+        setCommentFeedback((prev) => ({
+          ...prev,
+          [postId]: {
+            type: "error",
+            message: "Necesitas iniciar sesión para reaccionar.",
+          },
+        }));
+        return;
+      }
+
+      if (commentLikePending[commentId]) return;
+
+      const comment = commentsByPost[postId]?.find(
+        (item) => item.id === commentId,
+      );
+      if (!comment) return;
+
+      const alreadyLiked = comment.liked_by_user ?? false;
+      setCommentLikePending((prev) => ({ ...prev, [commentId]: true }));
+
+      if (alreadyLiked) {
+        const { error } = await supabase
+          .from("progress_update_comment_likes")
+          .delete()
+          .eq("comment_id", commentId)
+          .eq("user_id", currentUserId);
+
+        if (error) {
+          setCommentFeedback((prev) => ({
+            ...prev,
+            [postId]: {
+              type: "error",
+              message: "No pudimos actualizar tu reacción.",
+            },
+          }));
+        } else {
+          setCommentsByPost((prev) => {
+            const postComments = prev[postId] ?? [];
+            const updated = postComments.map((item) =>
+              item.id === commentId
+                ? {
+                    ...item,
+                    likes_count: Math.max(0, item.likes_count - 1),
+                    liked_by_user: false,
+                  }
+                : item,
+            );
+            return { ...prev, [postId]: updated };
+          });
+        }
+      } else {
+        const { error } = await supabase
+          .from("progress_update_comment_likes")
+          .insert({
+            comment_id: commentId,
+            user_id: currentUserId,
+          });
+
+        if (error) {
+          setCommentFeedback((prev) => ({
+            ...prev,
+            [postId]: {
+              type: "error",
+              message: "No pudimos registrar tu reacción.",
+            },
+          }));
+        } else {
+          setCommentsByPost((prev) => {
+            const postComments = prev[postId] ?? [];
+            const updated = postComments.map((item) =>
+              item.id === commentId
+                ? {
+                    ...item,
+                    likes_count: item.likes_count + 1,
+                    liked_by_user: true,
+                  }
+                : item,
+            );
+            return { ...prev, [postId]: updated };
+          });
+        }
+      }
+
+      setCommentLikePending((prev) => ({ ...prev, [commentId]: false }));
+    },
+    [commentLikePending, commentsByPost, currentUserId],
+  );
+
+  const handleStartEditComment = useCallback((commentId: string, content: string) => {
+    setCommentEditing((prev) => ({ ...prev, [commentId]: true }));
+    setCommentEditDrafts((prev) => ({ ...prev, [commentId]: content }));
+  }, []);
+
+  const handleCancelEditComment = useCallback((commentId: string) => {
+    setCommentEditing((prev) => {
+      if (!prev[commentId]) return prev;
+      const next = { ...prev };
+      delete next[commentId];
+      return next;
+    });
+    setCommentEditDrafts((prev) => {
+      if (!(commentId in prev)) return prev;
+      const next = { ...prev };
+      delete next[commentId];
+      return next;
+    });
+    setCommentActionPending((prev) => {
+      if (!prev[commentId]) return prev;
+      const next = { ...prev };
+      delete next[commentId];
+      return next;
+    });
+  }, []);
+
+  const handleUpdateComment = useCallback(
+    async (postId: string, commentId: string) => {
+      if (!currentUserId) {
+        setCommentFeedback((prev) => ({
+          ...prev,
+          [postId]: {
+            type: "error",
+            message: "Necesitas iniciar sesión para editar tu comentario.",
+          },
+        }));
+        return;
+      }
+
+      const draft = commentEditDrafts[commentId]?.trim() ?? "";
+      if (!draft) {
+        setCommentFeedback((prev) => ({
+          ...prev,
+          [postId]: {
+            type: "error",
+            message: "Tu comentario no puede quedar vacío.",
+          },
+        }));
+        return;
+      }
+
+      setCommentActionPending((prev) => ({ ...prev, [commentId]: true }));
+
+      const { error } = await supabase
+        .from("progress_update_comments")
+        .update({ content: draft })
+        .eq("id", commentId)
+        .eq("user_id", currentUserId);
+
+      if (error) {
+        setCommentFeedback((prev) => ({
+          ...prev,
+          [postId]: {
+            type: "error",
+            message: "No pudimos actualizar tu comentario.",
+          },
+        }));
+      } else {
+        setCommentsByPost((prev) => {
+          const updated = (prev[postId] ?? []).map((comment) =>
+            comment.id === commentId ? { ...comment, content: draft } : comment,
+          );
+          return { ...prev, [postId]: updated };
+        });
+        setCommentFeedback((prev) => ({
+          ...prev,
+          [postId]: {
+            type: "success",
+            message: "Comentario actualizado.",
+          },
+        }));
+        setCommentEditing((prev) => {
+          const next = { ...prev };
+          delete next[commentId];
+          return next;
+        });
+        setCommentEditDrafts((prev) => {
+          const next = { ...prev };
+          delete next[commentId];
+          return next;
+        });
+      }
+
+      setCommentActionPending((prev) => ({ ...prev, [commentId]: false }));
+    },
+    [commentEditDrafts, currentUserId],
+  );
+
+  const handleDeleteComment = useCallback(
+    async (postId: string, commentId: string) => {
+      if (!currentUserId) {
+        setCommentFeedback((prev) => ({
+          ...prev,
+          [postId]: {
+            type: "error",
+            message: "Necesitas iniciar sesión para gestionar tus comentarios.",
+          },
+        }));
+        return;
+      }
+
+      const confirmed =
+        typeof window !== "undefined"
+          ? window.confirm("¿Quieres eliminar este comentario?")
+          : false;
+
+      if (!confirmed) return;
+
+      setCommentActionPending((prev) => ({ ...prev, [commentId]: true }));
+
+      const { error } = await supabase
+        .from("progress_update_comments")
+        .delete()
+        .eq("id", commentId)
+        .eq("user_id", currentUserId);
+
+      if (error) {
+        setCommentFeedback((prev) => ({
+          ...prev,
+          [postId]: {
+            type: "error",
+            message: "No pudimos eliminar tu comentario.",
+          },
+        }));
+      } else {
+        setCommentsByPost((prev) => {
+          const filtered = (prev[postId] ?? []).filter(
+            (comment) => comment.id !== commentId,
+          );
+          return { ...prev, [postId]: filtered };
+        });
+        setFeed((current) =>
+          current.map((post) =>
+            post.id === postId
+              ? {
+                  ...post,
+                  comments_count: Math.max(0, post.comments_count - 1),
+                }
+              : post,
+          ),
+        );
+        setCommentFeedback((prev) => ({
+          ...prev,
+          [postId]: {
+            type: "success",
+            message: "Comentario eliminado.",
+          },
+        }));
+      }
+
+      setCommentActionPending((prev) => ({ ...prev, [commentId]: false }));
+      setCommentEditing((prev) => {
+        if (!prev[commentId]) return prev;
+        const next = { ...prev };
+        delete next[commentId];
+        return next;
+      });
+      setCommentEditDrafts((prev) => {
+        if (!(commentId in prev)) return prev;
+        const next = { ...prev };
+        delete next[commentId];
+        return next;
+      });
+    },
+    [currentUserId, setFeed],
   );
 
   const handleRefreshFeed = useCallback(async () => {
@@ -931,42 +1257,169 @@ export default function SocialPage() {
                                   Cargando comentarios...
                                 </p>
                               ) : commentsByPost[post.id]?.length ? (
-                                commentsByPost[post.id]?.map((comment) => (
-                                  <div
-                                    key={comment.id}
-                                    className="flex items-start gap-3 rounded-xl bg-card/80 p-3"
-                                  >
-                                    <div className="relative h-8 w-8 overflow-hidden rounded-full bg-primary/10">
-                                      {comment.avatar_url ? (
-                                        <Image
-                                          src={comment.avatar_url}
-                                          alt={comment.full_name ?? "Integrante"}
-                                          width={32}
-                                          height={32}
-                                          className="h-full w-full object-cover"
-                                          unoptimized
-                                        />
-                                      ) : (
-                                        <span className="flex h-full w-full items-center justify-center text-xs font-semibold text-primary">
-                                          {getInitials(comment.full_name)}
-                                        </span>
-                                      )}
-                                    </div>
-                                    <div className="flex-1 space-y-1">
-                                      <div className="flex items-center justify-between">
-                                        <span className="text-xs font-semibold text-foreground">
-                                          {comment.full_name ?? "Integrante"}
-                                        </span>
-                                        <span className="text-[10px] text-muted-foreground">
-                                          {formatRelativeTime(comment.created_at)}
-                                        </span>
+                                commentsByPost[post.id]?.map((comment) => {
+                                  const isOwner = comment.user_id === currentUserId;
+                                  const isEditing = commentEditing[comment.id] ?? false;
+                                  const editDraft =
+                                    commentEditDrafts[comment.id] ?? comment.content;
+                                  const likeLoading =
+                                    commentLikePending[comment.id] ?? false;
+                                  const actionPending =
+                                    commentActionPending[comment.id] ?? false;
+
+                                  return (
+                                    <div
+                                      key={comment.id}
+                                      className="flex items-start gap-3 rounded-xl bg-card/80 p-3"
+                                    >
+                                      <div className="relative h-8 w-8 overflow-hidden rounded-full bg-primary/10">
+                                        {comment.avatar_url ? (
+                                          <Image
+                                            src={comment.avatar_url}
+                                            alt={comment.full_name ?? "Integrante"}
+                                            width={32}
+                                            height={32}
+                                            className="h-full w-full object-cover"
+                                            unoptimized
+                                          />
+                                        ) : (
+                                          <span className="flex h-full w-full items-center justify-center text-xs font-semibold text-primary">
+                                            {getInitials(comment.full_name)}
+                                          </span>
+                                        )}
                                       </div>
-                                      <p className="text-xs text-muted-foreground">
-                                        {comment.content}
-                                      </p>
+                                      <div className="flex-1 space-y-2">
+                                        <div className="flex items-center justify-between">
+                                          <span className="text-xs font-semibold text-foreground">
+                                            {comment.full_name ?? "Integrante"}
+                                          </span>
+                                          <span className="text-[10px] text-muted-foreground">
+                                            {formatRelativeTime(comment.created_at)}
+                                          </span>
+                                        </div>
+                                        {isEditing ? (
+                                          <Textarea
+                                            rows={3}
+                                            value={editDraft}
+                                            onChange={(event) =>
+                                              setCommentEditDrafts((prev) => ({
+                                                ...prev,
+                                                [comment.id]: event.target.value,
+                                              }))
+                                            }
+                                            className="text-xs"
+                                          />
+                                        ) : (
+                                          <p className="text-xs text-muted-foreground">
+                                            {comment.content}
+                                          </p>
+                                        )}
+                                        <div className="flex flex-wrap items-center gap-2 pt-1 text-[10px] text-muted-foreground">
+                                          <button
+                                            type="button"
+                                            className={`flex items-center gap-1 rounded-md border border-border/60 px-2 py-1 transition ${
+                                              comment.liked_by_user
+                                                ? "bg-primary/10 text-primary"
+                                                : ""
+                                            }`}
+                                            onClick={() =>
+                                              handleToggleCommentLike(
+                                                post.id,
+                                                comment.id,
+                                              )
+                                            }
+                                            disabled={likeLoading}
+                                          >
+                                            {likeLoading ? (
+                                              <Loader2 className="h-3 w-3 animate-spin" />
+                                            ) : (
+                                              <Heart
+                                                className={`h-3 w-3 ${
+                                                  comment.liked_by_user
+                                                    ? "fill-current"
+                                                    : ""
+                                                }`}
+                                              />
+                                            )}
+                                            {comment.likes_count}
+                                          </button>
+                                          {isOwner ? (
+                                            isEditing ? (
+                                              <>
+                                                <Button
+                                                  type="button"
+                                                  size="sm"
+                                                  className="h-7 px-3 text-xs"
+                                                  onClick={() =>
+                                                    handleUpdateComment(
+                                                      post.id,
+                                                      comment.id,
+                                                    )
+                                                  }
+                                                  disabled={actionPending}
+                                                >
+                                                  {actionPending ? (
+                                                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                                  ) : (
+                                                    "Guardar"
+                                                  )}
+                                                </Button>
+                                                <Button
+                                                  type="button"
+                                                  variant="ghost"
+                                                  size="sm"
+                                                  className="h-7 px-3 text-xs"
+                                                  onClick={() =>
+                                                    handleCancelEditComment(
+                                                      comment.id,
+                                                    )
+                                                  }
+                                                  disabled={actionPending}
+                                                >
+                                                  Cancelar
+                                                </Button>
+                                              </>
+                                            ) : (
+                                              <>
+                                                <button
+                                                  type="button"
+                                                  className="flex items-center gap-1 rounded-md px-2 py-1 transition hover:bg-muted"
+                                                  onClick={() =>
+                                                    handleStartEditComment(
+                                                      comment.id,
+                                                      comment.content,
+                                                    )
+                                                  }
+                                                >
+                                                  <Pencil className="h-3 w-3" />
+                                                  Editar
+                                                </button>
+                                                <button
+                                                  type="button"
+                                                  className="flex items-center gap-1 rounded-md px-2 py-1 text-destructive transition hover:bg-destructive/10"
+                                                  onClick={() =>
+                                                    handleDeleteComment(
+                                                      post.id,
+                                                      comment.id,
+                                                    )
+                                                  }
+                                                  disabled={actionPending}
+                                                >
+                                                  {actionPending ? (
+                                                    <Loader2 className="h-3 w-3 animate-spin" />
+                                                  ) : (
+                                                    <Trash2 className="h-3 w-3" />
+                                                  )}
+                                                  Eliminar
+                                                </button>
+                                              </>
+                                            )
+                                          ) : null}
+                                        </div>
+                                      </div>
                                     </div>
-                                  </div>
-                                ))
+                                  );
+                                })
                               ) : (
                                 <p className="text-xs text-muted-foreground">
                                   Aún no hay comentarios. Deja el primero.
