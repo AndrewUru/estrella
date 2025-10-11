@@ -150,18 +150,27 @@ export default function AdminPage() {
     }
 
     let normalized: ModerationComment[] =
-      data?.map((row) => ({
-        id: row.id as string,
-        content: row.content as string,
-        created_at: row.created_at as string,
-        update_id: row.update_id as string,
-        user_id: row.user_id as string,
-        author_name:
-          (row.profiles as { full_name: string | null } | null)?.full_name ??
-          null,
-        update_excerpt: null,
-        update_owner: null,
-      })) ?? [];
+      data?.map((row) => {
+        const profileRelation =
+          row.profiles as
+            | { full_name: string | null }
+            | { full_name: string | null }[]
+            | null;
+        const profile = Array.isArray(profileRelation)
+          ? profileRelation[0]
+          : profileRelation;
+
+        return {
+          id: row.id as string,
+          content: row.content as string,
+          created_at: row.created_at as string,
+          update_id: row.update_id as string,
+          user_id: row.user_id as string,
+          author_name: profile?.full_name ?? null,
+          update_excerpt: null,
+          update_owner: null,
+        };
+      }) ?? [];
 
     const updateIds = Array.from(
       new Set(normalized.map((comment) => comment.update_id)),
