@@ -1,3 +1,5 @@
+//C:\estrella\components\social\hooks\useComments.ts
+
 "use client";
 
 import { useCallback, useEffect, useState } from "react";

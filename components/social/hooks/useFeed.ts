@@ -20,10 +20,7 @@ type FeedRow = {
 
 const isFeedRow = (value: unknown): value is FeedRow =>
   Boolean(
-    value &&
-      typeof value === "object" &&
-      "id" in value &&
-      "created_at" in value
+    value && typeof value === "object" && "id" in value && "created_at" in value
   );
 
 const normalizeFeedPost = (row: FeedRow): FeedPost => ({
@@ -43,6 +40,7 @@ export function useFeed() {
   const queryClient = useQueryClient();
   const [userId, setUserId] = useState<string | null>(null);
 
+  // Obtener usuario actual
   useEffect(() => {
     const fetchUser = async () => {
       const { data } = await supabase.auth.getUser();
@@ -51,6 +49,7 @@ export function useFeed() {
     void fetchUser();
   }, []);
 
+  // Cargar feed inicial
   const { data, isLoading, isFetching, refetch } = useQuery<FeedPost[]>({
     queryKey: ["feed"],
     queryFn: async () => {
@@ -79,13 +78,14 @@ export function useFeed() {
 
   const feed = data ?? [];
 
+  // Hook de likes
   const { likedMap, toggleLike, pending } = useLikes({
     table: "progress_update_likes",
     targetField: "update_id",
     userId,
   });
 
-  // Realtime updates
+  // 🔁 Realtime: actualizaciones de publicaciones
   useRealtime<FeedRow>("progress_updates", (payload) => {
     queryClient.setQueryData<FeedPost[]>(["feed"], (current = []) => {
       const event = payload.eventType;
@@ -113,6 +113,16 @@ export function useFeed() {
     });
   });
 
+  // 🔁 Realtime: comentarios añadidos o eliminados
+  useRealtime("progress_update_comments", (payload) => {
+    const event = payload.eventType;
+    if (event === "INSERT" || event === "DELETE") {
+      // Refresca el feed para actualizar el contador de comentarios
+      queryClient.invalidateQueries({ queryKey: ["feed"] });
+    }
+  });
+
+  // ➕ Crear nueva publicación
   const addPost = useCallback(
     async (content: string, mood: MoodValue) => {
       const { data: userData } = await supabase.auth.getUser();
