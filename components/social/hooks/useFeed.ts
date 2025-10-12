@@ -48,7 +48,7 @@ export function useFeed() {
     void fetchUser();
   }, []);
 
-  const { data, isLoading, isFetching, refetch } = useQuery<FeedPost[]>({
+  const { data, isLoading, isFetching, refetch, error, isError } = useQuery<FeedPost[]>({
     queryKey: ["feed"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -178,6 +178,8 @@ export function useFeed() {
     isLoading,
     isFetching,
     refetch,
+    error,
+    isError,
     likedMap,
     toggleLike,
     pending,
