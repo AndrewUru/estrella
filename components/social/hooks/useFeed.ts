@@ -15,9 +15,6 @@ type FeedRow = {
   created_at: string;
   likes_count: number | null;
   comments_count: number | null;
-  liked_by_user: boolean | null;
-  full_name?: string | null;
-  avatar_url?: string | null;
   profiles?: ProfileSummary | null;
 };
 
@@ -27,11 +24,10 @@ const normalizeFeedPost = (row: FeedRow): FeedPost => ({
   content: row.content ?? "",
   mood: (row.mood ?? null) as MoodValue,
   created_at: row.created_at,
-  likes_count: row.likes_count,
-  comments_count: row.comments_count,
-  liked_by_user: row.liked_by_user,
-  full_name: row.full_name ?? row.profiles?.full_name ?? null,
-  avatar_url: row.avatar_url ?? row.profiles?.avatar_url ?? null,
+  likes_count: row.likes_count ?? 0,
+  comments_count: row.comments_count ?? 0,
+  full_name: row.profiles?.full_name ?? null,
+  avatar_url: row.profiles?.avatar_url ?? null,
   profiles: row.profiles ?? null,
 });
 
@@ -44,7 +40,6 @@ export function useFeed() {
       const { data } = await supabase.auth.getUser();
       setUserId(data.user?.id ?? null);
     };
-
     void fetchUser();
   }, []);
 
@@ -54,7 +49,16 @@ export function useFeed() {
       const { data, error } = await supabase
         .from("progress_updates")
         .select(
-          "id, user_id, content, mood, created_at, likes_count, comments_count, liked_by_user, full_name, avatar_url, profiles(full_name, avatar_url)"
+          `
+          id,
+          user_id,
+          content,
+          mood,
+          created_at,
+          likes_count,
+          comments_count,
+          profiles(full_name, avatar_url)
+        `
         )
         .order("created_at", { ascending: false })
         .limit(40)
@@ -73,28 +77,25 @@ export function useFeed() {
     userId,
   });
 
+  // Realtime updates
   useRealtime<FeedRow>("progress_updates", (payload) => {
     queryClient.setQueryData<FeedPost[]>(["feed"], (current = []) => {
       if (payload.type === "INSERT" && payload.new) {
         const newPost = normalizeFeedPost(payload.new);
-        if (current.some((post) => post.id === newPost.id)) {
-          return current;
-        }
+        if (current.some((post) => post.id === newPost.id)) return current;
         return [newPost, ...current];
       }
 
       if (payload.type === "DELETE") {
-        const removed = payload.old;
-        if (!removed) {
-          return current;
-        }
-        return current.filter((post) => post.id !== removed.id);
+        const oldData = payload.old;
+        if (!oldData) return current; // previene el null
+        return current.filter((post) => post.id !== oldData.id);
       }
 
       if (payload.type === "UPDATE" && payload.new) {
-        const updatedPost = normalizeFeedPost(payload.new);
+        const updated = normalizeFeedPost(payload.new);
         return current.map((post) =>
-          post.id === updatedPost.id ? { ...post, ...updatedPost } : post
+          post.id === updated.id ? { ...post, ...updated } : post
         );
       }
 
@@ -116,12 +117,22 @@ export function useFeed() {
           mood,
         })
         .select(
-          "id, user_id, content, mood, created_at, likes_count, comments_count, liked_by_user, full_name, avatar_url, profiles(full_name, avatar_url)"
+          `
+          id,
+          user_id,
+          content,
+          mood,
+          created_at,
+          likes_count,
+          comments_count,
+          profiles(full_name, avatar_url)
+        `
         )
         .single()
         .returns<FeedRow>();
 
-      if (error || !data) throw error ?? new Error("No se pudo crear la publicacion");
+      if (error || !data)
+        throw error ?? new Error("No se pudo crear la publicación");
 
       queryClient.setQueryData<FeedPost[]>(["feed"], (old = []) => [
         normalizeFeedPost(data),
