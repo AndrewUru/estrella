@@ -61,7 +61,7 @@ export function PostCard({ post }: { post: FeedPost }) {
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25 }}
-      className="rounded-3xl border border-border/60 bg-white/70 shadow-sm backdrop-blur-sm p-5 space-y-4"
+      className="rounded-3xl border border-border/60 shadow-sm backdrop-blur-sm p-5 space-y-4"
     >
       <div className="flex items-center gap-3">
         <div className="relative h-11 w-11 overflow-hidden rounded-full bg-primary/10">
