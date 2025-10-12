@@ -61,8 +61,7 @@ const adminShortcuts: Shortcut[] = [
     href: "/protected/admin/practicas#nueva",
     icon: PlusCircle,
     title: "Crear nueva practica",
-    description:
-      "Publica ejercicios guiados para acompanar a las integrantes.",
+    description: "Publica ejercicios guiados para acompanar a las integrantes.",
     cta: "Crear practica",
   },
 ];
@@ -86,7 +85,6 @@ type ModerationComment = {
 
 export default function AdminPage() {
   const router = useRouter();
-
   const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
@@ -95,6 +93,7 @@ export default function AdminPage() {
   const [commentsError, setCommentsError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
+  // 🔐 Validar admin al cargar
   useEffect(() => {
     async function validarAdmin() {
       const {
@@ -132,13 +131,16 @@ export default function AdminPage() {
     router.refresh();
   };
 
+  // 🗂 Cargar últimos comentarios
   const fetchLatestComments = async () => {
     setCommentsLoading(true);
     setCommentsError(null);
 
     const { data, error } = await supabase
       .from("progress_update_comments")
-      .select("id, content, created_at, user_id, update_id, profiles(full_name)")
+      .select(
+        "id, content, created_at, user_id, update_id, profiles(full_name)"
+      )
       .order("created_at", { ascending: false })
       .limit(40);
 
@@ -151,11 +153,10 @@ export default function AdminPage() {
 
     let normalized: ModerationComment[] =
       data?.map((row) => {
-        const profileRelation =
-          row.profiles as
-            | { full_name: string | null }
-            | { full_name: string | null }[]
-            | null;
+        const profileRelation = row.profiles as
+          | { full_name: string | null }
+          | { full_name: string | null }[]
+          | null;
         const profile = Array.isArray(profileRelation)
           ? profileRelation[0]
           : profileRelation;
@@ -172,25 +173,26 @@ export default function AdminPage() {
         };
       }) ?? [];
 
+    // 📎 Buscar publicaciones relacionadas
     const updateIds = Array.from(
-      new Set(normalized.map((comment) => comment.update_id)),
+      new Set(normalized.map((comment) => comment.update_id))
     ).filter(Boolean);
 
     if (updateIds.length > 0) {
-      const { data: relatedUpdates, error: updatesError } = await supabase
+      const { data: relatedUpdates } = await supabase
         .from("progress_updates")
         .select("id, content, user_id")
         .in("id", updateIds);
 
-      if (!updatesError && relatedUpdates) {
+      if (relatedUpdates) {
         const map = new Map(
-          relatedUpdates.map((update) => [
-            update.id as string,
+          relatedUpdates.map((u) => [
+            u.id as string,
             {
-              content: update.content as string | null,
-              owner: update.user_id as string | null,
+              content: u.content as string | null,
+              owner: u.user_id as string | null,
             },
-          ]),
+          ])
         );
 
         normalized = normalized.map((comment) => {
@@ -209,18 +211,21 @@ export default function AdminPage() {
     setCommentsLoading(false);
   };
 
+  // 🧹 Borrar comentario con RPC (seguro para RLS)
   const handleDeleteComment = async (id: string) => {
     setDeletingId(id);
-    const { error } = await supabase
-      .from("progress_update_comments")
-      .delete()
-      .eq("id", id);
 
-    if (!error) {
-      setComments((prev) => prev.filter((comment) => comment.id !== id));
+    const { error } = await supabase.rpc("admin_delete_comment", {
+      comment_id: id,
+    });
+
+    if (error) {
+      console.error("DELETE error:", error);
+      setCommentsError("No se pudo eliminar el comentario (RLS/permiso).");
     } else {
-      setCommentsError("No se pudo eliminar el comentario. Intenta nuevamente.");
+      setComments((prev) => prev.filter((c) => c.id !== id));
     }
+
     setDeletingId(null);
   };
 
@@ -261,6 +266,7 @@ export default function AdminPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-background via-background to-secondary/30">
       <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-10 px-4 py-10 sm:px-6 lg:px-8">
+        {/* 🔹 Header */}
         <header className="rounded-3xl border border-border/80 bg-card/80 shadow-sm backdrop-blur">
           <div className="flex flex-col gap-6 p-8 sm:p-10 lg:flex-row lg:items-center lg:justify-between">
             <div className="space-y-5">
@@ -272,9 +278,8 @@ export default function AdminPage() {
                   Bienvenida, {userName}
                 </h1>
                 <p className="max-w-2xl text-base text-muted-foreground">
-                  Administra la experiencia de quienes forman parte de la
-                  comunidad, manten el contenido actualizado y guia cada proceso
-                  con claridad.
+                  Administra la experiencia de la comunidad y guia cada proceso
+                  con claridad y orden.
                 </p>
               </div>
             </div>
@@ -289,16 +294,12 @@ export default function AdminPage() {
           </div>
         </header>
 
+        {/* 🔹 Atajos */}
         <section className="grid gap-8 lg:grid-cols-[2fr,1fr]">
           <div className="space-y-6">
-            <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-              <h2 className="text-xl font-semibold text-foreground">
-                Accesos rapidos
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                Elige una seccion para comenzar.
-              </p>
-            </div>
+            <h2 className="text-xl font-semibold text-foreground">
+              Accesos rapidos
+            </h2>
             <div className="grid gap-6 sm:grid-cols-2">
               {adminShortcuts.map(
                 ({ href, icon: Icon, title, description, cta }) => (
@@ -325,7 +326,7 @@ export default function AdminPage() {
                       </CardContent>
                     </Card>
                   </Link>
-                ),
+                )
               )}
             </div>
           </div>
@@ -336,7 +337,7 @@ export default function AdminPage() {
                 Recomendaciones rapidas
               </CardTitle>
               <CardDescription>
-                Organiza tu jornada de administracion con claridad y ritmo.
+                Organiza tu jornada con claridad y ritmo.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-5 text-sm text-muted-foreground">
@@ -350,6 +351,7 @@ export default function AdminPage() {
           </Card>
         </section>
 
+        {/* 🔹 Moderación */}
         <section className="space-y-6">
           <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -393,15 +395,15 @@ export default function AdminPage() {
             </div>
           </div>
 
-          {commentsError ? (
+          {commentsError && (
             <p className="text-sm text-destructive">{commentsError}</p>
-          ) : null}
+          )}
 
           <div className="grid gap-4 md:grid-cols-2">
             {commentsLoading && comments.length === 0 ? (
               Array.from({ length: 4 }).map((_, index) => (
                 <Card
-                  key={`comment-skeleton-${index}`}
+                  key={`skeleton-${index}`}
                   className="border-border/60 bg-card/80"
                 >
                   <CardContent className="space-y-3 p-5">
