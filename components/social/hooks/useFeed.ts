@@ -83,8 +83,12 @@ export function useFeed() {
         return [newPost, ...current];
       }
 
-      if (payload.type === "DELETE" && payload.old) {
-        return current.filter((post) => post.id !== payload.old.id);
+      if (payload.type === "DELETE") {
+        const removed = payload.old;
+        if (!removed) {
+          return current;
+        }
+        return current.filter((post) => post.id !== removed.id);
       }
 
       if (payload.type === "UPDATE" && payload.new) {
