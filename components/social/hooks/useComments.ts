@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 import type { PostComment } from "../types";
@@ -11,17 +13,19 @@ type CommentRow = {
   likes_count: number | null;
   profiles: {
     full_name: string | null;
+    avatar_url: string | null;
   } | null;
 };
 
-const mapComment = (row: CommentRow): PostComment => ({
+const normalizeComment = (row: CommentRow): PostComment => ({
   id: row.id,
   update_id: row.update_id,
   content: row.content ?? "",
   created_at: row.created_at,
   user_id: row.user_id,
-  likes_count: row.likes_count,
+  likes_count: row.likes_count ?? 0,
   full_name: row.profiles?.full_name ?? null,
+  avatar_url: row.profiles?.avatar_url ?? null,
 });
 
 export function useComments(postId: string) {
@@ -33,7 +37,15 @@ export function useComments(postId: string) {
     const { data, error } = await supabase
       .from("progress_update_comments")
       .select(
-        "id, update_id, content, created_at, user_id, likes_count, profiles(full_name)"
+        `
+          id,
+          update_id,
+          content,
+          created_at,
+          user_id,
+          likes_count,
+          profiles(full_name, avatar_url)
+        `
       )
       .eq("update_id", postId)
       .order("created_at", { ascending: false })
@@ -46,24 +58,48 @@ export function useComments(postId: string) {
       return;
     }
 
-    setComments((data ?? []).map(mapComment));
+    setComments((data ?? []).map(normalizeComment));
     setIsLoading(false);
   }, [postId]);
 
   const addComment = useCallback(
     async (content: string) => {
-      const user = (await supabase.auth.getUser()).data.user;
+      const trimmed = content.trim();
+      if (!trimmed) return;
+
+      const { data: userData } = await supabase.auth.getUser();
+      const user = userData?.user;
       if (!user) return;
 
-      await supabase.from("progress_update_comments").insert({
-        update_id: postId,
-        content,
-        user_id: user.id,
-      });
+      const { data, error } = await supabase
+        .from("progress_update_comments")
+        .insert({
+          update_id: postId,
+          content: trimmed,
+          user_id: user.id,
+        })
+        .select(
+          `
+            id,
+            update_id,
+            content,
+            created_at,
+            user_id,
+            likes_count,
+            profiles(full_name, avatar_url)
+          `
+        )
+        .single()
+        .returns<CommentRow>();
 
-      await fetchComments();
+      if (error || !data) {
+        console.error("Error adding comment", error);
+        return;
+      }
+
+      setComments((prev) => [normalizeComment(data), ...prev]);
     },
-    [fetchComments, postId]
+    [postId]
   );
 
   useEffect(() => {

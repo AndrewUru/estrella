@@ -1,3 +1,5 @@
+//C:\estrella\components\social\types.ts
+
 export type MoodValue =
   | "gratitud"
   | "inspiracion"
@@ -32,4 +34,5 @@ export interface PostComment {
   user_id: string;
   likes_count?: number | null;
   full_name?: string | null;
+  avatar_url?: string | null;
 }

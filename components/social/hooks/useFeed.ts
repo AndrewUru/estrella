@@ -18,6 +18,14 @@ type FeedRow = {
   profiles?: ProfileSummary | null;
 };
 
+const isFeedRow = (value: unknown): value is FeedRow =>
+  Boolean(
+    value &&
+      typeof value === "object" &&
+      "id" in value &&
+      "created_at" in value
+  );
+
 const normalizeFeedPost = (row: FeedRow): FeedPost => ({
   id: row.id,
   user_id: row.user_id,
@@ -80,19 +88,21 @@ export function useFeed() {
   // Realtime updates
   useRealtime<FeedRow>("progress_updates", (payload) => {
     queryClient.setQueryData<FeedPost[]>(["feed"], (current = []) => {
-      if (payload.type === "INSERT" && payload.new) {
+      const event = payload.eventType;
+
+      if (event === "INSERT" && isFeedRow(payload.new)) {
         const newPost = normalizeFeedPost(payload.new);
-        if (current.some((post) => post.id === newPost.id)) return current;
+        if (current.some((post) => post.id === newPost.id)) {
+          return current;
+        }
         return [newPost, ...current];
       }
 
-      if (payload.type === "DELETE") {
-        const oldData = payload.old;
-        if (!oldData) return current; // previene el null
-        return current.filter((post) => post.id !== oldData.id);
+      if (event === "DELETE" && isFeedRow(payload.old)) {
+        return current.filter((post) => post.id !== payload.old.id);
       }
 
-      if (payload.type === "UPDATE" && payload.new) {
+      if (event === "UPDATE" && isFeedRow(payload.new)) {
         const updated = normalizeFeedPost(payload.new);
         return current.map((post) =>
           post.id === updated.id ? { ...post, ...updated } : post

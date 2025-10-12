@@ -1,3 +1,5 @@
+//C:\estrella\components\social\CommentSection.tsx
+
 "use client";
 
 import { useState, type ChangeEvent } from "react";
@@ -37,7 +39,11 @@ export function CommentSection({ postId }: CommentSectionProps) {
       />
       <div className="flex justify-end">
         <Button size="sm" onClick={handleSubmit} disabled={isLoading}>
-          {isLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : "Comentar"}
+          {isLoading ? (
+            <Loader2 className="h-3 w-3 animate-spin" />
+          ) : (
+            "Comentar"
+          )}
         </Button>
       </div>
 
