@@ -4,6 +4,7 @@ import { Footer } from "@/components/footer";
 import { ThemeProvider } from "next-themes";
 import { createBrowserClient } from "@supabase/ssr";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 // 🌐 Tipado para deferredPrompt
@@ -26,6 +27,7 @@ export default function ClientProviders({
 }: {
   children: React.ReactNode;
 }) {
+  const [queryClient] = useState(() => new QueryClient());
   const [supabase] = useState(() =>
     createBrowserClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -58,15 +60,17 @@ export default function ClientProviders({
 
   return (
     <SessionContextProvider supabaseClient={supabase}>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="dark"
-        enableSystem
-        disableTransitionOnChange
-      >
-        {children}
-        <Footer />
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Footer />
+        </ThemeProvider>
+      </QueryClientProvider>
     </SessionContextProvider>
   );
 }
