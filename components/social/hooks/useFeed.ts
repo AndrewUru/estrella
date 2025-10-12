@@ -40,7 +40,6 @@ export function useFeed() {
   const queryClient = useQueryClient();
   const [userId, setUserId] = useState<string | null>(null);
 
-  // Obtener usuario actual
   useEffect(() => {
     const fetchUser = async () => {
       const { data } = await supabase.auth.getUser();
@@ -49,7 +48,6 @@ export function useFeed() {
     void fetchUser();
   }, []);
 
-  // Cargar feed inicial
   const { data, isLoading, isFetching, refetch } = useQuery<FeedPost[]>({
     queryKey: ["feed"],
     queryFn: async () => {
@@ -78,23 +76,20 @@ export function useFeed() {
 
   const feed = data ?? [];
 
-  // Hook de likes
   const { likedMap, toggleLike, pending } = useLikes({
     table: "progress_update_likes",
     targetField: "update_id",
     userId,
   });
 
-  // 🔁 Realtime: actualizaciones de publicaciones
+  // 🔹 Realtime de publicaciones (progress_updates)
   useRealtime<FeedRow>("progress_updates", (payload) => {
     queryClient.setQueryData<FeedPost[]>(["feed"], (current = []) => {
       const event = payload.eventType;
 
       if (event === "INSERT" && isFeedRow(payload.new)) {
         const newPost = normalizeFeedPost(payload.new);
-        if (current.some((post) => post.id === newPost.id)) {
-          return current;
-        }
+        if (current.some((post) => post.id === newPost.id)) return current;
         return [newPost, ...current];
       }
 
@@ -113,16 +108,32 @@ export function useFeed() {
     });
   });
 
-  // 🔁 Realtime: comentarios añadidos o eliminados
-  useRealtime("progress_update_comments", (payload) => {
-    const event = payload.eventType;
-    if (event === "INSERT" || event === "DELETE") {
-      // Refresca el feed para actualizar el contador de comentarios
-      queryClient.invalidateQueries({ queryKey: ["feed"] });
-    }
+  // 🔹 NUEVO: Realtime de comentarios (progress_update_comments)
+  useRealtime<{ update_id?: string }>("progress_update_comments", (payload) => {
+    const newRow = payload.new as { update_id?: string } | null;
+    const oldRow = payload.old as { update_id?: string } | null;
+
+    const updateId = newRow?.update_id ?? oldRow?.update_id;
+    if (!updateId) return;
+
+    // Actualiza el contador localmente
+    queryClient.setQueryData<FeedPost[]>(["feed"], (current = []) =>
+      current.map((post) => {
+        if (post.id !== updateId) return post;
+
+        const currentCount = post.comments_count ?? 0;
+        const updatedCount =
+          payload.eventType === "INSERT"
+            ? currentCount + 1
+            : payload.eventType === "DELETE"
+            ? Math.max(currentCount - 1, 0)
+            : currentCount;
+
+        return { ...post, comments_count: updatedCount };
+      })
+    );
   });
 
-  // ➕ Crear nueva publicación
   const addPost = useCallback(
     async (content: string, mood: MoodValue) => {
       const { data: userData } = await supabase.auth.getUser();

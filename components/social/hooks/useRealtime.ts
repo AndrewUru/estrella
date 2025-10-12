@@ -3,8 +3,9 @@ import type { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase/client";
 
 /**
- * Suscribe un canal realtime genérico a una tabla de Supabase
- * con tipado seguro de payload.
+ * Hook genérico para suscribirse a actualizaciones Realtime de una tabla de Supabase.
+ * @param table Nombre de la tabla (por ejemplo, "progress_updates")
+ * @param callback Función que recibe el payload tipado del evento
  */
 export function useRealtime<T extends Record<string, unknown>>(
   table: string,
@@ -16,7 +17,10 @@ export function useRealtime<T extends Record<string, unknown>>(
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table },
-        (payload: RealtimePostgresChangesPayload<T>) => callback(payload)
+        (payload) => {
+          // 👇 Cast explícito para preservar el tipo genérico T
+          callback(payload as RealtimePostgresChangesPayload<T>);
+        }
       )
       .subscribe();
 
