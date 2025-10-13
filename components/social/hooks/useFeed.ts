@@ -1,10 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase/client";
 import { useRealtime } from "./useRealtime";
-import { useLikes } from "./useLikes";
 import type { FeedPost, MoodValue, ProfileSummary } from "../types";
 
 type FeedRow = {
@@ -13,7 +11,6 @@ type FeedRow = {
   content: string | null;
   mood: MoodValue | string | null;
   created_at: string;
-  likes_count: number | null;
   comments_count: number | null;
   profiles?: ProfileSummary | null;
 };
@@ -29,7 +26,6 @@ const normalizeFeedPost = (row: FeedRow): FeedPost => ({
   content: row.content ?? "",
   mood: (row.mood ?? null) as MoodValue,
   created_at: row.created_at,
-  likes_count: row.likes_count ?? 0,
   comments_count: row.comments_count ?? 0,
   full_name: row.profiles?.full_name ?? null,
   avatar_url: row.profiles?.avatar_url ?? null,
@@ -38,51 +34,35 @@ const normalizeFeedPost = (row: FeedRow): FeedPost => ({
 
 export function useFeed() {
   const queryClient = useQueryClient();
-  const [userId, setUserId] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      setUserId(data.user?.id ?? null);
-    };
-    void fetchUser();
-  }, []);
-
-  const { data, isLoading, isFetching, refetch, error, isError } = useQuery<FeedPost[]>({
-    queryKey: ["feed"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("progress_updates")
-        .select(
-          `
+  const { data, isLoading, isFetching, refetch, error, isError } =
+    useQuery<FeedPost[]>({
+      queryKey: ["feed"],
+      queryFn: async () => {
+        const { data, error } = await supabase
+          .from("progress_updates")
+          .select(
+            `
           id,
           user_id,
           content,
           mood,
           created_at,
-          likes_count,
           comments_count,
           profiles(full_name, avatar_url)
         `
-        )
-        .order("created_at", { ascending: false })
-        .limit(40)
-        .returns<FeedRow[]>();
+          )
+          .order("created_at", { ascending: false })
+          .limit(40)
+          .returns<FeedRow[]>();
 
-      if (error) throw error;
-      return (data ?? []).map(normalizeFeedPost);
-    },
-  });
+        if (error) throw error;
+        return (data ?? []).map(normalizeFeedPost);
+      },
+    });
 
   const feed = data ?? [];
 
-  const { likedMap, toggleLike, pending } = useLikes({
-    table: "progress_update_likes",
-    targetField: "update_id",
-    userId,
-  });
-
-  // 🔹 Realtime de publicaciones (progress_updates)
   useRealtime<FeedRow>("progress_updates", (payload) => {
     queryClient.setQueryData<FeedPost[]>(["feed"], (current = []) => {
       const event = payload.eventType;
@@ -108,7 +88,6 @@ export function useFeed() {
     });
   });
 
-  // 🔹 NUEVO: Realtime de comentarios (progress_update_comments)
   useRealtime<{ update_id?: string }>("progress_update_comments", (payload) => {
     const newRow = payload.new as { update_id?: string } | null;
     const oldRow = payload.old as { update_id?: string } | null;
@@ -116,7 +95,6 @@ export function useFeed() {
     const updateId = newRow?.update_id ?? oldRow?.update_id;
     if (!updateId) return;
 
-    // Actualiza el contador localmente
     queryClient.setQueryData<FeedPost[]>(["feed"], (current = []) =>
       current.map((post) => {
         if (post.id !== updateId) return post;
@@ -134,45 +112,6 @@ export function useFeed() {
     );
   });
 
-  const addPost = useCallback(
-    async (content: string, mood: MoodValue) => {
-      const { data: userData } = await supabase.auth.getUser();
-      const currentUser = userData?.user;
-      if (!currentUser) throw new Error("No autenticado");
-
-      const { data, error } = await supabase
-        .from("progress_updates")
-        .insert({
-          user_id: currentUser.id,
-          content,
-          mood,
-        })
-        .select(
-          `
-          id,
-          user_id,
-          content,
-          mood,
-          created_at,
-          likes_count,
-          comments_count,
-          profiles(full_name, avatar_url)
-        `
-        )
-        .single()
-        .returns<FeedRow>();
-
-      if (error || !data)
-        throw error ?? new Error("No se pudo crear la publicación");
-
-      queryClient.setQueryData<FeedPost[]>(["feed"], (old = []) => [
-        normalizeFeedPost(data),
-        ...old,
-      ]);
-    },
-    [queryClient]
-  );
-
   return {
     feed,
     isLoading,
@@ -180,9 +119,5 @@ export function useFeed() {
     refetch,
     error,
     isError,
-    likedMap,
-    toggleLike,
-    pending,
-    addPost,
   };
 }

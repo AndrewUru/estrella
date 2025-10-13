@@ -12,7 +12,6 @@ type CommentRow = {
   content: string | null;
   created_at: string;
   user_id: string;
-  likes_count: number | null;
   profiles: {
     full_name: string | null;
     avatar_url: string | null;
@@ -25,7 +24,6 @@ const normalizeComment = (row: CommentRow): PostComment => ({
   content: row.content ?? "",
   created_at: row.created_at,
   user_id: row.user_id,
-  likes_count: row.likes_count ?? 0,
   full_name: row.profiles?.full_name ?? null,
   avatar_url: row.profiles?.avatar_url ?? null,
 });
@@ -33,6 +31,15 @@ const normalizeComment = (row: CommentRow): PostComment => ({
 export function useComments(postId: string) {
   const [comments, setComments] = useState<PostComment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setCurrentUserId(data.user?.id ?? null);
+    };
+    void loadUser();
+  }, []);
 
   const fetchComments = useCallback(async () => {
     setIsLoading(true);
@@ -45,7 +52,6 @@ export function useComments(postId: string) {
           content,
           created_at,
           user_id,
-          likes_count,
           profiles(full_name, avatar_url)
         `
       )
@@ -87,7 +93,6 @@ export function useComments(postId: string) {
             content,
             created_at,
             user_id,
-            likes_count,
             profiles(full_name, avatar_url)
           `
         )
@@ -104,9 +109,28 @@ export function useComments(postId: string) {
     [postId]
   );
 
+  const deleteComment = useCallback(async (commentId: string) => {
+    const { data: userData } = await supabase.auth.getUser();
+    const user = userData?.user;
+    if (!user) return;
+
+    const { error } = await supabase
+      .from("progress_update_comments")
+      .delete()
+      .eq("id", commentId)
+      .eq("user_id", user.id);
+
+    if (error) {
+      console.error("Error deleting comment", error);
+      return;
+    }
+
+    setComments((prev) => prev.filter((comment) => comment.id !== commentId));
+  }, []);
+
   useEffect(() => {
     void fetchComments();
   }, [fetchComments]);
 
-  return { comments, addComment, isLoading };
+  return { comments, addComment, deleteComment, isLoading, currentUserId };
 }

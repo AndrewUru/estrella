@@ -2,11 +2,10 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { Heart, MessageCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { supabase } from "@/lib/supabase/client";
 import { CommentSection } from "./CommentSection";
 import type { FeedPost, MoodValue } from "./types";
 
@@ -22,37 +21,12 @@ const MOOD_META: Record<Exclude<MoodValue, null>, MoodMeta> = {
 export function PostCard({ post }: { post: FeedPost }) {
   const authorName = post.full_name ?? post.profiles?.full_name ?? "Integrante";
   const avatarUrl = post.avatar_url ?? post.profiles?.avatar_url ?? null;
-  const [liked, setLiked] = useState(post.liked_by_user ?? false);
-  const [likeCount, setLikeCount] = useState(post.likes_count ?? 0);
   const [openComments, setOpenComments] = useState(false);
+  const [commentCount, setCommentCount] = useState(post.comments_count ?? 0);
 
-  const toggleLike = async () => {
-    const user = (await supabase.auth.getUser()).data.user;
-    if (!user) {
-      alert("Inicia sesion para reaccionar");
-      return;
-    }
-
-    const wasLiked = liked;
-    const nextLiked = !wasLiked;
-
-    setLiked(nextLiked);
-    setLikeCount((prev) => prev + (nextLiked ? 1 : -1));
-
-    if (wasLiked) {
-      await supabase
-        .from("progress_update_likes")
-        .delete()
-        .eq("update_id", post.id)
-        .eq("user_id", user.id);
-      return;
-    }
-
-    await supabase.from("progress_update_likes").insert({
-      update_id: post.id,
-      user_id: user.id,
-    });
-  };
+  useEffect(() => {
+    setCommentCount(post.comments_count ?? 0);
+  }, [post.comments_count]);
 
   const moodMeta = post.mood ? getMoodMeta(post.mood) : null;
 
@@ -96,30 +70,24 @@ export function PostCard({ post }: { post: FeedPost }) {
         {post.content}
       </p>
 
-      <div className="flex gap-3 text-xs text-muted-foreground">
+      <div className="flex items-center justify-between border-t border-border/50 pt-3 text-xs">
         <Button
-          variant="outline"
+          variant="ghost"
           size="sm"
-          className={`gap-1.5 border border-border/60 px-3 py-1 text-xs ${
-            liked ? "bg-primary/10 text-primary" : ""
-          }`}
-          onClick={toggleLike}
-        >
-          <Heart className={`h-3.5 w-3.5 ${liked ? "fill-current" : ""}`} />
-          {likeCount}
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="gap-1.5 border border-border/60 px-3 py-1 text-xs"
           onClick={() => setOpenComments((prev) => !prev)}
+          className="gap-2 px-0 text-xs font-semibold text-primary hover:text-primary/80"
         >
           <MessageCircle className="h-3.5 w-3.5" />
-          {post.comments_count ?? 0}
+          {openComments ? "Ocultar comentarios" : "Ver comentarios"}
         </Button>
+        <span className="rounded-full bg-secondary/70 px-3 py-1 text-[11px] font-medium text-secondary-foreground">
+          {commentCount} {commentCount === 1 ? "comentario" : "comentarios"}
+        </span>
       </div>
 
-      {openComments && <CommentSection postId={post.id} />}
+      {openComments && (
+        <CommentSection postId={post.id} onCountChange={setCommentCount} />
+      )}
     </motion.div>
   );
 }

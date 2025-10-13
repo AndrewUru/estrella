@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Card,
   CardHeader,
@@ -12,13 +13,13 @@ export function SidebarRight() {
     <div className="space-y-6">
       <Card className="border-border/70 bg-card/90 shadow-sm backdrop-blur">
         <CardHeader>
-          <CardTitle className="text-base">Próximos hitos</CardTitle>
+          <CardTitle className="text-base">Proximos hitos</CardTitle>
           <CardDescription>Pasos para sostener tu proceso</CardDescription>
         </CardHeader>
-        <CardContent className="text-sm text-muted-foreground space-y-2">
-          <p>• Publica una reflexión diaria 🌞</p>
-          <p>• Reacciona a las notas de otras almas 🌿</p>
-          <p>• Guarda tus momentos clave 💎</p>
+        <CardContent className="space-y-2 text-sm text-muted-foreground">
+          <p>- Publica una reflexion diaria</p>
+          <p>- Responde a las notas de otras personas</p>
+          <p>- Guarda tus momentos clave</p>
         </CardContent>
       </Card>
     </div>
