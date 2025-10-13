@@ -76,12 +76,6 @@ export default function SocialLandingSection() {
             >
               Visitar la comunidad
             </Link>
-            <Link
-              href="#faq"
-              className="inline-flex items-center gap-2 rounded-full border border-pink-400/40 px-5 py-3 text-sm font-semibold text-pink-500 transition hover:bg-pink-500/10 dark:border-pink-700/40 dark:text-pink-200"
-            >
-              Ver cómo funciona
-            </Link>
           </div>
         </div>
 

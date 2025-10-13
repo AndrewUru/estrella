@@ -88,7 +88,7 @@ const ThemeSwitcher = () => {
         <DropdownMenuLabel className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-[0.25em] text-purple-200">
           Ajustar tema
           <span className="text-[10px] font-normal uppercase tracking-[0.35em] text-purple-300/70">
-            elige la energia del momento
+            elige la energía del momento
           </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="my-2 h-px bg-purple-500/30" />
@@ -120,7 +120,7 @@ const ThemeSwitcher = () => {
         <DropdownMenuItem className="text-[11px] uppercase tracking-[0.2em] text-purple-200/70 focus:bg-transparent">
           {activeTheme.value === "system"
             ? "Siguiendo el pulso del dispositivo"
-            : "Sincronizado con tu eleccion"}
+            : "Sincronizado con tu elección"}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

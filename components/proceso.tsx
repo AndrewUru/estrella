@@ -7,23 +7,23 @@ import Link from "next/link";
 const steps = [
   {
     id: "01",
-    title: "Anclar la intencion",
+    title: "Anclar la intención",
     description:
-      "Conecta con un objetivo claro para tu semana y abre el portal energetico que te guiara.",
+      "Conecta con un objetivo claro para tu semana y abre el portal energético que te guiará.",
     image: "/images/canalizaciones.webp",
   },
   {
     id: "02",
-    title: "Practicas guiadas",
+    title: "Prácticas guiadas",
     description:
       "Recibe meditaciones canalizadas, breathwork y activaciones para sostener tu proceso diario.",
     image: "/images/anclar.webp",
   },
   {
     id: "03",
-    title: "Integracion consciente",
+    title: "Integración consciente",
     description:
-      "Registra lo que sientes, comparte en comunidad y permite que la transformacion se asiente en ti.",
+      "Registra lo que sientes, comparte en comunidad y permite que la transformación se asiente en ti.",
     image: "/images/integracion.webp",
   },
 ];
@@ -51,7 +51,7 @@ export default function ProcesoSection() {
           Como se vive Estrella del Alba
         </h2>
         <p className="text-base text-gray-600 sm:text-lg dark:text-gray-300">
-          Acompana tu transformacion con rituales diarios, audio-guia y espacios
+          Acompaña tu transformación con rituales diarios, audio-guía y espacios
           protegidos. Tres pasos sencillos que puedes repetir cada ciclo.
         </p>
       </motion.div>
@@ -87,7 +87,7 @@ export default function ProcesoSection() {
             </p>
             <div className="mt-6 h-px w-full bg-gradient-to-r from-transparent via-purple-400/40 to-transparent" />
             <div className="mt-4 flex items-center gap-2 text-sm font-semibold text-purple-600 dark:text-purple-300">
-              <span>Explorar mas</span>
+              <span>Explorar más</span>
               <motion.span
                 initial={{ x: 0 }}
                 whileHover={{ x: 6 }}
@@ -114,10 +114,10 @@ export default function ProcesoSection() {
                 Tu portal privado
               </p>
               <h3 className="text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-white">
-                Practica, registra y celebra tu energia cada dia
+                Practica, registra y celebra tu energía cada día
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-300">
-                Explora tu panel con accesos rapidos a sesiones, rituales y
+                Explora tu panel con accesos rápidos a sesiones, rituales y
                 comunidad. Visualiza tu avance y desbloquea material premium
                 conforme sostienes el ritmo.
               </p>
