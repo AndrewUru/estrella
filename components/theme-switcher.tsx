@@ -62,6 +62,10 @@ const ThemeSwitcher = () => {
   }
 
   const { Icon } = activeTheme;
+  const iconColor =
+    resolvedTheme === "light" ? "text-purple-700" : "text-purple-200";
+  const sparklesColor =
+    resolvedTheme === "light" ? "text-purple-600" : "text-purple-200/80";
 
   return (
     <DropdownMenu>
@@ -73,11 +77,13 @@ const ThemeSwitcher = () => {
           className="group relative flex items-center gap-2 rounded-full border border-white/10 bg-gradient-to-r from-indigo-500/15 via-purple-500/10 to-pink-500/15 px-3 py-2 text-xs font-semibold text-foreground shadow-sm transition hover:scale-[1.02] hover:border-purple-300/40 hover:bg-purple-500/20 focus-visible:ring-2 focus-visible:ring-purple-300"
         >
           <span className="absolute inset-x-2 -bottom-1 h-px bg-gradient-to-r from-transparent via-purple-400/40 to-transparent transition-opacity group-hover:opacity-100" />
-          <Icon size={ICON_SIZE} className="text-purple-200 drop-shadow" />
+          <Icon size={ICON_SIZE} className={`${iconColor} drop-shadow`} />
           <span className="hidden text-[11px] uppercase tracking-[0.18em] text-black-700 sm:inline">
             {activeTheme.label}
           </span>
-          <Sparkles className="h-3.5 w-3.5 text-purple-200/80 transition-transform duration-500 group-hover:rotate-12" />
+          <Sparkles
+            className={`h-3.5 w-3.5 ${sparklesColor} transition-transform duration-500 group-hover:rotate-12`}
+          />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent

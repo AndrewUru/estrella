@@ -40,7 +40,7 @@ export function UpdatePasswordForm({
       setError(
         error instanceof Error
           ? error.message
-          : "OcurriÃ³ un problema al actualizar tu contraseÃ±a"
+          : "Ocurri\u00f3 un problema al actualizar tu contrase\u00f1a"
       );
     } finally {
       setIsLoading(false);
@@ -58,10 +58,10 @@ export function UpdatePasswordForm({
       <Card className="border border-border bg-card/80 shadow-none">
         <CardHeader>
           <CardTitle className="text-2xl font-semibold text-primary">
-            Actualiza tu contrasena
+            Actualiza tu contrase\u00f1a
           </CardTitle>
           <CardDescription className="text-muted-foreground">
-            Ingresa una nueva contrasena segura para proteger tu cuenta.
+            Ingresa una nueva contrase\u00f1a segura para proteger tu cuenta.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -71,20 +71,20 @@ export function UpdatePasswordForm({
           >
             <div className="grid gap-2">
               <Label htmlFor="password" className="text-sm font-semibold">
-                Nueva contrasena
+                Nueva contrase\u00f1a
               </Label>
               <div className="space-y-2">
                 <Input
                   id="password"
                   type="password"
-                  placeholder="Ingresa tu nueva contrasena"
+                  placeholder="Ingresa tu nueva contrase\u00f1a"
                   required
                   value={password}
                   className="border-border bg-background text-foreground focus-visible:ring-primary"
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Debe tener al menos 8 caracteres e incluir numeros y letras.
+                  Debe tener al menos 8 caracteres e incluir n\u00fameros y letras.
                 </p>
               </div>
             </div>
@@ -92,7 +92,7 @@ export function UpdatePasswordForm({
               <p className="text-sm font-medium text-destructive">{error}</p>
             )}
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Guardando..." : "Guardar nueva contraseÃ±a"}
+              {isLoading ? "Guardando..." : "Guardar nueva contrase\u00f1a"}
             </Button>
           </form>
         </CardContent>
@@ -100,4 +100,5 @@ export function UpdatePasswordForm({
     </div>
   );
 }
+
 
