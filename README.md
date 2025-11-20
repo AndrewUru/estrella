@@ -1,105 +1,55 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
-  <h1 align="center">Next.js and Supabase Starter Kit</h1>
-</a>
+# Estrella
 
-<p align="center">
- The fastest way to build apps with Next.js and Supabase
-</p>
+Plataforma web para la comunidad Estrella del Alba: landing publica, onboarding y area protegida con practicas guiadas, progreso diario, feed social y panel de administracion. Construida sobre Next.js (App Router) y Supabase.
 
-<p align="center">
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
-  <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
-  <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
-</p>
-<br/>
+## Estado actual
+- **Landing y paginas informativas**: `app/page.tsx` con secciones Hero/Proceso/Stats/Social, mas contenido en `app/bienvenida`, `app/informacion`, `app/preguntas`, `app/terminos`, `app/privacidad`, `app/contacto` y `app/upgrade`.
+- **Autenticacion y perfiles**: flujo Supabase Auth en `app/auth/*`, middleware en `middleware.ts` para proteger rutas y helper `lib/supabase/ensure-user-profile.ts` para crear perfiles por defecto. Subida de avatar a bucket `avatars` via `app/api/upload-avatar/route.ts` y vista de perfil en `app/protected/profile`.
+- **Area protegida y progreso**: dashboard en `app/protected/page.tsx` que lee plan y progreso (`progresos`, `entregas`) para desbloquear dias, con API `app/api/progreso/init` y `app/api/progreso/completar` para iniciar y marcar completados.
+- **Practicas guiadas**: galeria en `components/PracticesGallery.tsx` filtrada por tipo con control de plan (free/premium) y audio/PDF. Creacion desde panel admin `app/protected/admin/practicas#nueva` con `components/admin/NewPracticeForm.tsx` subiendo a buckets `media-audio`, `media-covers` y `media-pdfs` y guardando en la tabla `practices`.
+- **Comunidad**: pagina `app/protected/social/page.tsx` con composer, feed y comentarios en tiempo real usando TanStack Query + Supabase Realtime sobre `progress_updates` y `progress_update_comments`, mas stats y sidebars (`components/social/*`). Moderacion de comentarios en `app/protected/admin/page.tsx` via RPC `admin_delete_comment`.
+- **Membresia y pagos**: pantalla `app/upgrade/page.tsx` con PayPal Subscriptions (hook `hooks/usePayPalButtons.ts`) que actualiza `profiles.plan`/`plan_type`/`subscription_id` en Supabase al aprobar el pago.
+- **Scripts**: importador masivo `scripts/import-users.ts` que lee `scripts/usuarios_limpios.csv`, crea usuarios (Auth + tabla `profiles`) y genera `usuarios_generados.csv` con accesos.
+- **PWA y tema**: configurado con `next-pwa` en `next.config.ts` (service worker en `public/`) y modo claro/oscuro via `next-themes` y `components/theme-switcher.tsx`.
 
-## Features
+## Stack y estructura
+- Next.js (App Router) + React 19 + TypeScript.
+- Tailwind CSS + shadcn/ui, lucide-react y heroicons para UI.
+- Supabase JS/SSR para Auth, Storage y RLS; TanStack Query para datos en vivo; Framer Motion para animaciones; next-themes y next-pwa.
+- Carpetas clave: `app/` (rutas y paginas), `components/` (UI y bloques como Hero, Stats, Social), `lib/` (supabase client/server/admin, hooks), `hooks/` (PayPal), `scripts/` (tareas CLI), `public/` (assets).
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Middleware
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Password-based authentication block installed via the [Supabase UI Library](https://supabase.com/ui/docs/nextjs/password-based-auth)
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Components with [shadcn/ui](https://ui.shadcn.com/)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+## Configuracion local
+1. Requisitos: Node 20+ y npm.
+2. Instala dependencias: `npm install`.
+3. Copia `.env.example` a `.env.local` y completa:
+   - `NEXT_PUBLIC_SUPABASE_URL` (URL del proyecto).
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` (anon key).
+   - `SUPABASE_URL` (igual que la publica, para clientes admin/SSR).
+   - `SUPABASE_SERVICE_ROLE_KEY` (service role, necesario para scripts y endpoints admin).
+4. Ejecuta:
+   - `npm run dev` para desarrollo (App Router, sin Turbopack).
+   - `npm run build` / `npm start` para produccion.
+   - `npm run lint` para eslint.
+5. PayPal: los plan IDs estan hardcodeados en `app/upgrade/page.tsx` (`PLANS`). Sustituyelos por los de tu cuenta si cambian.
 
-## Demo
+## Esquema Supabase (resumen)
+- **profiles**: `id` (uuid), `email`, `full_name`, `avatar_url`, `role` (alumna/admin), `is_active`, `start_date`, `plan` (gratis/premium), `plan_type` (gratis/premium-mensual/premium-anual/7D), `subscription_id`, `created_at`.
+- **progresos**: `user_id`, `dia`, `completado`, `completado_at`, `desbloqueado`. La API `progreso/init` crea el dia 1; `progreso/completar` marca completado y desbloquea el siguiente.
+- **entregas**: catalogo diario (usado para pintar tarjetas del dashboard). Campos usados: `dia`, `imagen_url` (+ el resto del contenido que muestre cada dia).
+- **practices**: `id`, `title`, `kind` (meditation/channeling), `description`, `language`, `facilitator`, `duration_minutes`, `tags[]`, `audio_url`, `cover_url`, `pdf_url`, `visibility` (public/private/unlisted), `plan` (free/premium), `recorded_at`, `created_by`, `created_at`. Archivos en buckets `media-audio`, `media-covers`, `media-pdfs`.
+- **progress_updates** y **progress_update_comments**: posts y comentarios del feed social. Relacionan con `profiles` para nombre/avatar; `comments_count` se actualiza via triggers.
+- **Storage**: bucket `avatars` para fotos de perfil y buckets `media-*` para practicas. Ajusta las politicas RLS/Storage para permitir solo al propietario subir/leer lo que corresponda.
+- **RPC**: `admin_delete_comment` usado en el panel admin para moderacion segura respetando RLS.
 
-You can view a fully working demo at [demo-nextjs-with-supabase.vercel.app](https://demo-nextjs-with-supabase.vercel.app/).
+## Flujo de creacion
+1. Se partio del Next.js + Supabase Starter Kit (App Router) y se tradujo la UI al castellano.
+2. Se configuro Supabase con Auth basada en cookies, manejo de perfiles (`ensure-user-profile`) y middleware para proteger rutas privadas.
+3. Se diseno la landing y paginas publicas con Tailwind/shadcn y assets de marca, mas copy e imagenes propias.
+4. Se construyo el dashboard protegido con control de plan (gratis/premium), desbloqueo diario (`entregas`/`progresos`) y galeria de practicas con gating por plan.
+5. Se integro subida de avatar y edicion de perfil, asi como flujo de upgrade anual con PayPal que actualiza el plan en `profiles`.
+6. Se creo el espacio social con posts/comentarios en tiempo real usando TanStack Query + Supabase Realtime y se anadio panel de moderacion y herramientas admin.
+7. Se anadio PWA, modo oscuro/claro, y scripts CLI para carga masiva de usuarias.
 
-## Deploy to Vercel
+## Despliegue
+- Orientado a Vercel + Supabase. `next.config.ts` incluye configuracion de PWA y dominios permitidos de imagen (`lh3.googleusercontent.com`, tu dominio Supabase). Define las variables de entorno en Vercel y en Supabase (Auth/Storage) para que coincidan con las claves anteriores.
 
-Vercel deployment will guide you through creating a Supabase account and project.
-
-After installation of the Supabase integration, all relevant environment variables will be assigned to the project so the deployment is fully functioning.
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This+starter+configures+Supabase+Auth+to+use+cookies%2C+making+the+user%27s+session+available+throughout+the+entire+Next.js+app+-+Client+Components%2C+Server+Components%2C+Route+Handlers%2C+Server+Actions+and+Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png)
-
-The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
-
-If you wish to just develop locally and not deploy to Vercel, [follow the steps below](#clone-and-run-locally).
-
-## Clone and run locally
-
-1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
-
-2. Create a Next.js app using the Supabase Starter template npx command
-
-   ```bash
-   npx create-next-app --example with-supabase with-supabase-app
-   ```
-
-   ```bash
-   yarn create next-app --example with-supabase with-supabase-app
-   ```
-
-   ```bash
-   pnpm create next-app --example with-supabase with-supabase-app
-   ```
-
-3. Use `cd` to change into the app's directory
-
-   ```bash
-   cd with-supabase-app
-   ```
-
-4. Rename `.env.example` to `.env.local` and update the following:
-
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=[INSERT SUPABASE PROJECT API ANON KEY]
-   ```
-
-   Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` can be found in [your Supabase project's API settings](https://supabase.com/dashboard/project/_?showConnect=true)
-
-5. You can now run the Next.js local development server:
-
-   ```bash
-   npm run dev
-   ```
-
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
-
-6. This template comes with the default shadcn/ui style initialized. If you instead want other ui.shadcn styles, delete `components.json` and [re-install shadcn/ui](https://ui.shadcn.com/docs/installation/next)
-
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
-
-## Feedback and issues
-
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
-
-## More Supabase examples
-
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
