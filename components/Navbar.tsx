@@ -152,8 +152,8 @@ export function Navbar() {
 
   const headerClasses = `sticky top-0 z-50 w-full border-b transition-all duration-300 ${
     scrolled
-      ? "bg-white/80 dark:bg-gray-950/85 backdrop-blur-xl border-white/30 dark:border-purple-900/40 shadow-[0_16px_45px_rgba(124,58,237,0.22)]"
-      : "bg-transparent border-transparent"
+      ? "bg-white/78 dark:bg-gray-950/85 backdrop-blur-xl border-white/70 dark:border-purple-900/40 shadow-[0_14px_44px_rgba(50,70,116,0.12)]"
+      : "bg-white/28 backdrop-blur-sm border-transparent"
   }`;
 
   return (
@@ -163,7 +163,7 @@ export function Navbar() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
-      <div className="absolute inset-x-0 top-0 -z-10 h-full bg-gradient-to-b from-purple-500/10 via-white/0 to-transparent dark:from-purple-900/35" />
+      <div className="absolute inset-x-0 top-0 -z-10 h-full bg-gradient-to-b from-white/60 via-white/20 to-transparent dark:from-purple-900/35" />
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:h-[4.5rem] sm:px-6 lg:px-8">
         <Link
           href="/"
@@ -174,7 +174,7 @@ export function Navbar() {
             transition={{ duration: 0.8 }}
             className="relative"
           >
-            <span className="absolute inset-0 rounded-full bg-gradient-to-tr from-purple-500/50 to-pink-500/40 blur-md" />
+            <span className="absolute inset-0 rounded-full bg-[#c89a3c]/25 blur-md" />
             <Image
               src="/logo-estrella.png"
               alt="Estrella del Alba"
@@ -185,10 +185,10 @@ export function Navbar() {
             />
           </motion.div>
           <div className="flex flex-col text-left">
-            <span className="text-sm font-semibold uppercase tracking-[0.3em] text-purple-500/80 dark:text-purple-300/80">
+            <span className="text-sm font-semibold uppercase tracking-[0.3em] text-[#6f5aa8] dark:text-purple-300/80">
               Estrella
             </span>
-            <span className="-mt-1 bg-gradient-to-r from-purple-600 via-pink-500 to-indigo-500 bg-clip-text text-sm font-bold text-transparent dark:from-purple-300 dark:via-pink-300 dark:to-indigo-300">
+            <span className="-mt-1 bg-gradient-to-r from-[#516fae] via-[#8d73b7] to-[#c89a3c] bg-clip-text text-sm font-bold text-transparent dark:from-purple-300 dark:via-pink-300 dark:to-indigo-300">
               del Alba
             </span>
           </div>
@@ -203,14 +203,14 @@ export function Navbar() {
                   href={item.href}
                   className={`group relative overflow-hidden rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
                     item.highlight
-                      ? "text-purple-600 dark:text-purple-300"
-                      : "text-zinc-700 dark:text-zinc-200"
+                      ? "text-[#516fae] dark:text-purple-300"
+                      : "text-[#535b78] dark:text-zinc-200"
                   }`}
                 >
                   {isActive && (
                     <motion.span
                       layoutId="nav-pill"
-                      className="absolute inset-0 -z-10 rounded-full bg-gradient-to-r from-purple-500/20 via-purple-500/10 to-transparent dark:from-purple-500/40 dark:via-pink-500/20"
+                      className="absolute inset-0 -z-10 rounded-full bg-white/75 shadow-sm ring-1 ring-[#d8c6ff]/60 dark:from-purple-500/40 dark:via-pink-500/20"
                       transition={{
                         type: "spring",
                         stiffness: 320,
@@ -220,7 +220,7 @@ export function Navbar() {
                   )}
                   <span className="relative flex items-center gap-2">
                     <span>{item.label}</span>
-                    <span className="h-[2px] w-6 rounded-full bg-gradient-to-r from-purple-500/40 to-pink-500/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    <span className="h-[2px] w-6 rounded-full bg-[#c89a3c]/55 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   </span>
                 </Link>
               </motion.div>

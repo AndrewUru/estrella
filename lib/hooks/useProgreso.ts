@@ -36,7 +36,6 @@ export function useProgreso() {
       try {
         const res = await fetch("/api/progreso/init", {
           method: "POST",
-          body: JSON.stringify({ user_id: user.id }),
         });
         if (!res.ok) {
           const errData = await res.json();

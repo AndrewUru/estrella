@@ -105,7 +105,11 @@ export default function DashboardPage() {
           { data: completados, error: compErr },
         ] = await Promise.all([
           supabase.from("entregas").select("dia, imagen_url").order("dia"),
-          supabase.from("progresos").select("dia").eq("user_id", user.id),
+          supabase
+            .from("progresos")
+            .select("dia")
+            .eq("user_id", user.id)
+            .eq("completado", true),
         ]);
 
         if (entErr) console.error("entregas error", entErr.message);

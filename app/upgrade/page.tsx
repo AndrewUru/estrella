@@ -86,6 +86,8 @@ const FAQ_ITEMS = [
   },
 ];
 
+const PAYPAL_CLIENT_ID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
+
 export default function UpgradePage() {
   const [scriptLoaded, setScriptLoaded] = useState(false);
 
@@ -328,11 +330,13 @@ export default function UpgradePage() {
         </div>
       </motion.section>
 
-      <Script
-        src="https://www.paypal.com/sdk/js?client-id=ASQix2Qu6atiH43_jrk18jeSMDjB_YdTjbfI8jrTJ7x5uagNzUhuNMXacO49ZxJWr_EMpBhrpVPbOvR_&components=buttons&vault=true&intent=subscription"
-        strategy="afterInteractive"
-        onLoad={() => setScriptLoaded(true)}
-      />
+      {PAYPAL_CLIENT_ID && (
+        <Script
+          src={`https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&components=buttons&vault=true&intent=subscription`}
+          strategy="afterInteractive"
+          onLoad={() => setScriptLoaded(true)}
+        />
+      )}
     </div>
   );
 }

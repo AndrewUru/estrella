@@ -32,46 +32,19 @@ export default function DiaPage() {
   const [tipoPlan, setTipoPlan] = useState<Plan | null>(null);
 
   const avanzarDia = async () => {
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-
-    if (userError || !user) {
-      alert("No se pudo obtener el usuario.");
-      return;
-    }
-
-    const { data: existente, error: fetchError } = await supabase
-      .from("progresos")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("dia", dia)
-      .maybeSingle();
-
-    if (fetchError) {
-      console.error("Error verificando progreso:", fetchError);
-      alert("Error verificando si ya completaste este día.");
-      return;
-    }
-
-    if (existente) {
-      alert("Ya has completado este día ✨");
-      router.push("/protected");
-      return;
-    }
-
-    const { error } = await supabase.from("progresos").insert({
-      user_id: user.id,
-      dia: dia,
+    const res = await fetch("/api/progreso/completar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ dia }),
     });
 
-    if (error) {
-      console.error("Error al insertar progreso:", error);
-      alert("Hubo un problema al guardar tu avance.");
-    } else {
+    if (res.ok) {
       router.push("/protected");
+      return;
     }
+
+    const data = await res.json().catch(() => null);
+    alert(data?.error || "Hubo un problema al guardar tu avance.");
   };
 
   useEffect(() => {

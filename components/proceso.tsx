@@ -3,158 +3,160 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight, BookOpenCheck, Headphones, PenLine } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
-const steps = [
+const steps: Array<{
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  icon: LucideIcon;
+}> = [
   {
     id: "01",
-    title: "Anclar la intención",
+    title: "Define tu intencion",
     description:
-      "Conecta con un objetivo claro para tu semana y abre el portal energético que te guiará.",
+      "Empiezas con una guia sencilla para reconocer como estas y que quieres sostener durante el ciclo.",
     image: "/images/canalizaciones.webp",
+    icon: PenLine,
   },
   {
     id: "02",
-    title: "Prácticas guiadas",
+    title: "Escucha la practica",
     description:
-      "Recibe meditaciones canalizadas, breathwork y activaciones para sostener tu proceso diario.",
+      "Cada dia tienes una sesion clara, en audio y recursos complementarios para ir a tu ritmo.",
     image: "/images/anclar.webp",
+    icon: Headphones,
   },
   {
     id: "03",
-    title: "Integración consciente",
+    title: "Integra lo vivido",
     description:
-      "Registra lo que sientes, comparte en comunidad y permite que la transformación se asiente en ti.",
+      "Registras sensaciones, desbloqueas el siguiente paso y puedes compartir avances en comunidad.",
     image: "/images/integracion.webp",
+    icon: BookOpenCheck,
   },
 ];
 
 export default function ProcesoSection() {
   return (
-    <section className="relative mx-auto flex w-full max-w-6xl flex-col gap-12 px-6 py-24 text-center">
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full bg-purple-400/15 blur-3xl" />
-        <div className="absolute right-0 top-40 h-64 w-64 translate-x-1/3 rounded-full bg-pink-400/20 blur-3xl" />
-        <div className="absolute left-0 bottom-0 h-56 w-56 -translate-x-1/3 translate-y-1/3 rounded-full bg-indigo-400/15 blur-3xl" />
-      </div>
-
+    <section className="relative mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 py-20">
       <motion.div
-        initial={{ opacity: 0, y: -18 }}
+        initial={{ opacity: 0, y: 18 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
         viewport={{ once: true, amount: 0.4 }}
-        className="mx-auto max-w-2xl space-y-5"
+        className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-end"
       >
-        <p className="text-xs font-semibold uppercase tracking-[0.35em] text-purple-500/80 dark:text-purple-200/70">
-          Tu viaje interior
-        </p>
-        <h2 className="text-3xl font-bold leading-tight text-gray-900 sm:text-4xl md:text-5xl dark:text-white">
-          Como se vive Estrella del Alba
-        </h2>
-        <p className="text-base text-gray-600 sm:text-lg dark:text-gray-300">
-          Acompaña tu transformación con rituales diarios, audio-guía y espacios
-          protegidos. Tres pasos sencillos que puedes repetir cada ciclo.
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#8d73b7]">
+            Tu viaje interior
+          </p>
+          <h2 className="mt-3 text-3xl font-semibold leading-tight text-[#27304f] sm:text-4xl">
+            Un recorrido simple, bonito y facil de seguir
+          </h2>
+        </div>
+        <p className="max-w-2xl text-base leading-7 text-[#68708b] lg:justify-self-end">
+          La experiencia esta organizada para que no tengas que decidir que hacer
+          cada dia. Entras, escuchas, integras y sigues avanzando con calma.
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-        {steps.map((step, index) => (
-          <motion.article
-            key={step.id}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.12, ease: "easeOut" }}
-            viewport={{ once: true, amount: 0.3 }}
-            className="group relative overflow-hidden rounded-3xl border border-purple-200/40 bg-white/70 p-6 text-left shadow-lg backdrop-blur dark:border-purple-900/40 dark:bg-gray-950/70"
-          >
-            <span className="absolute right-6 top-6 text-sm font-semibold uppercase tracking-[0.4em] text-purple-400/70">
-              {step.id}
-            </span>
-            <div className="relative mb-6 overflow-hidden rounded-2xl bg-purple-500/10">
-              <Image
-                src={step.image}
-                alt={step.title}
-                width={420}
-                height={300}
-                className="h-48 w-full object-cover transition duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-purple-900/40 via-transparent to-transparent" />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-              {step.title}
-            </h3>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
-              {step.description}
-            </p>
-            <div className="mt-6 h-px w-full bg-gradient-to-r from-transparent via-purple-400/40 to-transparent" />
-            <div className="mt-4 flex items-center gap-2 text-sm font-semibold text-purple-600 dark:text-purple-300">
-              <span>Explorar más</span>
-              <motion.span
-                initial={{ x: 0 }}
-                whileHover={{ x: 6 }}
-                className="text-lg"
-              >
-                →
-              </motion.span>
-            </div>
-          </motion.article>
-        ))}
+      <div className="grid gap-4 md:grid-cols-3">
+        {steps.map((step, index) => {
+          const Icon = step.icon;
+
+          return (
+            <motion.article
+              key={step.id}
+              initial={{ opacity: 0, y: 22 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.5,
+                delay: index * 0.08,
+                ease: "easeOut",
+              }}
+              viewport={{ once: true, amount: 0.3 }}
+              className="group overflow-hidden rounded-lg border border-white/80 bg-white/74 shadow-[0_18px_50px_rgba(50,70,116,0.1)] backdrop-blur-xl"
+            >
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <Image
+                  src={step.image}
+                  alt={step.title}
+                  fill
+                  sizes="(min-width: 768px) 33vw, 100vw"
+                  className="object-cover transition duration-500 group-hover:scale-[1.03]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#27304f]/45 via-transparent to-white/8" />
+                <span className="absolute left-4 top-4 rounded-full border border-white/65 bg-white/72 px-3 py-1 text-xs font-semibold text-[#516fae] backdrop-blur">
+                  {step.id}
+                </span>
+              </div>
+              <div className="p-5">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[#d8c6ff]/70 bg-white/70 text-[#516fae]">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <h3 className="mt-5 text-lg font-semibold text-[#27304f]">
+                  {step.title}
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-[#68708b]">
+                  {step.description}
+                </p>
+              </div>
+            </motion.article>
+          );
+        })}
       </div>
 
       <motion.div
-        initial={{ opacity: 0, scale: 0.96 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        initial={{ opacity: 0, y: 22 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.55, ease: "easeOut" }}
         viewport={{ once: true, amount: 0.3 }}
-        className="relative overflow-hidden rounded-[2.5rem] border border-purple-200/50 bg-gradient-to-br from-white/90 via-white/80 to-purple-100/60 p-1 shadow-2xl dark:border-purple-900/40 dark:from-gray-950/90 dark:via-gray-950/80 dark:to-purple-950/70"
+        className="relative overflow-hidden rounded-lg border border-white/80 bg-white/76 p-6 shadow-[0_22px_70px_rgba(50,70,116,0.12)] backdrop-blur-xl sm:p-8"
       >
-        <div className="relative overflow-hidden rounded-[2.25rem] bg-gradient-to-br from-purple-500/15 via-white/70 to-transparent p-6 sm:p-10">
-          <div className="grid gap-8 md:grid-cols-[minmax(0,1fr),320px] md:items-center">
-            <div className="space-y-6 text-left">
-              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-purple-500/70 dark:text-purple-200/70">
-                Tu portal privado
-              </p>
-              <h3 className="text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-white">
-                Practica, registra y celebra tu energía cada día
-              </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                Explora tu panel con accesos rápidos a sesiones, rituales y
-                comunidad. Visualiza tu avance y desbloquea material premium
-                conforme sostienes el ritmo.
-              </p>
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href="/protected"
-                  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-600 to-pink-500 px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:shadow-purple-500/40"
-                >
-                  Ver mi espacio
-                </Link>
-                <Link
-                  href="/preguntas"
-                  className="inline-flex items-center gap-2 rounded-full border border-purple-400/40 px-5 py-3 text-sm font-semibold text-purple-600 transition hover:bg-purple-500/10 dark:border-purple-700/40 dark:text-purple-200"
-                >
-                  Dudas frecuentes
-                </Link>
-              </div>
+        <div
+          className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-[0.1]"
+          style={{ backgroundImage: "url('/images/oleo-abstracto.webp')" }}
+        />
+        <div className="relative grid gap-8 md:grid-cols-[minmax(0,1fr)_320px] md:items-center">
+          <div className="space-y-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#8d73b7]">
+              Tu portal privado
+            </p>
+            <h3 className="text-2xl font-semibold text-[#27304f] sm:text-3xl">
+              Practica, registra y celebra tu energia cada dia
+            </h3>
+            <p className="max-w-2xl text-sm leading-6 text-[#68708b]">
+              Tu panel reune sesiones, progreso y comunidad en un espacio claro,
+              para que vuelvas a tu practica sin ruido.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="/protected"
+                className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[#516fae] px-5 py-3 text-sm font-semibold text-white shadow-[0_16px_40px_rgba(81,111,174,0.22)] transition hover:bg-[#405c98]"
+              >
+                Ver mi espacio
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/preguntas"
+                className="inline-flex min-h-11 items-center rounded-full border border-[#b8c8ee] bg-white/65 px-5 py-3 text-sm font-semibold text-[#405c98] transition hover:bg-white"
+              >
+                Dudas frecuentes
+              </Link>
             </div>
+          </div>
 
-            <motion.div
-              initial={{ y: 24, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-              viewport={{ once: true, amount: 0.3 }}
-              className="relative"
-            >
-              <div className="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-purple-400/30 blur-3xl" />
-              <div className="relative overflow-hidden rounded-[1.75rem] border border-purple-200/40 bg-white/90 shadow-xl dark:border-purple-800/40 dark:bg-gray-950/90">
-                <Image
-                  src="/Captura-vista-mi-espacio.webp"
-                  alt="Vista de tu espacio interior"
-                  width={640}
-                  height={420}
-                  className="h-full w-full object-cover"
-                />
-              </div>
-            </motion.div>
+          <div className="relative overflow-hidden rounded-lg border border-white/80 bg-white shadow-lg">
+            <Image
+              src="/Captura-vista-mi-espacio.webp"
+              alt="Vista de tu espacio interior"
+              width={640}
+              height={420}
+              className="h-full w-full object-cover"
+            />
           </div>
         </div>
       </motion.div>
