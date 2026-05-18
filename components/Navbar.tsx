@@ -34,7 +34,7 @@ type NavLink = {
 
 const navLinks: NavLink[] = [
   { href: "/", label: "Inicio", icon: Home },
-  { href: "/informacion", label: "Como funciona?", icon: Map },
+  { href: "/informacion", label: "Como funciona", icon: Map },
   { href: "/protected/social", label: "Comunidad", icon: Users },
   { href: "/preguntas", label: "Preguntas", icon: HelpCircle },
   { href: "/upgrade", label: "Planes", icon: Gem, highlight: true },
@@ -152,8 +152,8 @@ export function Navbar() {
 
   const headerClasses = `sticky top-0 z-50 w-full border-b transition-all duration-300 ${
     scrolled
-      ? "bg-white/78 dark:bg-gray-950/85 backdrop-blur-xl border-white/70 dark:border-purple-900/40 shadow-[0_14px_44px_rgba(50,70,116,0.12)]"
-      : "bg-white/28 backdrop-blur-sm border-transparent"
+      ? "border-[#d8c6ff]/55 bg-[#fffaf2]/90 shadow-[0_16px_48px_rgba(81,111,174,0.13)] backdrop-blur-xl dark:border-purple-900/50 dark:bg-gray-950/90"
+      : "border-transparent bg-[#fffaf2]/40 backdrop-blur-md dark:bg-gray-950/40"
   }`;
 
   return (
@@ -163,23 +163,24 @@ export function Navbar() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
-      <div className="absolute inset-x-0 top-0 -z-10 h-full bg-gradient-to-b from-white/60 via-white/20 to-transparent dark:from-purple-900/35" />
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:h-[4.5rem] sm:px-6 lg:px-8">
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_10%_0%,rgba(216,198,255,0.35),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.72),rgba(255,250,242,0.28))] dark:bg-[radial-gradient(circle_at_10%_0%,rgba(126,87,194,0.28),transparent_36%),linear-gradient(180deg,rgba(17,24,39,0.88),rgba(17,24,39,0.34))]" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#c89a3c]/65 to-transparent" />
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:h-[4.75rem] sm:px-6 lg:px-8">
         <Link
           href="/"
-          className="flex items-center gap-3 rounded-full px-2 py-1 transition hover:scale-[1.02]"
+          className="group flex items-center gap-3 rounded-full border border-transparent px-2 py-1 transition hover:border-[#d8c6ff]/60 hover:bg-white/55 hover:shadow-[0_12px_30px_rgba(81,111,174,0.1)] dark:hover:border-purple-800/60 dark:hover:bg-white/5"
         >
           <motion.div
-            whileHover={{ rotate: 360 }}
-            transition={{ duration: 0.8 }}
-            className="relative"
+            whileHover={{ rotate: 18, scale: 1.04 }}
+            transition={{ duration: 0.45, ease: "easeOut" }}
+            className="relative grid h-11 w-11 place-items-center rounded-full bg-white shadow-[0_12px_28px_rgba(81,111,174,0.14)] ring-1 ring-[#d8c6ff]/70 dark:bg-purple-950/70 dark:ring-purple-800/70"
           >
-            <span className="absolute inset-0 rounded-full bg-[#c89a3c]/25 blur-md" />
+            <span className="absolute inset-0 rounded-full bg-[#c89a3c]/20 blur-md transition group-hover:bg-[#c89a3c]/30" />
             <Image
               src="/logo-estrella.png"
               alt="Estrella del Alba"
-              width={38}
-              height={38}
+              width={36}
+              height={36}
               priority
               className="relative z-10 rounded-full"
             />
@@ -194,23 +195,25 @@ export function Navbar() {
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-6 sm:flex">
+        <nav className="hidden items-center gap-3 lg:flex">
+          <div className="flex items-center gap-1 rounded-full border border-white/75 bg-white/50 p-1 shadow-[0_14px_36px_rgba(81,111,174,0.08)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5">
           {desktopLinks.map((item) => {
             const isActive = matchPath(item.href);
+            const Icon = item.icon;
             return (
               <motion.div key={item.href} whileHover={{ y: -2 }}>
                 <Link
                   href={item.href}
-                  className={`group relative overflow-hidden rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
+                  className={`group relative overflow-hidden rounded-full px-3.5 py-2 text-xs font-semibold transition ${
                     item.highlight
-                      ? "text-[#516fae] dark:text-purple-300"
+                      ? "text-[#8a6724] dark:text-[#f1d293]"
                       : "text-[#535b78] dark:text-zinc-200"
                   }`}
                 >
                   {isActive && (
                     <motion.span
                       layoutId="nav-pill"
-                      className="absolute inset-0 -z-10 rounded-full bg-white/75 shadow-sm ring-1 ring-[#d8c6ff]/60 dark:from-purple-500/40 dark:via-pink-500/20"
+                      className="absolute inset-0 -z-10 rounded-full bg-white/95 shadow-sm ring-1 ring-[#d8c6ff]/80 dark:bg-purple-950/70 dark:ring-purple-800/70"
                       transition={{
                         type: "spring",
                         stiffness: 320,
@@ -219,21 +222,29 @@ export function Navbar() {
                     />
                   )}
                   <span className="relative flex items-center gap-2">
+                    <Icon
+                      className={`h-3.5 w-3.5 ${
+                        item.highlight ? "text-[#c89a3c]" : "text-[#8d73b7]"
+                      }`}
+                    />
                     <span>{item.label}</span>
-                    <span className="h-[2px] w-6 rounded-full bg-[#c89a3c]/55 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    {item.highlight && (
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#c89a3c]" />
+                    )}
                   </span>
                 </Link>
               </motion.div>
             );
           })}
+          </div>
 
           <ThemeSwitcher />
 
           {user ? (
             <div className="relative flex items-center gap-3" ref={userMenuRef}>
               <div className="relative h-11 w-11">
-                <span className="absolute inset-0 -z-10 rounded-full bg-gradient-to-br from-purple-500/60 via-pink-500/40 to-indigo-500/40 blur" />
-                <div className="relative h-full w-full overflow-hidden rounded-full border border-purple-400/40 bg-purple-500/20 shadow-inner shadow-purple-500/30">
+                <span className="absolute inset-0 -z-10 rounded-full bg-[#c89a3c]/25 blur-md" />
+                <div className="relative h-full w-full overflow-hidden rounded-full border border-white/80 bg-[#516fae]/15 shadow-inner shadow-[#516fae]/20 dark:border-purple-800/70 dark:bg-purple-950/60">
                   {avatar ? (
                     <Image
                       src={avatar}
@@ -242,7 +253,7 @@ export function Navbar() {
                       className="object-cover"
                     />
                   ) : (
-                    <div className="grid h-full w-full place-items-center text-sm font-semibold text-white">
+                    <div className="grid h-full w-full place-items-center bg-gradient-to-br from-[#516fae] to-[#8d73b7] text-sm font-semibold text-white">
                       {initials}
                     </div>
                   )}
@@ -251,7 +262,7 @@ export function Navbar() {
 
               <button
                 onClick={() => setUserMenuOpen((prev) => !prev)}
-                className="rounded-full p-2 text-purple-600 transition hover:bg-purple-50 dark:text-purple-200 dark:hover:bg-purple-950/40"
+                className="rounded-full border border-transparent p-2 text-[#516fae] transition hover:border-[#d8c6ff]/70 hover:bg-white/65 dark:text-purple-200 dark:hover:border-purple-800/60 dark:hover:bg-white/5"
                 aria-label="Abrir menu de cuenta"
               >
                 <Cog6ToothIcon className="h-5 w-5" />
@@ -264,17 +275,17 @@ export function Navbar() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -6, scale: 0.98 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute right-0 top-14 w-60 overflow-hidden rounded-2xl border border-purple-200/40 bg-gradient-to-br from-white/95 via-white/90 to-purple-50/90 p-2 shadow-xl dark:from-gray-950/95 dark:via-gray-950/90 dark:to-purple-950/80"
+                    className="absolute right-0 top-14 w-64 overflow-hidden rounded-2xl border border-[#d8c6ff]/60 bg-[#fffaf2]/95 p-2 shadow-[0_24px_70px_rgba(39,48,79,0.18)] backdrop-blur-xl dark:border-purple-900/60 dark:bg-gray-950/95"
                   >
-                    <div className="rounded-xl bg-purple-500/10 px-4 py-3 text-xs uppercase tracking-[0.2em] text-purple-500 dark:text-purple-200">
+                    <div className="rounded-xl border border-white/70 bg-white/65 px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#6f5aa8] dark:border-purple-900/50 dark:bg-white/5 dark:text-purple-200">
                       {user.email}
                     </div>
                     <Link
                       href="/protected/profile"
                       onClick={() => setUserMenuOpen(false)}
-                      className="mt-2 flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-zinc-700 transition hover:bg-purple-500/10 dark:text-zinc-100 dark:hover:bg-purple-900/40"
+                      className="mt-2 flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-[#535b78] transition hover:bg-white/70 hover:text-[#516fae] dark:text-zinc-100 dark:hover:bg-white/5 dark:hover:text-purple-200"
                     >
-                      <User2 className="h-4 w-4 text-purple-500" />
+                      <User2 className="h-4 w-4 text-[#8d73b7]" />
                       Ver perfil
                     </Link>
                     <button
@@ -296,20 +307,21 @@ export function Navbar() {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link
                 href="/auth/login"
-                className="rounded-full bg-gradient-to-r from-purple-600 to-pink-500 px-4 py-2 text-sm font-semibold text-white shadow-lg transition hover:shadow-purple-500/40"
+                className="inline-flex items-center gap-2 rounded-full bg-[#516fae] px-4 py-2 text-sm font-semibold text-white shadow-[0_14px_34px_rgba(81,111,174,0.24)] transition hover:bg-[#405c98]"
               >
+                <SparklesIcon className="h-4 w-4 text-[#f4d99a]" />
                 Entrar
               </Link>
             </motion.div>
           )}
         </nav>
 
-        <div className="flex items-center gap-3 sm:hidden">
+        <div className="flex items-center gap-3 lg:hidden">
           <ThemeSwitcher />
           <motion.button
             onClick={() => setMenuOpen((prev) => !prev)}
             whileTap={{ scale: 0.92 }}
-            className="rounded-xl p-2 text-zinc-700 transition hover:bg-purple-50 dark:text-zinc-200 dark:hover:bg-purple-950/40"
+            className="rounded-full border border-[#d8c6ff]/65 bg-white/60 p-2 text-[#516fae] shadow-sm transition hover:bg-white dark:border-purple-900/60 dark:bg-white/5 dark:text-purple-200 dark:hover:bg-white/10"
             aria-label="Abrir menu principal"
           >
             <AnimatePresence mode="wait" initial={false}>
@@ -346,7 +358,7 @@ export function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.28, ease: "easeInOut" }}
-            className="sm:hidden border-t border-purple-200/30 bg-white/95 shadow-lg backdrop-blur dark:border-purple-900/40 dark:bg-gray-950/95"
+            className="border-t border-[#d8c6ff]/55 bg-[#fffaf2]/95 shadow-[0_22px_55px_rgba(81,111,174,0.14)] backdrop-blur-xl dark:border-purple-900/50 dark:bg-gray-950/95 lg:hidden"
           >
             <div className="space-y-3 px-4 py-6">
               {mobileLinks.map((item, index) => {
@@ -363,18 +375,22 @@ export function Navbar() {
                       href={item.href}
                       className={`flex items-center gap-3 rounded-2xl px-4 py-2.5 text-sm font-medium transition ${
                         isActive
-                          ? "bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-600 dark:text-purple-200"
-                          : "text-zinc-700 hover:bg-purple-500/10 dark:text-zinc-100 dark:hover:bg-purple-900/30"
+                          ? "bg-white/80 text-[#516fae] shadow-sm ring-1 ring-[#d8c6ff]/65 dark:bg-white/10 dark:text-purple-200 dark:ring-purple-900/70"
+                          : "text-[#535b78] hover:bg-white/60 hover:text-[#516fae] dark:text-zinc-100 dark:hover:bg-white/5 dark:hover:text-purple-200"
                       }`}
                     >
-                      <Icon className="h-5 w-5" />
+                      <Icon
+                        className={`h-5 w-5 ${
+                          item.highlight ? "text-[#c89a3c]" : "text-[#8d73b7]"
+                        }`}
+                      />
                       {item.label}
                     </Link>
                   </motion.div>
                 );
               })}
 
-              <div className="mt-4 border-t border-purple-200/30 pt-4 dark:border-purple-900/40">
+              <div className="mt-4 border-t border-[#d8c6ff]/55 pt-4 dark:border-purple-900/50">
                 {user ? (
                   <>
                     <motion.div
@@ -384,9 +400,9 @@ export function Navbar() {
                     >
                       <Link
                         href="/protected/profile"
-                        className="flex items-center gap-3 rounded-2xl px-4 py-2.5 text-sm font-medium text-zinc-700 transition hover:bg-purple-500/10 dark:text-zinc-100 dark:hover:bg-purple-900/30"
+                        className="flex items-center gap-3 rounded-2xl px-4 py-2.5 text-sm font-medium text-[#535b78] transition hover:bg-white/60 hover:text-[#516fae] dark:text-zinc-100 dark:hover:bg-white/5 dark:hover:text-purple-200"
                       >
-                        <User2 className="h-5 w-5 text-purple-500" />
+                        <User2 className="h-5 w-5 text-[#8d73b7]" />
                         Ver perfil
                       </Link>
                     </motion.div>
@@ -413,9 +429,9 @@ export function Navbar() {
                   >
                     <Link
                       href="/auth/login"
-                      className="flex items-center gap-3 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:shadow-purple-500/40"
+                      className="flex items-center gap-3 rounded-2xl bg-[#516fae] px-4 py-2.5 text-sm font-semibold text-white shadow-[0_16px_34px_rgba(81,111,174,0.24)] transition hover:bg-[#405c98]"
                     >
-                      <SparklesIcon className="h-5 w-5" />
+                      <SparklesIcon className="h-5 w-5 text-[#f4d99a]" />
                       Iniciar sesion
                     </Link>
                   </motion.div>
