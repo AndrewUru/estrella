@@ -52,7 +52,9 @@ export function Navbar() {
   const pathname = usePathname();
 
   const isPanelRoute =
-    pathname === "/protected" || pathname?.startsWith("/protected/social");
+    pathname === "/protected" ||
+    pathname?.startsWith("/protected/social") ||
+    pathname?.startsWith("/protected/dia/");
 
   const user = session?.user;
   const avatar = avatarUrl || user?.user_metadata?.avatar_url;

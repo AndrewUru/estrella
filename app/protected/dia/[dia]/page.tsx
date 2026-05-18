@@ -1,42 +1,56 @@
-//C:\estrella\app\protected\dia\[dia]\page.tsx
-
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase/client";
 import {
-  ArrowLeftIcon,
-  DocumentTextIcon,
-  SparklesIcon,
-} from "@heroicons/react/24/solid";
+  ArrowLeft,
+  BookOpen,
+  CheckCircle2,
+  Download,
+  FileText,
+  Headphones,
+  Home,
+  Loader2,
+  Lock,
+  MessageSquare,
+  Sparkles,
+} from "lucide-react";
+import { supabase } from "@/lib/supabase/client";
 
 type Entrega = {
   dia: number;
   titulo: string;
   descripcion: string;
-  archivo_pdf?: string;
-  audio_url?: string;
+  archivo_pdf?: string | null;
+  audio_url?: string | null;
+  imagen_url?: string | null;
 };
 
-type Plan = "gratis" | "premium";
+type Plan = "gratis" | "premium" | "membresia" | string;
 
 export default function DiaPage() {
   const params = useParams();
   const router = useRouter();
-  const dia = parseInt(params.dia as string);
+  const dia = Number.parseInt(params.dia as string, 10);
 
   const [accesoPermitido, setAccesoPermitido] = useState(false);
   const [entrega, setEntrega] = useState<Entrega | null>(null);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [tipoPlan, setTipoPlan] = useState<Plan | null>(null);
 
   const avanzarDia = async () => {
+    setSaving(true);
+
     const res = await fetch("/api/progreso/completar", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ dia }),
     });
+
+    setSaving(false);
 
     if (res.ok) {
       router.push("/protected");
@@ -55,7 +69,10 @@ export default function DiaPage() {
         data: { user },
       } = await supabase.auth.getUser();
 
-      if (!user) return router.push("/auth/login");
+      if (!user) {
+        router.push("/auth/login");
+        return;
+      }
 
       const { data: perfil } = await supabase
         .from("profiles")
@@ -63,7 +80,10 @@ export default function DiaPage() {
         .eq("id", user.id)
         .single();
 
-      if (!perfil?.start_date || !perfil.plan) return;
+      if (!perfil?.start_date || !perfil.plan) {
+        setLoading(false);
+        return;
+      }
 
       setTipoPlan(perfil.plan);
 
@@ -95,237 +115,383 @@ export default function DiaPage() {
     cargarEntrega();
   }, [dia, router]);
 
-  if (loading)
+  if (loading) {
     return (
-      <div className="flex flex-col items-center mt-20 animate-pulse">
-        <svg
-          className="w-12 h-12 bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:bg-[hsl(var(--primary)/0.85)] mb-4 animate-spin"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-          />
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8v8z"
-          />
-        </svg>
-        <p className="text-center text-lg text-gray-700">
-          Cargando contenido energético...
-        </p>
-      </div>
-    );
-
-  if (!accesoPermitido) {
-    const mensaje =
-      tipoPlan === "gratis" && dia > 1
-        ? {
-            icon: (
-              <SparklesIcon className="w-12 h-12 text-[hsl(var(--accent))] mb-4" />
-            ),
-            titulo: "Este contenido es parte del plan premium",
-            descripcion:
-              "Gracias por unirte al Día 1 de forma gratuita. Para seguir avanzando en tu viaje interior, puedes desbloquear todos los días del programa por solo 22 €.",
-          }
-        : {
-            icon: (
-              <DocumentTextIcon className="w-12 h-12 text-[hsl(var(--accent))] mb-4" />
-            ),
-            titulo: "Este contenido no está disponible aún.",
-            descripcion:
-              "Cada día tiene su tiempo sagrado. Vuelve más adelante cuando tu alma esté lista para recibir este material.",
-          };
-
-    return (
-      <div className="flex flex-col items-center mt-20 px-4 text-center">
-        {mensaje.icon}
-        <h2 className="text-2xl font-semibold mb-2 text-[hsl(var(--foreground))]">
-          {mensaje.titulo}
-        </h2>
-        <p className="text-gray-600 mb-6 max-w-md">{mensaje.descripcion}</p>
-        <a
-          href="/protected/"
-          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-        >
-          <ArrowLeftIcon className="w-5 h-5 mr-2" />
-          Volver al dashboard
-        </a>
-      </div>
+      <main className="min-h-screen bg-[#fffaf2] dark:bg-gray-950">
+        <div className="flex min-h-screen items-center justify-center px-6">
+          <div className="flex max-w-sm flex-col items-center gap-3 text-center text-[#5f6680] dark:text-zinc-400">
+            <Loader2 className="h-6 w-6 animate-spin text-[#516fae]" aria-hidden="true" />
+            <p className="text-sm sm:text-base">Preparando el contenido del dia...</p>
+          </div>
+        </div>
+      </main>
     );
   }
 
-  if (!entrega)
+  if (!accesoPermitido) {
+    const premiumLock = tipoPlan === "gratis" && dia > 1;
+
     return (
-      <div className="flex flex-col items-center mt-20 px-4 text-center">
-        <DocumentTextIcon className="w-12 h-12 text-[hsl(var(--destructive)) mb-4" />
-        <h2 className="text-2xl font-semibold mb-2 text-[hsl(var(--foreground))]">
-          Contenido no encontrado.
-        </h2>
-        <p className="text-gray-600 mb-6">
-          No se ha cargado material para el día {dia}. Puede que esté en proceso
-          de canalización ✨.
-        </p>
-        <a
-          href="/protected/"
-          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-        >
-          <ArrowLeftIcon className="w-5 h-5 mr-2" />
-          Volver al dashboard
-        </a>
-      </div>
+      <BlockedState
+        title={
+          premiumLock
+            ? "Este contenido forma parte del plan premium"
+            : "Este contenido no esta disponible todavia"
+        }
+        description={
+          premiumLock
+            ? "Gracias por unirte al dia 1 de forma gratuita. Puedes desbloquear el recorrido completo desde los planes."
+            : "Cada practica tiene su momento. Vuelve mas adelante para recibir este material cuando se abra en tu proceso."
+        }
+        ctaHref={premiumLock ? "/upgrade" : "/protected"}
+        ctaLabel={premiumLock ? "Ver planes" : "Volver al panel"}
+        icon={premiumLock ? Sparkles : Lock}
+      />
     );
+  }
+
+  if (!entrega) {
+    return (
+      <BlockedState
+        title="Contenido no encontrado"
+        description={`No se ha cargado material para el dia ${dia}. Puede que este en proceso de preparacion.`}
+        ctaHref="/protected"
+        ctaLabel="Volver al panel"
+        icon={FileText}
+      />
+    );
+  }
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 px-6 rounded-2xl shadow-xl py-10 transition-all duration-300 bg-gradient-to-br from-purple-50/80 via-purple-100/60 to-violet-100/40 dark:from-purple-950 dark:via-violet-950/60 dark:to-gray-900 border border-purple-200 dark:border-purple-800">
-      {/* Header con mejor jerarquía visual */}
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full text-sm font-medium mb-4">
-          <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
-          Canalización de Samarí Luz
-        </div>
-        <h1 className="text-4xl font-extrabold mb-4 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
-          Día {entrega.dia}{" "}
-          <span className="text-2xl font-normal text-muted-foreground">|</span>{" "}
-          <span className="block md:inline text-3xl mt-2 md:mt-0">
-            {entrega.titulo}
-          </span>
-        </h1>
-        <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-          {entrega.descripcion}
-        </p>
-      </div>
+    <main className="relative min-h-screen overflow-x-clip bg-[#fffaf2] text-[#27304f] dark:bg-gray-950 dark:text-zinc-100">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_8%,rgba(216,198,255,0.38),transparent_30%),radial-gradient(circle_at_88%_18%,rgba(200,154,60,0.18),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.72),rgba(255,250,242,0.7))] dark:bg-[radial-gradient(circle_at_12%_8%,rgba(126,87,194,0.22),transparent_32%),radial-gradient(circle_at_88%_18%,rgba(200,154,60,0.1),transparent_30%)]" />
 
-      {/* Contenido principal con mejor organización */}
-      <div className="grid md:grid-cols-2 gap-8 mb-10">
-        {/* Sección PDF */}
-        {entrega.archivo_pdf && (
-          <div className="bg-white dark:bg-zinc-900 rounded-xl p-6 shadow-lg border border-purple-200 dark:border-purple-700 hover:shadow-xl transition-all duration-300 group">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                <DocumentTextIcon className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-zinc-900 dark:text-white">
-                  Guía Energética
-                </h3>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                  Material complementario en PDF
-                </p>
-              </div>
+      <div className="relative mx-auto grid min-h-screen w-full max-w-7xl gap-5 px-4 py-4 sm:px-6 lg:grid-cols-[250px_minmax(0,1fr)_300px] lg:px-6">
+        <aside className="lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)]">
+          <div className="flex h-full flex-col rounded-[1.5rem] border border-[#d8c6ff]/55 bg-white/60 p-4 shadow-[0_24px_70px_rgba(81,111,174,0.12)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5">
+            <Link href="/protected" className="flex items-center gap-3 rounded-2xl px-2 py-2">
+              <span className="relative grid h-11 w-11 place-items-center rounded-full bg-white shadow-sm ring-1 ring-[#d8c6ff]/70 dark:bg-purple-950/70 dark:ring-purple-800/70">
+                <span className="absolute inset-0 rounded-full bg-[#c89a3c]/20 blur-md" />
+                <Image
+                  src="/logo-estrella.png"
+                  alt="Estrella del Alba"
+                  width={36}
+                  height={36}
+                  priority
+                  className="relative rounded-full"
+                />
+              </span>
+              <span className="flex flex-col">
+                <span className="text-xs font-semibold uppercase tracking-[0.28em] text-[#6f5aa8] dark:text-purple-300/80">
+                  Estrella
+                </span>
+                <span className="-mt-0.5 bg-gradient-to-r from-[#516fae] via-[#8d73b7] to-[#c89a3c] bg-clip-text text-sm font-bold text-transparent">
+                  Dia {entrega.dia}
+                </span>
+              </span>
+            </Link>
+
+            <nav className="mt-6 grid gap-2">
+              <PanelLink href="/protected" icon={Home}>
+                Mi espacio
+              </PanelLink>
+              <PanelLink href="#contenido" icon={BookOpen}>
+                Contenido
+              </PanelLink>
+              {entrega.audio_url && (
+                <PanelLink href="#audio" icon={Headphones}>
+                  Audio
+                </PanelLink>
+              )}
+              {entrega.archivo_pdf && (
+                <PanelLink href="#guia" icon={FileText}>
+                  Guia PDF
+                </PanelLink>
+              )}
+              <PanelLink href="/protected/social" icon={MessageSquare}>
+                Comunidad
+              </PanelLink>
+            </nav>
+
+            <div className="mt-auto hidden rounded-2xl border border-[#d8c6ff]/65 bg-[#fffaf2]/70 p-4 text-sm leading-6 text-[#5f6680] dark:border-purple-900/55 dark:bg-white/5 dark:text-zinc-400 lg:block">
+              Reserva unos minutos al final para integrar antes de marcar el dia
+              como completado.
             </div>
-            <a
-              href={entrega.archivo_pdf}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 w-full justify-center px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:opacity-90 transition-all duration-300 font-medium group-hover:scale-105"
-            >
-              Descargar PDF
-            </a>
           </div>
-        )}
+        </aside>
 
-        {/* Sección Audio */}
-        {entrega.audio_url && (
-          <div className="bg-white dark:bg-zinc-900 rounded-xl p-6 shadow-lg border border-purple-200 dark:border-purple-700 hover:shadow-xl transition-all duration-300">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M9 12a3 3 0 106 0 3 3 0 00-6 0z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-semibold text-zinc-900 dark:text-white">
-                  Meditación Canalizada
-                </h3>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                  Audio guiado por Samarí Luz
-                </p>
+        <section className="min-w-0 space-y-5 pb-8">
+          <header
+            id="contenido"
+            className="overflow-hidden rounded-[1.5rem] border border-[#d8c6ff]/55 bg-white/70 shadow-[0_20px_60px_rgba(81,111,174,0.12)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5"
+          >
+            <div className="relative min-h-[320px] p-5 sm:p-7">
+              <Image
+                src={entrega.imagen_url ?? "/images/oleo-celeste.webp"}
+                alt=""
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 760px"
+                className="object-cover opacity-20"
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#fffaf2]/96 via-[#fffaf2]/82 to-[#d8c6ff]/50 dark:from-gray-950/96 dark:via-gray-950/86 dark:to-purple-950/42" />
+              <div className="relative flex min-h-[270px] flex-col justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-[#d8c6ff]/70 bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#6f5aa8] backdrop-blur dark:border-purple-900/60 dark:bg-white/5 dark:text-purple-200">
+                    <Sparkles className="h-4 w-4 text-[#c89a3c]" />
+                    Canalizacion de Samari Luz
+                  </span>
+                  <Link
+                    href="/protected"
+                    className="inline-flex items-center gap-2 rounded-full border border-[#d8c6ff]/70 bg-white/70 px-4 py-2 text-sm font-semibold text-[#516fae] transition hover:bg-white dark:border-purple-900/60 dark:bg-white/5 dark:text-purple-200 dark:hover:bg-white/10"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Volver
+                  </Link>
+                </div>
+
+                <div className="max-w-3xl">
+                  <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#8d73b7] dark:text-purple-300">
+                    Dia {entrega.dia}
+                  </p>
+                  <h1 className="mt-3 text-3xl font-semibold leading-tight tracking-normal text-[#27304f] dark:text-white sm:text-5xl">
+                    {entrega.titulo}
+                  </h1>
+                  <p className="mt-5 max-w-2xl text-base leading-8 text-[#5f6680] dark:text-zinc-300">
+                    {entrega.descripcion}
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="bg-purple-100/30 dark:bg-purple-900/30 p-4 rounded-lg">
-              <audio
-                controls
-                src={entrega.audio_url}
-                className="w-full h-12 rounded-lg"
-                preload="auto"
-                style={{
-                  filter:
-                    "sepia(20%) saturate(70%) hue-rotate(290deg) brightness(1.1)",
-                }}
+          </header>
+
+          <div className="grid gap-5 xl:grid-cols-2">
+            {entrega.audio_url && (
+              <section
+                id="audio"
+                className="rounded-[1.5rem] border border-[#d8c6ff]/55 bg-white/70 p-5 shadow-[0_18px_55px_rgba(81,111,174,0.1)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5"
               >
-                Tu navegador no soporta la reproducción de audio.
-              </audio>
+                <ResourceHeader
+                  icon={Headphones}
+                  label="Escucha"
+                  title="Audio guiado"
+                  description="Prepara un espacio tranquilo y escucha a tu ritmo."
+                />
+                <div className="mt-5 rounded-2xl border border-white/75 bg-[#fffaf2]/80 p-4 dark:border-purple-900/50 dark:bg-gray-950/50">
+                  <audio
+                    controls
+                    src={entrega.audio_url}
+                    className="w-full"
+                    preload="metadata"
+                  >
+                    Tu navegador no soporta la reproduccion de audio.
+                  </audio>
+                </div>
+              </section>
+            )}
+
+            {entrega.archivo_pdf && (
+              <section
+                id="guia"
+                className="rounded-[1.5rem] border border-[#d8c6ff]/55 bg-white/70 p-5 shadow-[0_18px_55px_rgba(81,111,174,0.1)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5"
+              >
+                <ResourceHeader
+                  icon={FileText}
+                  label="Guia"
+                  title="Material PDF"
+                  description="Usa esta guia para acompanar la practica y volver a ella cuando lo necesites."
+                />
+                <a
+                  href={entrega.archivo_pdf}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#516fae] px-4 py-3 text-sm font-semibold text-white shadow-[0_16px_34px_rgba(81,111,174,0.2)] transition hover:bg-[#405c98]"
+                >
+                  <Download className="h-4 w-4 text-[#f4d99a]" />
+                  Abrir PDF
+                </a>
+              </section>
+            )}
+          </div>
+
+          <section className="rounded-[1.5rem] border border-[#d8c6ff]/55 bg-white/70 p-5 text-center shadow-[0_18px_55px_rgba(81,111,174,0.1)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5 sm:p-7">
+            <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-[#d8c6ff]/70 bg-white/70 text-[#516fae] dark:border-purple-900/60 dark:bg-white/5 dark:text-purple-200">
+              <CheckCircle2 className="h-7 w-7 text-[#c89a3c]" />
+            </span>
+            <h2 className="mt-5 text-2xl font-semibold text-[#27304f] dark:text-white">
+              Cierra este momento con presencia
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-[#5f6680] dark:text-zinc-400">
+              Cuando hayas escuchado, leido o integrado lo necesario, marca este
+              dia como completado para continuar tu recorrido.
+            </p>
+            <button
+              type="button"
+              onClick={avanzarDia}
+              disabled={saving}
+              className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[#516fae] px-6 py-3 text-sm font-semibold text-white shadow-[0_16px_34px_rgba(81,111,174,0.24)] transition hover:bg-[#405c98] disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {saving ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Guardando...
+                </>
+              ) : (
+                <>
+                  Completar dia
+                  <Sparkles className="h-4 w-4 text-[#f4d99a]" />
+                </>
+              )}
+            </button>
+          </section>
+        </section>
+
+        <aside className="space-y-5 pb-8 lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)] lg:overflow-y-auto">
+          <div className="rounded-[1.5rem] border border-[#d8c6ff]/55 bg-white/60 p-4 shadow-[0_20px_60px_rgba(81,111,174,0.1)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8d73b7] dark:text-purple-300">
+              Sesion actual
+            </p>
+            <div className="mt-4 space-y-3">
+              <InfoRow label="Dia" value={String(entrega.dia)} />
+              <InfoRow
+                label="Audio"
+                value={entrega.audio_url ? "Disponible" : "Sin audio"}
+              />
+              <InfoRow
+                label="PDF"
+                value={entrega.archivo_pdf ? "Disponible" : "Sin PDF"}
+              />
             </div>
           </div>
-        )}
+
+          <div className="rounded-[1.5rem] border border-[#d8c6ff]/55 bg-white/60 p-4 shadow-[0_20px_60px_rgba(81,111,174,0.1)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8d73b7] dark:text-purple-300">
+              Integracion
+            </p>
+            <p className="mt-4 text-sm leading-7 text-[#5f6680] dark:text-zinc-400">
+              Antes de seguir, anota una sensacion, una palabra o una imagen que
+              te haya quedado despues de la practica.
+            </p>
+            <Link
+              href="/protected/social"
+              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-[#d8c6ff]/70 bg-white/70 px-4 py-3 text-sm font-semibold text-[#516fae] transition hover:bg-white dark:border-purple-900/60 dark:bg-white/5 dark:text-purple-200 dark:hover:bg-white/10"
+            >
+              Compartir en comunidad
+              <MessageSquare className="h-4 w-4" />
+            </Link>
+          </div>
+        </aside>
       </div>
+    </main>
+  );
+}
 
-      {/* Sección de integración mejorada */}
-      <div className="bg-gradient-to-br from-purple-50 via-purple-100 to-pink-50 dark:from-zinc-900 dark:via-purple-950 dark:to-pink-950 rounded-xl p-8 text-center border border-purple-200 dark:border-purple-700">
-        <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg
-            className="w-8 h-8 text-white dark:text-purple-100"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-            />
-          </svg>
-        </div>
+function PanelLink({
+  href,
+  icon: Icon,
+  children,
+}: {
+  href: string;
+  icon: typeof Sparkles;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium text-[#535b78] transition hover:bg-white/70 hover:text-[#516fae] dark:text-zinc-300 dark:hover:bg-white/5 dark:hover:text-purple-200"
+    >
+      <Icon className="h-4 w-4 text-[#8d73b7] transition group-hover:text-[#c89a3c]" />
+      {children}
+    </Link>
+  );
+}
 
-        <h3 className="text-xl font-semibold text-purple-900 dark:text-purple-100 mb-3">
-          Momento de Integración
-        </h3>
-        <p className="text-sm text-purple-700 dark:text-purple-300 mb-6 max-w-md mx-auto">
-          Tómate el tiempo que necesites para sentir y asimilar la energía de
-          esta canalización.
+function ResourceHeader({
+  icon: Icon,
+  label,
+  title,
+  description,
+}: {
+  icon: typeof Sparkles;
+  label: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="flex items-start gap-3">
+      <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[#d8c6ff]/70 bg-white/70 text-[#516fae] dark:border-purple-900/60 dark:bg-white/5 dark:text-purple-200">
+        <Icon className="h-5 w-5 text-[#c89a3c]" />
+      </span>
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8d73b7] dark:text-purple-300">
+          {label}
         </p>
-
-        <button
-          onClick={avanzarDia}
-          className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-500 text-white dark:text-purple-100 rounded-full hover:opacity-90 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-        >
-          <span>Completar Día</span>
-          <SparklesIcon className="w-6 h-6" />
-        </button>
-
-        {/* Navegación mejorada */}
-        <div className="mt-8 pt-6 border-t border-purple-200 dark:border-purple-700">
-          <a
-            href="/protected"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-white/80 dark:bg-zinc-800 text-purple-800 dark:text-purple-200 rounded-full hover:bg-purple-100 dark:hover:bg-zinc-700 transition-all duration-300 shadow-md hover:shadow-lg font-medium border border-purple-200 dark:border-purple-600"
-          >
-            <ArrowLeftIcon className="w-5 h-5" />
-            Volver a Mi espacio
-          </a>
-        </div>
+        <h2 className="mt-1 text-xl font-semibold text-[#27304f] dark:text-white">
+          {title}
+        </h2>
+        <p className="mt-1 text-sm leading-6 text-[#5f6680] dark:text-zinc-400">
+          {description}
+        </p>
       </div>
-
-      {/* Elementos decorativos sutiles */}
-      <div className="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-secondary/20 to-accent/20 rounded-full opacity-20 blur-xl"></div>
-      <div className="absolute bottom-10 left-10 w-16 h-16 bg-gradient-to-br from-accent/20 to-primary/20 rounded-full opacity-20 blur-lg"></div>
     </div>
+  );
+}
+
+function InfoRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between gap-4 rounded-2xl border border-white/75 bg-white/60 px-4 py-3 text-sm dark:border-purple-900/50 dark:bg-white/5">
+      <span className="text-[#5f6680] dark:text-zinc-400">{label}</span>
+      <span className="font-semibold text-[#27304f] dark:text-zinc-100">
+        {value}
+      </span>
+    </div>
+  );
+}
+
+function BlockedState({
+  title,
+  description,
+  ctaHref,
+  ctaLabel,
+  icon: Icon,
+}: {
+  title: string;
+  description: string;
+  ctaHref: string;
+  ctaLabel: string;
+  icon: typeof Sparkles;
+}) {
+  return (
+    <main className="relative min-h-screen overflow-hidden bg-[#fffaf2] text-[#27304f] dark:bg-gray-950 dark:text-zinc-100">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(216,198,255,0.42),transparent_32%),radial-gradient(circle_at_80%_20%,rgba(200,154,60,0.18),transparent_30%)]" />
+      <div className="relative mx-auto flex min-h-screen max-w-3xl items-center justify-center px-4 py-12">
+        <section className="w-full rounded-[1.5rem] border border-[#d8c6ff]/55 bg-white/70 p-6 text-center shadow-[0_24px_70px_rgba(81,111,174,0.14)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5 sm:p-10">
+          <span className="mx-auto inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-[#d8c6ff]/70 bg-white/70 dark:border-purple-900/60 dark:bg-white/5">
+            <Icon className="h-8 w-8 text-[#c89a3c]" />
+          </span>
+          <h1 className="mt-6 text-2xl font-semibold text-[#27304f] dark:text-white sm:text-3xl">
+            {title}
+          </h1>
+          <p className="mx-auto mt-3 max-w-lg text-sm leading-7 text-[#5f6680] dark:text-zinc-400">
+            {description}
+          </p>
+          <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link
+              href={ctaHref}
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#516fae] px-5 py-3 text-sm font-semibold text-white shadow-[0_16px_34px_rgba(81,111,174,0.22)] transition hover:bg-[#405c98]"
+            >
+              {ctaLabel}
+              <ArrowLeft className="h-4 w-4 text-[#f4d99a]" />
+            </Link>
+            <Link
+              href="/protected"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-[#d8c6ff]/70 bg-white/70 px-5 py-3 text-sm font-semibold text-[#516fae] transition hover:bg-white dark:border-purple-900/60 dark:bg-white/5 dark:text-purple-200 dark:hover:bg-white/10"
+            >
+              Mi espacio
+            </Link>
+          </div>
+        </section>
+      </div>
+    </main>
   );
 }
