@@ -1,9 +1,21 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { SparklesIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowRight,
+  BookOpen,
+  CalendarDays,
+  CheckCircle2,
+  Gem,
+  Home,
+  Lock,
+  MessageSquare,
+  Settings,
+  Sparkles,
+  UserRound,
+} from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { useUserProfile } from "@/lib/hooks/useUserProfile";
 import PracticesGallery from "@/components/PracticesGallery";
@@ -23,6 +35,14 @@ export type Perfil = {
   username?: string | null;
 };
 
+const panelLinks = [
+  { href: "/protected", label: "Inicio", icon: Home },
+  { href: "#recorrido", label: "Recorrido", icon: CalendarDays },
+  { href: "#practicas", label: "Practicas", icon: BookOpen },
+  { href: "/protected/social", label: "Comunidad", icon: MessageSquare },
+  { href: "/protected/profile", label: "Perfil", icon: UserRound },
+];
+
 export default function DashboardPage() {
   const [progreso, setProgreso] = useState<ProgresoItem[]>([]);
   const [perfil, setPerfil] = useState<Perfil | null>(null);
@@ -39,9 +59,8 @@ export default function DashboardPage() {
 
   const progresoPercent = useMemo(() => {
     if (!progreso.length) return 0;
-    const done = progreso.filter((p) => p.completado).length;
-    return Math.round((done / progreso.length) * 100);
-  }, [progreso]);
+    return Math.round((completadosCount / progreso.length) * 100);
+  }, [completadosCount, progreso.length]);
 
   const totalDias = progreso.length;
 
@@ -164,9 +183,9 @@ export default function DashboardPage() {
   }, []);
 
   const profileName = fullName || perfil?.full_name || "Estrella";
-  const greetingName = loadingHook ? "..." : profileName;
-  const profileInitial = profileName.trim().charAt(0).toUpperCase() || "E";
-  const planLabel = perfil?.plan || "Sin plan";
+  const firstName = getFirstName(profileName);
+  const initials = getInitials(profileName);
+  const planLabel = formatPlan(perfil?.plan || "Sin plan");
   const startDateLabel = useMemo(() => {
     if (!perfil?.start_date) return "Sin fecha";
     const parsed = new Date(perfil.start_date);
@@ -180,95 +199,213 @@ export default function DashboardPage() {
     : progreso;
 
   return (
-    <div className="relative min-h-screen bg-slate-50 pb-16 dark:bg-gray-950">
-      <div className="pointer-events-none absolute inset-x-0 top-0 hidden h-72 bg-gradient-to-b from-purple-200/40 via-transparent to-transparent blur-3xl sm:block dark:from-purple-900/40" />
-      <div className="relative mx-auto w-full max-w-6xl px-4 pt-10 sm:px-6 lg:px-8 md:pt-12">
-        <header className="grid gap-6 lg:grid-cols-[minmax(0,1fr),340px] lg:items-start">
-          <div className="rounded-3xl border border-white/60 bg-white/80 p-8 shadow-sm backdrop-blur dark:border-white/10 dark:bg-black/40">
-            <div className="flex items-center gap-3 text-sm font-medium text-purple-600 dark:text-purple-300">
-              <SparklesIcon className="h-6 w-6" />
-              <span>Espacio protegido</span>
+    <main className="relative min-h-screen overflow-x-clip bg-[#fffaf2] text-[#27304f] dark:bg-gray-950 dark:text-zinc-100">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_8%,rgba(216,198,255,0.38),transparent_30%),radial-gradient(circle_at_88%_18%,rgba(200,154,60,0.18),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.72),rgba(255,250,242,0.7))] dark:bg-[radial-gradient(circle_at_12%_8%,rgba(126,87,194,0.22),transparent_32%),radial-gradient(circle_at_88%_18%,rgba(200,154,60,0.1),transparent_30%)]" />
+
+      <div className="relative mx-auto grid min-h-screen w-full max-w-7xl gap-5 px-4 py-4 sm:px-6 lg:grid-cols-[250px_minmax(0,1fr)_300px] lg:px-6">
+        <aside className="lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)]">
+          <div className="flex h-full flex-col rounded-[1.5rem] border border-[#d8c6ff]/55 bg-white/60 p-4 shadow-[0_24px_70px_rgba(81,111,174,0.12)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5">
+            <Link href="/" className="flex items-center gap-3 rounded-2xl px-2 py-2">
+              <span className="relative grid h-11 w-11 place-items-center rounded-full bg-white shadow-sm ring-1 ring-[#d8c6ff]/70 dark:bg-purple-950/70 dark:ring-purple-800/70">
+                <span className="absolute inset-0 rounded-full bg-[#c89a3c]/20 blur-md" />
+                <Image
+                  src="/logo-estrella.png"
+                  alt="Estrella del Alba"
+                  width={36}
+                  height={36}
+                  priority
+                  className="relative rounded-full"
+                />
+              </span>
+              <span className="flex flex-col">
+                <span className="text-xs font-semibold uppercase tracking-[0.28em] text-[#6f5aa8] dark:text-purple-300/80">
+                  Estrella
+                </span>
+                <span className="-mt-0.5 bg-gradient-to-r from-[#516fae] via-[#8d73b7] to-[#c89a3c] bg-clip-text text-sm font-bold text-transparent">
+                  Mi espacio
+                </span>
+              </span>
+            </Link>
+
+            <div className="mt-6 rounded-2xl border border-white/75 bg-white/60 p-4 dark:border-purple-900/50 dark:bg-white/5">
+              <div className="flex items-center gap-3">
+                <div className="relative h-12 w-12 overflow-hidden rounded-2xl bg-gradient-to-br from-[#516fae] to-[#8d73b7] text-sm font-semibold text-white shadow-[0_14px_30px_rgba(81,111,174,0.24)]">
+                  {perfil?.avatar_url ? (
+                    <Image
+                      src={perfil.avatar_url}
+                      alt="Avatar"
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="grid h-full w-full place-items-center">
+                      {initials}
+                    </div>
+                  )}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8d73b7] dark:text-purple-300">
+                    Tu proceso
+                  </p>
+                  <p className="truncate text-sm font-semibold text-[#27304f] dark:text-zinc-100">
+                    {profileName}
+                  </p>
+                  {perfil?.username && (
+                    <p className="truncate text-xs text-[#777088] dark:text-zinc-500">
+                      @{perfil.username}
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
-            <h1 className="mt-6 text-3xl font-semibold text-gray-900 dark:text-white sm:text-4xl">
-              Hola, {greetingName}
-            </h1>
-            <p className="mt-4 text-base text-gray-600 dark:text-gray-300 sm:text-lg">
-              Acompaña tu proceso con calma. Retoma el programa donde lo dejaste
-              y usa las prácticas como guía diaria.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              {loadingProgreso ? (
-                <div className="h-12 w-40 animate-pulse rounded-full bg-gray-200/80 dark:bg-gray-700/60" />
-              ) : nextUnlockedDay ? (
+
+            <nav className="mt-6 grid gap-2">
+              {panelLinks.map((item) => {
+                const Icon = item.icon;
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium text-[#535b78] transition hover:bg-white/70 hover:text-[#516fae] dark:text-zinc-300 dark:hover:bg-white/5 dark:hover:text-purple-200"
+                  >
+                    <Icon className="h-4 w-4 text-[#8d73b7] transition group-hover:text-[#c89a3c]" />
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            <div className="mt-auto hidden rounded-2xl border border-[#d8c6ff]/65 bg-[#fffaf2]/70 p-4 text-sm leading-6 text-[#5f6680] dark:border-purple-900/55 dark:bg-white/5 dark:text-zinc-400 lg:block">
+              Vuelve a tu practica con suavidad. Un paso pequeno tambien cuenta.
+            </div>
+          </div>
+        </aside>
+
+        <section className="min-w-0 space-y-5 pb-8">
+          <div className="rounded-[1.5rem] border border-[#d8c6ff]/55 bg-white/60 p-4 shadow-[0_20px_60px_rgba(81,111,174,0.1)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5 sm:p-5">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8d73b7] dark:text-purple-300">
+                  Panel personal
+                </p>
+                <h1 className="mt-1 text-2xl font-semibold tracking-normal text-[#27304f] dark:text-white sm:text-3xl">
+                  Hola, {loadingHook ? "..." : firstName}. Retoma tu recorrido.
+                </h1>
+              </div>
+              {nextUnlockedDay ? (
                 <Link
                   href={`/protected/dia/${nextUnlockedDay.dia}`}
-                  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-600 to-pink-500 px-5 py-3 text-sm font-semibold text-white shadow transition hover:from-purple-700 hover:to-pink-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500"
+                  className="inline-flex w-fit items-center gap-2 rounded-full bg-[#516fae] px-4 py-2.5 text-sm font-semibold text-white shadow-[0_16px_34px_rgba(81,111,174,0.24)] transition hover:bg-[#405c98]"
                   aria-label={`Continuar con el dia ${nextUnlockedDay.dia}`}
                 >
-                  <span>Continuar con el día {nextUnlockedDay.dia}</span>
-                  <SparklesIcon className="h-4 w-4" />
+                  Dia {nextUnlockedDay.dia}
+                  <ArrowRight className="h-4 w-4 text-[#f4d99a]" />
                 </Link>
               ) : (
                 <Link
                   href="#practicas"
-                  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-600 to-pink-500 px-5 py-3 text-sm font-semibold text-white shadow transition hover:from-purple-700 hover:to-pink-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500"
+                  className="inline-flex w-fit items-center gap-2 rounded-full bg-[#516fae] px-4 py-2.5 text-sm font-semibold text-white shadow-[0_16px_34px_rgba(81,111,174,0.24)] transition hover:bg-[#405c98]"
                 >
-                  <span>Explorar prácticas</span>
-                  <SparklesIcon className="h-4 w-4" />
+                  Explorar practicas
+                  <ArrowRight className="h-4 w-4 text-[#f4d99a]" />
                 </Link>
               )}
-
-              <Link
-                href="/protected/profile"
-                className="inline-flex items-center gap-2 rounded-full border border-gray-300/80 bg-white/70 px-5 py-3 text-sm font-semibold text-gray-800 transition hover:border-purple-300 hover:text-purple-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500 dark:border-white/20 dark:bg-black/30 dark:text-gray-100 dark:hover:border-purple-400"
-              >
-                <span>Ver perfil</span>
-              </Link>
             </div>
           </div>
 
-          <aside className="flex h-full flex-col gap-6 rounded-3xl border border-purple-200/60 bg-gradient-to-br from-purple-600 via-purple-500 to-pink-500 p-6 text-white shadow-lg backdrop-blur dark:border-purple-400/30 dark:from-purple-700 dark:via-purple-600 dark:to-pink-500">
-            <div className="flex items-center gap-4">
-              <div className="relative h-16 w-16 overflow-hidden rounded-2xl border border-white/40 bg-white/10">
-                {perfil?.avatar_url ? (
-                  <Image
-                    src={perfil.avatar_url}
-                    alt="Avatar"
-                    fill
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="grid h-full w-full place-content-center text-xl font-semibold">
-                    {profileInitial}
-                  </div>
-                )}
-              </div>
-              <div className="min-w-0">
-                <p className="text-xs uppercase tracking-wide text-white/70">
-                  Tu perfil
+          {esGratis && (
+            <div className="rounded-[1.5rem] border border-[#c89a3c]/40 bg-[#fff3cf]/80 p-4 text-sm text-[#6d5321] shadow-sm backdrop-blur dark:border-[#c89a3c]/30 dark:bg-[#3a2d12]/50 dark:text-[#f1d293] sm:flex sm:items-center sm:justify-between sm:gap-4">
+              <p>
+                Tu plan actual es gratuito. Solo el dia 1 esta disponible por
+                ahora.
+              </p>
+              <Link
+                href="/upgrade"
+                className="mt-3 inline-flex items-center justify-center gap-2 rounded-full bg-[#c89a3c] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#ad8431] sm:mt-0"
+              >
+                Mejorar plan
+              </Link>
+            </div>
+          )}
+
+          <div className="grid gap-4 sm:grid-cols-3">
+            <MetricCard
+              label="Progreso"
+              value={loadingProgreso ? "--" : `${progresoPercent}%`}
+              helper={`${completadosCount} de ${totalDias || 0} dias`}
+              icon={CheckCircle2}
+            />
+            <MetricCard
+              label="Plan"
+              value={planLabel}
+              helper={`Inicio: ${startDateLabel}`}
+              icon={Gem}
+            />
+            <MetricCard
+              label="Bloqueados"
+              value={loadingProgreso ? "--" : String(lockedCount)}
+              helper="Se abren con tu ritmo"
+              icon={Lock}
+            />
+          </div>
+
+          <section
+            id="recorrido"
+            className="rounded-[1.5rem] border border-[#d8c6ff]/55 bg-white/70 p-4 shadow-[0_18px_55px_rgba(81,111,174,0.1)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5 sm:p-5"
+          >
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8d73b7] dark:text-purple-300">
+                  Tu recorrido
                 </p>
-                <p className="truncate text-lg font-semibold">{profileName}</p>
-                {perfil?.username && (
-                  <p className="truncate text-xs text-white/80">
-                    @{perfil.username}
-                  </p>
-                )}
+                <h2 className="mt-1 text-2xl font-semibold text-[#27304f] dark:text-white">
+                  Practicas por dia
+                </h2>
               </div>
+              {completadosCount > 0 && (
+                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1.5 text-xs font-semibold text-emerald-700 dark:border-emerald-400/30 dark:bg-emerald-950/40 dark:text-emerald-300">
+                  {completadosCount} completados
+                </span>
+              )}
             </div>
 
-            <div className="space-y-2">
-              <p className="text-xs uppercase tracking-wide text-white/70">
-                Progreso total
-              </p>
-              <p className="text-4xl font-semibold">
-                {loadingProgreso ? "--" : `${progresoPercent}%`}
-              </p>
-              <p className="text-sm text-white/80">
-                {completadosCount} de {totalDias || 0} dias completados
-              </p>
-              <div className="h-2 w-full overflow-hidden rounded-full bg-white/30">
+            {!loadingProgreso && progreso.length === 0 ? (
+              <div className="mt-6 rounded-2xl border border-dashed border-[#d8c6ff]/70 bg-white/60 p-10 text-center text-sm text-[#5f6680] dark:border-purple-900/60 dark:bg-white/5 dark:text-zinc-400">
+                Aun no hay practicas disponibles. Cuando se publiquen, las
+                veras aqui.
+              </div>
+            ) : (
+              <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {items.map((p, index) => (
+                  <DayCard
+                    key={p?.dia ?? `skeleton-${index}`}
+                    item={p}
+                    index={index}
+                    loading={loadingProgreso}
+                  />
+                ))}
+              </div>
+            )}
+          </section>
+
+          <section
+            id="practicas"
+            className="rounded-[1.5rem] border border-[#d8c6ff]/55 bg-white/70 p-4 shadow-[0_18px_55px_rgba(81,111,174,0.1)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5 sm:p-5"
+          >
+            <PracticesGallery />
+          </section>
+        </section>
+
+        <aside className="space-y-5 pb-8 lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)] lg:overflow-y-auto">
+          <div className="rounded-[1.5rem] border border-[#d8c6ff]/55 bg-white/60 p-4 shadow-[0_20px_60px_rgba(81,111,174,0.1)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8d73b7] dark:text-purple-300">
+              Estado actual
+            </p>
+            <div className="mt-4 space-y-3">
+              <div className="h-2 overflow-hidden rounded-full bg-[#d8c6ff]/45 dark:bg-purple-950">
                 <div
-                  className="h-full rounded-full bg-white"
+                  className="h-full rounded-full bg-[#516fae]"
                   style={{ width: `${progresoPercent}%` }}
                   aria-valuenow={progresoPercent}
                   aria-valuemin={0}
@@ -276,206 +413,213 @@ export default function DashboardPage() {
                   role="progressbar"
                 />
               </div>
-            </div>
-
-            <ul className="grid gap-3 text-sm text-white/90">
-              <li className="flex items-center justify-between">
-                <span>Plan</span>
-                <span className="font-semibold">{planLabel}</span>
-              </li>
-              <li className="flex items-center justify-between">
-                <span>Inicio</span>
-                <span className="font-semibold">{startDateLabel}</span>
-              </li>
-              <li className="flex items-center justify-between">
-                <span>Bloqueados</span>
-                <span className="font-semibold">{lockedCount}</span>
-              </li>
-            </ul>
-          </aside>
-        </header>
-
-        {esGratis && (
-          <div className="mt-6 flex flex-col gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-6 py-5 text-amber-900 shadow-sm dark:border-amber-400/30 dark:bg-amber-950/40 dark:text-amber-200 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm">
-              Tu plan actual es gratuito. Solo el día 1 está disponible.
-              Actualiza para desbloquear el resto del recorrido.
-            </p>
-            <Link
-              href="/upgrade"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-amber-500 px-5 py-2.5 text-sm font-semibold text-white shadow transition hover:bg-amber-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
-            >
-              Mejorar plan
-            </Link>
-          </div>
-        )}
-
-        <section className="mt-12">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
-                Tu recorrido
-              </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                Revisa cada día y avanza a tu ritmo. Las sesiones se desbloquean
-                conforme avanzas.
+              <p className="text-sm leading-6 text-[#5f6680] dark:text-zinc-400">
+                {nextUnlockedDay
+                  ? `Tu siguiente practica disponible es el dia ${nextUnlockedDay.dia}.`
+                  : "No tienes practicas pendientes desbloqueadas ahora mismo."}
               </p>
             </div>
-            {completadosCount > 0 && (
-              <span className="rounded-full border border-green-200 bg-green-50 px-4 py-1.5 text-xs font-semibold text-green-700 dark:border-green-400/30 dark:bg-green-950/40 dark:text-green-300">
-                {completadosCount} días completados
-              </span>
-            )}
           </div>
 
-          {!loadingProgreso && progreso.length === 0 ? (
-            <div className="mt-10 rounded-3xl border border-dashed border-gray-300 bg-white/70 p-12 text-center text-sm text-gray-600 dark:border-white/20 dark:bg-black/40 dark:text-gray-300">
-              Aún no hay prácticas disponibles. Cuando se publiquen, las verás
-              aquí.
+          <div className="rounded-[1.5rem] border border-[#d8c6ff]/55 bg-white/60 p-4 shadow-[0_20px_60px_rgba(81,111,174,0.1)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8d73b7] dark:text-purple-300">
+              Accesos
+            </p>
+            <div className="mt-4 grid gap-2">
+              <QuickAction href="/protected/social" icon={MessageSquare}>
+                Ir a comunidad
+              </QuickAction>
+              <QuickAction href="/protected/profile" icon={Settings}>
+                Ajustar perfil
+              </QuickAction>
+              <QuickAction href="/upgrade" icon={Gem}>
+                Ver planes
+              </QuickAction>
             </div>
-          ) : (
-            <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {items.map((p, index) => (
-                <div
-                  key={p?.dia ?? `skeleton-${index}`}
-                  className={`group relative transform transition-all duration-300 ${
-                    !loadingProgreso && p && !p.desbloqueado ? "opacity-60" : ""
-                  } hover:-translate-y-2`}
-                  style={{
-                    animationDelay: `${index * 100}ms`,
-                    animation: "fadeInUp 0.6s ease-out forwards",
-                  }}
-                >
-                  <div
-                    className={`relative h-80 rounded-3xl border shadow-xl transition-all duration-300 ${
-                      loadingProgreso
-                        ? "border-gray-200/70 bg-gray-100 dark:border-gray-700 dark:bg-gray-800"
-                        : p?.desbloqueado
-                        ? "border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
-                        : "border-gray-300 bg-gray-100 dark:border-gray-600 dark:bg-gray-800"
-                    } ${
-                      !loadingProgreso && (p?.completado ?? false)
-                        ? "ring-2 ring-green-400/60"
-                        : ""
-                    }`}
-                  >
-                    <div className="absolute inset-0">
-                      {!loadingProgreso ? (
-                        <Image
-                          src={p?.imagen_url ?? "/fallback.png"}
-                          alt={`Dia ${p?.dia ?? ""}`}
-                          fill
-                          className={`object-cover transition-all duration-500 ${
-                            p?.desbloqueado
-                              ? "opacity-30 group-hover:opacity-50"
-                              : "opacity-10 group-hover:opacity-20"
-                          }`}
-                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                        />
-                      ) : (
-                        <div className="h-full w-full animate-pulse bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-800 dark:to-gray-700" />
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                    </div>
-
-                    <div className="relative z-10 flex h-full flex-col justify-between p-6">
-                      <div className="flex items-start justify-between">
-                        <div className="rounded-2xl bg-white/90 px-4 py-2 text-gray-800 shadow-sm backdrop-blur dark:bg-black/70 dark:text-white">
-                          <h3 className="text-xl font-semibold">
-                            {loadingProgreso ? "Dia --" : `Dia ${p?.dia ?? ""}`}
-                          </h3>
-                        </div>
-                        <div
-                          className={`h-4 w-4 rounded-full border-2 transition-all duration-300 ${
-                            loadingProgreso
-                              ? "border-white/40"
-                              : p?.completado
-                              ? "border-green-400 bg-green-400 shadow-lg shadow-green-400/40"
-                              : "border-white/60"
-                          }`}
-                        />
-                      </div>
-
-                      <div className="space-y-4">
-                        <div className="rounded-2xl bg-white/90 px-4 py-3 text-sm font-semibold text-gray-700 shadow-sm backdrop-blur dark:bg-black/70 dark:text-gray-100">
-                          <div className="flex items-center gap-2">
-                            {loadingProgreso ? (
-                              <>
-                                <span className="h-2 w-2 animate-pulse rounded-full bg-gray-400" />
-                                <span>Cargando...</span>
-                              </>
-                            ) : p?.completado ? (
-                              <>
-                                <span className="h-2 w-2 rounded-full bg-green-400" />
-                                <span>Completado</span>
-                              </>
-                            ) : p?.desbloqueado ? (
-                              <>
-                                <span className="h-2 w-2 rounded-full bg-orange-400" />
-                                <span>Pendiente</span>
-                              </>
-                            ) : (
-                              <>
-                                <span className="h-2 w-2 rounded-full bg-gray-400" />
-                                <span>Bloqueado</span>
-                              </>
-                            )}
-                          </div>
-                        </div>
-
-                        {loadingProgreso ? (
-                          <div className="h-12 w-full animate-pulse rounded-2xl bg-gray-300 dark:bg-gray-700" />
-                        ) : p?.desbloqueado ? (
-                          <Link
-                            href={`/protected/dia/${p?.dia ?? ""}`}
-                            className="group/btn flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-4 text-sm font-semibold text-white shadow-lg transition hover:scale-[1.02] hover:from-purple-600 hover:to-pink-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500"
-                            aria-label={`Abrir día ${p?.dia ?? ""}`}
-                          >
-                            <span>Acceder al día</span>
-                            <SparklesIcon className="h-5 w-5 transition-transform duration-300 group-hover/btn:rotate-12" />
-                          </Link>
-                        ) : (
-                          <div className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gray-300 px-6 py-4 text-sm font-medium text-gray-700 dark:bg-gray-600 dark:text-gray-300">
-                            <svg
-                              className="h-4 w-4"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                            <span>Próximamente</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
+          </div>
+        </aside>
       </div>
+    </main>
+  );
+}
 
-      <section id="practicas" className="mt-16">
-        <PracticesGallery />
-      </section>
-
-      <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
+function MetricCard({
+  label,
+  value,
+  helper,
+  icon: Icon,
+}: {
+  label: string;
+  value: string;
+  helper: string;
+  icon: typeof Sparkles;
+}) {
+  return (
+    <div className="rounded-[1.5rem] border border-[#d8c6ff]/55 bg-white/70 p-4 shadow-[0_18px_45px_rgba(81,111,174,0.08)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5">
+      <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#8d73b7] dark:text-purple-300">
+        <Icon className="h-4 w-4 text-[#c89a3c]" />
+        {label}
+      </div>
+      <p className="mt-3 text-2xl font-semibold text-[#27304f] dark:text-white">
+        {value}
+      </p>
+      <p className="mt-1 text-sm text-[#5f6680] dark:text-zinc-400">{helper}</p>
     </div>
   );
+}
+
+function DayCard({
+  item,
+  index,
+  loading,
+}: {
+  item: ProgresoItem | null;
+  index: number;
+  loading: boolean;
+}) {
+  const isLocked = !loading && item && !item.desbloqueado;
+  const isCompleted = !loading && item?.completado;
+  const canOpen = !loading && item?.desbloqueado;
+
+  return (
+    <article
+      className={`group relative overflow-hidden rounded-[1.25rem] border bg-white/80 shadow-sm transition hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(81,111,174,0.16)] dark:bg-gray-950/50 ${
+        loading
+          ? "border-[#d8c6ff]/45"
+          : isLocked
+          ? "border-[#d8c6ff]/40 opacity-65"
+          : isCompleted
+          ? "border-emerald-300/70"
+          : "border-[#d8c6ff]/60"
+      }`}
+      style={{ animationDelay: `${index * 60}ms` }}
+    >
+      <div className="relative aspect-[4/3] overflow-hidden">
+        {loading ? (
+          <div className="h-full w-full animate-pulse bg-[#e9e3f6]" />
+        ) : (
+          <Image
+            src={item?.imagen_url ?? "/fallback.png"}
+            alt={`Dia ${item?.dia ?? ""}`}
+            fill
+            className={`object-cover transition duration-500 group-hover:scale-105 ${
+              item?.desbloqueado ? "opacity-72" : "opacity-25 grayscale"
+            }`}
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#27304f]/72 via-[#27304f]/12 to-transparent" />
+        <div className="absolute left-4 top-4 rounded-full border border-white/70 bg-white/85 px-3 py-1 text-sm font-semibold text-[#27304f] backdrop-blur dark:bg-gray-950/80 dark:text-white">
+          {loading ? "Dia --" : `Dia ${item?.dia ?? ""}`}
+        </div>
+      </div>
+
+      <div className="space-y-4 p-4">
+        <div className="flex items-center justify-between gap-3">
+          <StatusPill loading={loading} item={item} />
+          {isCompleted && <CheckCircle2 className="h-5 w-5 text-emerald-500" />}
+        </div>
+
+        {loading ? (
+          <div className="h-11 animate-pulse rounded-2xl bg-[#e9e3f6]" />
+        ) : canOpen ? (
+          <Link
+            href={`/protected/dia/${item?.dia ?? ""}`}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#516fae] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#405c98]"
+            aria-label={`Abrir dia ${item?.dia ?? ""}`}
+          >
+            Acceder al dia
+            <Sparkles className="h-4 w-4 text-[#f4d99a]" />
+          </Link>
+        ) : (
+          <div className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#e7e0f3] px-4 py-3 text-sm font-semibold text-[#777088] dark:bg-purple-950/50 dark:text-zinc-400">
+            <Lock className="h-4 w-4" />
+            Proximamente
+          </div>
+        )}
+      </div>
+    </article>
+  );
+}
+
+function StatusPill({
+  loading,
+  item,
+}: {
+  loading: boolean;
+  item: ProgresoItem | null;
+}) {
+  if (loading) {
+    return (
+      <span className="rounded-full bg-[#e9e3f6] px-3 py-1 text-xs font-semibold text-[#777088]">
+        Cargando
+      </span>
+    );
+  }
+
+  if (item?.completado) {
+    return (
+      <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
+        Completado
+      </span>
+    );
+  }
+
+  if (item?.desbloqueado) {
+    return (
+      <span className="rounded-full bg-[#fff3cf] px-3 py-1 text-xs font-semibold text-[#8a6724] dark:bg-[#3a2d12]/50 dark:text-[#f1d293]">
+        Pendiente
+      </span>
+    );
+  }
+
+  return (
+    <span className="rounded-full bg-[#e7e0f3] px-3 py-1 text-xs font-semibold text-[#777088] dark:bg-purple-950/50 dark:text-zinc-400">
+      Bloqueado
+    </span>
+  );
+}
+
+function QuickAction({
+  href,
+  icon: Icon,
+  children,
+}: {
+  href: string;
+  icon: typeof Sparkles;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group flex items-center justify-between gap-3 rounded-2xl border border-white/75 bg-white/60 px-3 py-3 text-sm font-semibold text-[#535b78] transition hover:bg-white hover:text-[#516fae] dark:border-purple-900/50 dark:bg-white/5 dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-purple-200"
+    >
+      <span className="flex items-center gap-2">
+        <Icon className="h-4 w-4 text-[#8d73b7] transition group-hover:text-[#c89a3c]" />
+        {children}
+      </span>
+      <ArrowRight className="h-4 w-4 opacity-50 transition group-hover:translate-x-0.5 group-hover:opacity-100" />
+    </Link>
+  );
+}
+
+function getInitials(value: string | null | undefined) {
+  if (!value) return "E";
+
+  const parts = value.split(/\s+/).filter(Boolean);
+  const first = parts[0]?.[0] ?? "";
+  const last = parts.length > 1 ? parts[parts.length - 1]?.[0] ?? "" : "";
+
+  return (first + last || "E").toUpperCase();
+}
+
+function getFirstName(value: string | null | undefined) {
+  if (!value) return "Estrella";
+
+  return value.split(/\s+/).filter(Boolean)[0] ?? "Estrella";
+}
+
+function formatPlan(value: string) {
+  if (!value) return "Sin plan";
+  return value.charAt(0).toUpperCase() + value.slice(1);
 }
