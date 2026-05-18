@@ -51,6 +51,8 @@ export function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
 
+  const isPanelRoute = pathname?.startsWith("/protected/social");
+
   const user = session?.user;
   const avatar = avatarUrl || user?.user_metadata?.avatar_url;
   const initials = useMemo(
@@ -155,6 +157,10 @@ export function Navbar() {
       ? "border-[#d8c6ff]/55 bg-[#fffaf2]/90 shadow-[0_16px_48px_rgba(81,111,174,0.13)] backdrop-blur-xl dark:border-purple-900/50 dark:bg-gray-950/90"
       : "border-transparent bg-[#fffaf2]/40 backdrop-blur-md dark:bg-gray-950/40"
   }`;
+
+  if (isPanelRoute) {
+    return null;
+  }
 
   return (
     <motion.header

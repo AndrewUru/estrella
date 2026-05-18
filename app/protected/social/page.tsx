@@ -1,11 +1,14 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import {
-  ArrowRight,
+  ArrowLeft,
+  Bell,
   Compass,
+  Home,
   Loader2,
   MessageSquare,
   PenSquare,
@@ -14,43 +17,33 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { useUserProfile } from "@/lib/hooks/useUserProfile";
-import { Badge } from "@/components/ui/badge";
 import { Composer } from "@/components/social/Composer";
 import { Feed } from "@/components/social/Feed";
 import { MoodStats } from "@/components/social/MoodStats";
-import { SidebarLeft } from "@/components/social/SidebarLeft";
 import { SidebarRight } from "@/components/social/SidebarRight";
 
-const quickHighlights = [
-  {
-    title: "Escribe algo breve",
-    description: "Comparte un avance, una pregunta o una sensacion del dia.",
-    icon: PenSquare,
-  },
-  {
-    title: "Explora el feed",
-    description: "Mira como va la comunidad y responde cuando algo resuene.",
-    icon: Compass,
-  },
-  {
-    title: "Sostengan el impulso",
-    description: "Pequenas interacciones frecuentes crean mas constancia.",
-    icon: Users,
-  },
+const panelLinks = [
+  { href: "/protected", label: "Panel", icon: Home },
+  { href: "#composer", label: "Publicar", icon: PenSquare },
+  { href: "#feed", label: "Feed", icon: MessageSquare },
+  { href: "#community", label: "Comunidad", icon: Users },
 ];
 
 const communitySignals = [
   {
-    label: "Ritmo recomendado",
+    label: "Ritmo",
     value: "1 nota al dia",
+    icon: Sparkles,
   },
   {
-    label: "Mejor momento",
+    label: "Momento",
     value: "Despues de practicar",
+    icon: Compass,
   },
   {
     label: "Intencion",
-    value: "Compartir y acompanarse",
+    value: "Acompanarse",
+    icon: Bell,
   },
 ];
 
@@ -79,13 +72,11 @@ export default function SocialPage() {
 
   if (!authChecked || loadingProfile) {
     return (
-      <main className="min-h-screen bg-slate-50 dark:bg-gray-950">
+      <main className="min-h-screen bg-[#fffaf2] dark:bg-gray-950">
         <div className="flex min-h-screen items-center justify-center px-6">
-          <div className="flex max-w-sm flex-col items-center gap-3 text-center text-muted-foreground">
-            <Loader2 className="h-6 w-6 animate-spin" aria-hidden="true" />
-            <p className="text-sm sm:text-base">
-              Preparando tu espacio comunitario...
-            </p>
+          <div className="flex max-w-sm flex-col items-center gap-3 text-center text-[#5f6680] dark:text-zinc-400">
+            <Loader2 className="h-6 w-6 animate-spin text-[#516fae]" aria-hidden="true" />
+            <p className="text-sm sm:text-base">Preparando tu panel comunitario...</p>
           </div>
         </div>
       </main>
@@ -93,210 +84,141 @@ export default function SocialPage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-x-clip bg-slate-50 pb-16 dark:bg-gray-950">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(circle_at_top,_rgba(251,146,60,0.2),_transparent_55%)]" />
-      <div className="pointer-events-none absolute right-[-8rem] top-28 h-64 w-64 rounded-full bg-rose-200/30 blur-3xl dark:bg-rose-500/10" />
-      <div className="pointer-events-none absolute left-[-10rem] top-80 h-72 w-72 rounded-full bg-amber-200/30 blur-3xl dark:bg-amber-500/10" />
+    <main className="relative min-h-screen overflow-x-clip bg-[#fffaf2] text-[#27304f] dark:bg-gray-950 dark:text-zinc-100">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_8%,rgba(216,198,255,0.38),transparent_30%),radial-gradient(circle_at_88%_18%,rgba(200,154,60,0.18),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.72),rgba(255,250,242,0.7))] dark:bg-[radial-gradient(circle_at_12%_8%,rgba(126,87,194,0.22),transparent_32%),radial-gradient(circle_at_88%_18%,rgba(200,154,60,0.1),transparent_30%)]" />
 
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8">
-        <header className="grid gap-6 lg:grid-cols-[minmax(0,1fr),320px] lg:items-stretch">
-          <section className="relative overflow-hidden rounded-[2rem] border border-white/70 bg-white/80 p-6 shadow-sm backdrop-blur dark:border-white/10 dark:bg-black/40 lg:p-8">
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-r from-orange-200/40 via-rose-200/30 to-transparent blur-2xl dark:from-orange-500/10 dark:via-rose-500/10" />
+      <div className="relative mx-auto grid min-h-screen w-full max-w-7xl gap-5 px-4 py-4 sm:px-6 lg:grid-cols-[250px_minmax(0,1fr)_300px] lg:px-6">
+        <aside className="lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)]">
+          <div className="flex h-full flex-col rounded-[1.5rem] border border-[#d8c6ff]/55 bg-white/60 p-4 shadow-[0_24px_70px_rgba(81,111,174,0.12)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5">
+            <Link href="/" className="flex items-center gap-3 rounded-2xl px-2 py-2">
+              <span className="relative grid h-11 w-11 place-items-center rounded-full bg-white shadow-sm ring-1 ring-[#d8c6ff]/70 dark:bg-purple-950/70 dark:ring-purple-800/70">
+                <span className="absolute inset-0 rounded-full bg-[#c89a3c]/20 blur-md" />
+                <Image
+                  src="/logo-estrella.png"
+                  alt="Estrella del Alba"
+                  width={36}
+                  height={36}
+                  priority
+                  className="relative rounded-full"
+                />
+              </span>
+              <span className="flex flex-col">
+                <span className="text-xs font-semibold uppercase tracking-[0.28em] text-[#6f5aa8] dark:text-purple-300/80">
+                  Estrella
+                </span>
+                <span className="-mt-0.5 bg-gradient-to-r from-[#516fae] via-[#8d73b7] to-[#c89a3c] bg-clip-text text-sm font-bold text-transparent">
+                  Comunidad
+                </span>
+              </span>
+            </Link>
 
-            <div className="relative space-y-6">
-              <div className="flex flex-wrap items-center gap-3">
-                <Badge className="gap-2 border-0 bg-orange-500/10 px-3 py-1 text-orange-700 hover:bg-orange-500/10 dark:text-orange-200">
-                  <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-                  Comunidad activa
-                </Badge>
-                <p className="text-sm text-muted-foreground">
-                  Un lugar para compartir proceso, apoyo y momentum.
-                </p>
-              </div>
-
-              <div className="max-w-3xl space-y-4">
-                <h1 className="text-3xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-4xl lg:text-5xl">
-                  Comparte lo que estas integrando y encuentra eco en la comunidad.
-                </h1>
-                <p className="text-base leading-7 text-slate-600 dark:text-slate-300 sm:text-lg">
-                  {firstName}, esta pagina funciona mejor cuando entrar, escribir y leer se siente
-                  facil. Dejamos todo mas claro para que puedas publicar rapido, descubrir nuevas
-                  historias y volver a tu proceso sin friccion.
-                </p>
-              </div>
-
-              <div className="flex flex-wrap gap-3">
-                <a
-                  href="#composer"
-                  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-rose-500 px-5 py-3 text-sm font-semibold text-white shadow transition hover:from-orange-600 hover:to-rose-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
-                >
-                  Escribir una nota
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </a>
-                <a
-                  href="#feed"
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-300/80 bg-white/70 px-5 py-3 text-sm font-semibold text-slate-800 transition hover:border-orange-300 hover:text-orange-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500 dark:border-white/15 dark:bg-white/5 dark:text-white dark:hover:border-orange-400 dark:hover:text-orange-200"
-                >
-                  Ver conversaciones
-                  <MessageSquare className="h-4 w-4" aria-hidden="true" />
-                </a>
-                <Link
-                  href="/protected"
-                  className="inline-flex items-center gap-2 rounded-full px-2 py-3 text-sm font-medium text-muted-foreground transition hover:text-foreground"
-                >
-                  Volver al panel
-                </Link>
-              </div>
-
-              <div className="grid gap-3 md:grid-cols-3">
-                {quickHighlights.map((item) => {
-                  const Icon = item.icon;
-
-                  return (
-                    <div
-                      key={item.title}
-                      className="rounded-2xl border border-slate-200/80 bg-white/70 p-4 shadow-sm dark:border-white/10 dark:bg-white/5"
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className="mt-0.5 rounded-2xl bg-orange-500/10 p-2 text-orange-600 dark:text-orange-200">
-                          <Icon className="h-4 w-4" aria-hidden="true" />
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-sm font-semibold text-slate-900 dark:text-white">
-                            {item.title}
-                          </p>
-                          <p className="text-sm leading-6 text-slate-600 dark:text-slate-300">
-                            {item.description}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </section>
-
-          <aside className="overflow-hidden rounded-[2rem] border border-orange-300/40 bg-gradient-to-br from-orange-500 via-rose-500 to-pink-500 p-6 text-white shadow-lg">
-            <div className="flex h-full flex-col gap-6">
-              <div className="flex items-center gap-4">
-                <div className="grid h-16 w-16 place-content-center rounded-2xl border border-white/30 bg-white/10 text-xl font-semibold">
+            <div className="mt-6 rounded-2xl border border-white/75 bg-white/60 p-4 dark:border-purple-900/50 dark:bg-white/5">
+              <div className="flex items-center gap-3">
+                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-[#516fae] to-[#8d73b7] text-sm font-semibold text-white shadow-[0_14px_30px_rgba(81,111,174,0.24)]">
                   {initials}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs uppercase tracking-[0.24em] text-white/70">
-                    Tu presencia
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8d73b7] dark:text-purple-300">
+                    Tu espacio
                   </p>
-                  <p className="truncate text-xl font-semibold">
+                  <p className="truncate text-sm font-semibold text-[#27304f] dark:text-zinc-100">
                     {fullName || "Comunidad Estrella"}
                   </p>
-                  <p className="text-sm text-white/80">
-                    Cuando compartes, ayudas a sostener el ritmo colectivo.
-                  </p>
                 </div>
               </div>
-
-              <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-                {communitySignals.map((signal) => (
-                  <div
-                    key={signal.label}
-                    className="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur"
-                  >
-                    <p className="text-xs uppercase tracking-[0.2em] text-white/70">
-                      {signal.label}
-                    </p>
-                    <p className="mt-2 text-lg font-semibold">{signal.value}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="rounded-2xl border border-white/20 bg-black/10 p-4 text-sm text-white/85">
-                Empieza con algo pequeno: una sensacion, un descubrimiento o una pregunta honesta
-                ya es suficiente para abrir conversacion.
-              </div>
             </div>
-          </aside>
-        </header>
 
-        <section className="grid gap-4 rounded-[2rem] border border-slate-200/80 bg-white/70 p-5 shadow-sm backdrop-blur dark:border-white/10 dark:bg-black/30 sm:grid-cols-2 xl:grid-cols-4">
-          <div className="space-y-1">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-              Como aprovechar este espacio
-            </p>
-            <p className="text-sm text-slate-600 dark:text-slate-300">
-              Publica rapido, lee con calma y usa los laterales para orientarte.
-            </p>
+            <nav className="mt-6 grid gap-2">
+              {panelLinks.map((item) => {
+                const Icon = item.icon;
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium text-[#535b78] transition hover:bg-white/70 hover:text-[#516fae] dark:text-zinc-300 dark:hover:bg-white/5 dark:hover:text-purple-200"
+                  >
+                    <Icon className="h-4 w-4 text-[#8d73b7] transition group-hover:text-[#c89a3c]" />
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            <div className="mt-auto hidden rounded-2xl border border-[#d8c6ff]/65 bg-[#fffaf2]/70 p-4 text-sm leading-6 text-[#5f6680] dark:border-purple-900/55 dark:bg-white/5 dark:text-zinc-400 lg:block">
+              Comparte algo pequeno, responde con calma y vuelve a tu practica cuando lo sientas.
+            </div>
           </div>
-          <QuickTip label="1. Publica" text="Una nota corta suele funcionar mejor que esperar el momento perfecto." />
-          <QuickTip label="2. Revisa el tono" text="El selector emocional ayuda a que otras personas entiendan tu contexto." />
-          <QuickTip label="3. Participa" text="Responder o volver mas tarde mantiene el espacio vivo." />
+        </aside>
+
+        <section className="min-w-0 space-y-5 pb-6">
+          <div className="rounded-[1.5rem] border border-[#d8c6ff]/55 bg-white/60 p-4 shadow-[0_20px_60px_rgba(81,111,174,0.1)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5 sm:p-5">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8d73b7] dark:text-purple-300">
+                  Panel social
+                </p>
+                <h1 className="mt-1 text-2xl font-semibold tracking-normal text-[#27304f] dark:text-white sm:text-3xl">
+                  Hola, {firstName}. Comparte y acompana desde aqui.
+                </h1>
+              </div>
+              <Link
+                href="/protected"
+                className="inline-flex w-fit items-center gap-2 rounded-full border border-[#d8c6ff]/70 bg-white/70 px-4 py-2 text-sm font-semibold text-[#516fae] transition hover:bg-white dark:border-purple-900/60 dark:bg-white/5 dark:text-purple-200 dark:hover:bg-white/10"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Volver
+              </Link>
+            </div>
+          </div>
+
+          <div
+            id="composer"
+            className="rounded-[1.5rem] border border-[#d8c6ff]/55 bg-white/70 p-4 shadow-[0_18px_55px_rgba(81,111,174,0.1)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5 sm:p-5"
+          >
+            <Composer />
+          </div>
+
+          <div
+            id="feed"
+            className="rounded-[1.5rem] border border-[#d8c6ff]/55 bg-white/70 p-4 shadow-[0_18px_55px_rgba(81,111,174,0.1)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5 sm:p-5"
+          >
+            <Feed />
+          </div>
         </section>
 
-        <div className="grid gap-6 lg:grid-cols-[240px_minmax(0,1fr)_280px] lg:items-start">
-          <aside className="order-2 space-y-6 lg:order-1 lg:sticky lg:top-24">
-            <SidebarLeft />
-            <MoodStats />
-          </aside>
+        <aside id="community" className="space-y-5 pb-6 lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)] lg:overflow-y-auto">
+          <div className="rounded-[1.5rem] border border-[#d8c6ff]/55 bg-white/60 p-4 shadow-[0_20px_60px_rgba(81,111,174,0.1)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8d73b7] dark:text-purple-300">
+              Senales
+            </p>
+            <div className="mt-4 grid gap-3">
+              {communitySignals.map((signal) => {
+                const Icon = signal.icon;
 
-          <section className="order-1 space-y-6 lg:order-2">
-            <div
-              id="composer"
-              className="rounded-[2rem] border border-slate-200/80 bg-white/75 p-5 shadow-sm backdrop-blur dark:border-white/10 dark:bg-black/30"
-            >
-              <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-                    Tu siguiente paso
-                  </p>
-                  <h2 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">
-                    Comparte algo antes de seguir navegando
-                  </h2>
-                </div>
-                <p className="max-w-md text-sm text-slate-600 dark:text-slate-300">
-                  La experiencia mejora mucho cuando la accion principal esta clara: escribir primero,
-                  explorar despues.
-                </p>
-              </div>
-              <Composer />
+                return (
+                  <div
+                    key={signal.label}
+                    className="rounded-2xl border border-white/75 bg-white/60 p-4 dark:border-purple-900/50 dark:bg-white/5"
+                  >
+                    <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#8d73b7] dark:text-purple-300">
+                      <Icon className="h-4 w-4 text-[#c89a3c]" />
+                      {signal.label}
+                    </div>
+                    <p className="mt-2 text-sm font-semibold text-[#27304f] dark:text-zinc-100">
+                      {signal.value}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
+          </div>
 
-            <div
-              id="feed"
-              className="rounded-[2rem] border border-slate-200/80 bg-white/75 p-5 shadow-sm backdrop-blur dark:border-white/10 dark:bg-black/30"
-            >
-              <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-                    Historias recientes
-                  </p>
-                  <h2 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">
-                    Explora lo que esta pasando ahora
-                  </h2>
-                </div>
-                <p className="max-w-md text-sm text-slate-600 dark:text-slate-300">
-                  El feed queda mas visible y mejor separado para que leer, actualizar y volver al
-                  compositor resulte natural.
-                </p>
-              </div>
-              <Feed />
-            </div>
-          </section>
-
-          <aside className="order-3 space-y-6 lg:sticky lg:top-24">
-            <SidebarRight />
-          </aside>
-        </div>
+          <MoodStats />
+          <SidebarRight />
+        </aside>
       </div>
     </main>
-  );
-}
-
-function QuickTip({ label, text }: { label: string; text: string }) {
-  return (
-    <div className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-4 dark:border-white/10 dark:bg-white/5">
-      <p className="text-sm font-semibold text-slate-900 dark:text-white">{label}</p>
-      <p className="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300">{text}</p>
-    </div>
   );
 }
 
