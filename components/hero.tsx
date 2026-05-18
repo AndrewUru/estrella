@@ -7,14 +7,14 @@ import {
   ArrowRight,
   CheckCircle2,
   Heart,
-  PlayCircle,
+  PlayCircle, 
   Sparkles,
 } from "lucide-react";
 
 const featureList = [
-  "Practicas guiadas en audio y PDF",
+  "Prácticas guiadas en audio y PDF",
   "Rituales diarios para integrar con calma",
-  "Acompanamiento en una comunidad privada",
+  "Acompañamiento en una comunidad privada",
   "Un recorrido suave para volver a ti",
 ];
 
@@ -47,7 +47,7 @@ export function Hero() {
         >
           <div className="inline-flex items-center justify-center gap-2 rounded-full border border-[#d8c6ff]/70 bg-white/75 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#6f5aa8] shadow-sm backdrop-blur-md">
             <Sparkles className="h-4 w-4 text-[#c89a3c]" />
-            7 dias de reconexion energetica
+            7 días de reconexión energética
           </div>
 
           <div className="space-y-5">
@@ -55,9 +55,9 @@ export function Hero() {
               Un espacio luminoso para volver a tu centro
             </h1>
             <p className="mx-auto max-w-xl text-base leading-8 text-[#5f6680] sm:text-lg lg:mx-0">
-              Estrella del Alba acompana tu proceso con practicas guiadas,
+              Estrella del Alba acompaña tu proceso con prácticas guiadas,
               rituales sencillos y una comunidad cuidada para sostener tu
-              energia cada dia.
+              energía cada día.
             </p>
           </div>
 
@@ -86,14 +86,14 @@ export function Hero() {
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#b8c8ee] bg-white/65 px-6 py-3 text-sm font-semibold text-[#405c98] shadow-sm backdrop-blur transition hover:bg-white"
             >
               <PlayCircle className="h-5 w-5" />
-              Ver una sesion
+              Ver una sesión
             </Link>
           </div>
 
           <div className="flex items-center justify-center gap-2 text-sm font-medium text-[#777088] lg:justify-start">
             <Heart className="h-4 w-4 text-[#c89a3c]" />
             Una experiencia creada para mujeres sensibles, intuitivas y en
-            expansion.
+            expansión.
           </div>
         </motion.div>
 
@@ -116,7 +116,7 @@ export function Hero() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#27304f]/38 via-transparent to-white/12" />
               <div className="absolute bottom-4 left-4 right-4 rounded-2xl border border-white/55 bg-white/78 p-4 text-left shadow-lg backdrop-blur-md">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8d73b7]">
-                  Ritual del dia
+                  Ritual del día
                 </p>
                 <h2 className="mt-2 text-lg font-semibold leading-snug text-[#27304f]">
                   Respira, integra y deja que tu claridad vuelva.

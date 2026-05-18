@@ -1,163 +1,153 @@
-// components/Footer.tsx
+import Image from "next/image";
 import Link from "next/link";
+import { ExternalLink, Heart, Mail, Sparkles } from "lucide-react";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 
+const navLinks = [
+  { href: "/", label: "Inicio" },
+  { href: "/informacion", label: "Como funciona" },
+  { href: "/protected/social", label: "Comunidad" },
+  { href: "/preguntas", label: "Preguntas" },
+  { href: "/upgrade", label: "Planes" },
+  { href: "/protected", label: "Mi espacio" },
+];
+
+const resourceLinks = [
+  { href: "/privacidad", label: "Privacidad" },
+  { href: "/terminos", label: "Terminos" },
+  { href: "/contacto", label: "Contacto" },
+];
+
 export function Footer() {
+  const year = new Date().getFullYear();
+
   return (
-    <footer className="relative w-full overflow-hidden mt-16">
-      {/* Background decorativo */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-primary/10 pointer-events-none"></div>
+    <footer className="relative mt-20 w-full overflow-hidden border-t border-[#d8c6ff]/45 bg-[#fffaf2] text-[#535b78] dark:border-purple-900/50 dark:bg-gray-950 dark:text-zinc-300">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#c89a3c]/70 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(216,198,255,0.34),transparent_32%),radial-gradient(circle_at_82%_35%,rgba(200,154,60,0.18),transparent_28%)] dark:bg-[radial-gradient(circle_at_18%_20%,rgba(126,87,194,0.22),transparent_34%),radial-gradient(circle_at_82%_35%,rgba(200,154,60,0.12),transparent_30%)]" />
 
-      {/* Línea superior con gradiente */}
-      <div className="h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
-
-      <div className="relative bg-card/40 backdrop-blur-md">
-        <div className="max-w-6xl mx-auto px-6 py-8">
-          {/* Contenido principal del footer */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-            {/* Columna 1: Sobre Estrella del Alba */}
-            <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-foreground">
-                Estrella del Alba
-              </h3>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Tu camino de transformación espiritual comienza aquí. Reconecta
-                con tu esencia más profunda y despierta tu poder interior.
-              </p>
-              <div className="flex items-center gap-2 text-xs">
-                <div className="w-1 h-1 bg-primary rounded-full animate-pulse"></div>
-                <span className="text-muted-foreground">
-                  Transformación • Conexión • Despertar
+      <div className="relative mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-[1.25fr_1fr_1fr_1.1fr]">
+          <div className="space-y-5">
+            <Link href="/" className="inline-flex items-center gap-3">
+              <span className="relative grid h-12 w-12 place-items-center rounded-full bg-white shadow-[0_14px_35px_rgba(81,111,174,0.14)] ring-1 ring-[#d8c6ff]/70 dark:bg-purple-950/70 dark:ring-purple-800/70">
+                <span className="absolute inset-0 rounded-full bg-[#c89a3c]/20 blur-md" />
+                <Image
+                  src="/logo-estrella.png"
+                  alt="Estrella del Alba"
+                  width={40}
+                  height={40}
+                  className="relative rounded-full"
+                />
+              </span>
+              <span className="flex flex-col">
+                <span className="text-xs font-semibold uppercase tracking-[0.28em] text-[#6f5aa8] dark:text-purple-300/80">
+                  Estrella
                 </span>
-              </div>
-            </div>
+                <span className="-mt-0.5 bg-gradient-to-r from-[#516fae] via-[#8d73b7] to-[#c89a3c] bg-clip-text text-base font-bold text-transparent dark:from-purple-300 dark:via-pink-300 dark:to-indigo-300">
+                  del Alba
+                </span>
+              </span>
+            </Link>
 
-            {/* Columna 2: Navegación */}
-            <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-foreground">
-                Navegación
-              </h3>
-              <nav className="flex flex-col space-y-2">
-                <Link
-                  href="/"
-                  className="text-xs text-muted-foreground hover:text-primary transition-colors duration-300"
-                >
-                  Inicio
-                </Link>
-                <Link
-                  href="/informacion"
-                  className="text-xs text-muted-foreground hover:text-primary transition-colors duration-300"
-                >
-                  Información
-                </Link>
-                <Link
-                  href="/protected"
-                  className="text-xs text-muted-foreground hover:text-primary transition-colors duration-300"
-                >
-                  Mi Transformación
-                </Link>
-              </nav>
-            </div>
+            <p className="max-w-sm text-sm leading-7 text-[#5f6680] dark:text-zinc-400">
+              Un espacio luminoso para sostener tu practica diaria, reconectar
+              con tu energia y volver a tu centro con calma.
+            </p>
 
-            {/* Columna 3: Recursos */}
-            <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-foreground">
-                Recursos
-              </h3>
-              <nav className="flex flex-col space-y-2">
-                <Link
-                  href="/privacidad"
-                  className="text-xs text-muted-foreground hover:text-primary transition-colors duration-300"
-                >
-                  Política de Privacidad
-                </Link>
-                <Link
-                  href="/terminos"
-                  className="text-xs text-muted-foreground hover:text-primary transition-colors duration-300"
-                >
-                  Términos de Uso
-                </Link>
-                <Link
-                  href="/contacto"
-                  className="text-xs text-muted-foreground hover:text-primary transition-colors duration-300"
-                >
-                  Contacto
-                </Link>
-                <Link
-                  href="/preguntas"
-                  className="text-xs text-muted-foreground hover:text-primary transition-colors duration-300"
-                >
-                  Preguntas Frecuentes
-                </Link>
-              </nav>
-            </div>
-
-            {/* Columna 4: Conexión */}
-            <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-foreground">
-                Conexión
-              </h3>
-              <div className="space-y-3">
-                <p className="text-xs text-muted-foreground">
-                  Únete a nuestra comunidad de almas en transformación.
-                </p>
-                <div className="flex items-center gap-3">
-                  <ThemeSwitcher />
-                  <span className="text-xs text-muted-foreground">Tema</span>
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  <p>📧 Soporte: Marketing@samariluz.com</p>
-                </div>
-              </div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#d8c6ff]/70 bg-white/65 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#6f5aa8] shadow-sm backdrop-blur dark:border-purple-800/60 dark:bg-white/5 dark:text-purple-200">
+              <Sparkles className="h-4 w-4 text-[#c89a3c]" />
+              Practica, comunidad y claridad
             </div>
           </div>
 
-          {/* Separador */}
-          <div className="h-px bg-gradient-to-r from-transparent via-border/50 to-transparent mb-6"></div>
+          <div>
+            <h2 className="text-sm font-semibold text-[#27304f] dark:text-zinc-100">
+              Explorar
+            </h2>
+            <nav className="mt-4 grid gap-2">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="group inline-flex w-fit items-center gap-2 text-sm text-[#5f6680] transition hover:text-[#516fae] dark:text-zinc-400 dark:hover:text-purple-200"
+                >
+                  <span className="h-px w-4 bg-[#c89a3c]/55 transition group-hover:w-6" />
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
 
-          {/* Footer inferior */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
-            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
-              <p className="text-center sm:text-left">
-                Con amor creado por{" "}
-                <a
-                  href="https://samariluz.com"
-                  target="_blank"
-                  className="group relative font-semibold text-primary hover:text-primary/80 transition-all duration-300"
-                  rel="noreferrer"
+          <div>
+            <h2 className="text-sm font-semibold text-[#27304f] dark:text-zinc-100">
+              Recursos
+            </h2>
+            <nav className="mt-4 grid gap-2">
+              {resourceLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="group inline-flex w-fit items-center gap-2 text-sm text-[#5f6680] transition hover:text-[#516fae] dark:text-zinc-400 dark:hover:text-purple-200"
                 >
-                  <span className="relative z-10">Samari Luz</span>
-                  <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-primary/30 group-hover:w-full transition-all duration-300"></span>
-                </a>{" "}
-                y{" "}
-                <a
-                  href="https://elsaltoweb.es/"
-                  target="_blank"
-                  className="group relative font-semibold text-primary hover:text-primary/80 transition-all duration-300"
-                  rel="noreferrer"
-                >
-                  <span className="relative z-10">ElSaltoweb.es</span>
-                  <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-primary/30 group-hover:w-full transition-all duration-300"></span>
-                </a>
-              </p>
-              <div className="hidden sm:block w-px h-4 bg-border/50"></div>
-              <span className="text-center sm:text-left">
-                © {new Date().getFullYear()} Estrella del Alba. Todos los
-                derechos reservados.
+                  <span className="h-px w-4 bg-[#c89a3c]/55 transition group-hover:w-6" />
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          <div className="space-y-5">
+            <h2 className="text-sm font-semibold text-[#27304f] dark:text-zinc-100">
+              Conexion
+            </h2>
+            <a
+              href="mailto:Marketing@samariluz.com"
+              className="inline-flex items-center gap-3 rounded-2xl border border-white/80 bg-white/62 px-4 py-3 text-sm font-medium text-[#516fae] shadow-[0_14px_35px_rgba(81,111,174,0.09)] backdrop-blur transition hover:-translate-y-0.5 hover:bg-white dark:border-purple-900/50 dark:bg-white/5 dark:text-purple-200 dark:hover:bg-white/10"
+            >
+              <Mail className="h-4 w-4 text-[#c89a3c]" />
+              Marketing@samariluz.com
+            </a>
+
+            <div className="flex items-center gap-3">
+              <ThemeSwitcher />
+              <span className="text-sm text-[#5f6680] dark:text-zinc-400">
+                Ajustar tema
               </span>
-            </div>
-
-            <div className="flex items-center gap-4 text-xs">
-              <span className="opacity-75">Versión 1.0</span>
-              <div className="w-px h-4 bg-border/50"></div>
-              <span className="opacity-75">Hecho con ✨ y 💜</span>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Decoración inferior */}
-      <div className="h-1 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20"></div>
+        <div className="mt-10 flex flex-col gap-5 border-t border-[#d8c6ff]/55 pt-6 text-xs text-[#777088] dark:border-purple-900/50 dark:text-zinc-500 sm:flex-row sm:items-center sm:justify-between">
+          <p>{year} Estrella del Alba. Todos los derechos reservados.</p>
+
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <span className="inline-flex items-center gap-1.5">
+              <Heart className="h-3.5 w-3.5 text-[#c89a3c]" />
+              Creado por{" "}
+              <a
+                href="https://samariluz.com"
+                target="_blank"
+                className="inline-flex items-center gap-1 font-semibold text-[#516fae] transition hover:text-[#405c98] dark:text-purple-200 dark:hover:text-purple-100"
+                rel="noreferrer"
+              >
+                Samari Luz
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            </span>
+            <span className="hidden h-4 w-px bg-[#d8c6ff] dark:bg-purple-900 sm:block" />
+            <a
+              href="https://elsaltoweb.es/"
+              target="_blank"
+              className="inline-flex items-center gap-1 font-semibold text-[#516fae] transition hover:text-[#405c98] dark:text-purple-200 dark:hover:text-purple-100"
+              rel="noreferrer"
+            >
+              ElSaltoweb.es
+              <ExternalLink className="h-3 w-3" />
+            </a>
+          </div>
+        </div>
+      </div>
     </footer>
   );
 }
