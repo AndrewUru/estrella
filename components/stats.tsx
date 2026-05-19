@@ -85,74 +85,91 @@ export function Stats() {
   return (
     <section
       ref={sectionRef}
-      className="relative mx-auto w-full max-w-6xl px-6 py-20"
+      className="relative w-full overflow-hidden px-6 py-20 transition-colors duration-1000"
     >
-      <motion.div
-        initial={{ opacity: 0, y: 18 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        viewport={{ once: true, amount: 0.4 }}
-        className="mx-auto max-w-2xl text-center"
-      >
-        <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#8d73b7]">
-          Ritmo sostenible
-        </p>
-        <h2 className="mt-3 text-3xl font-semibold leading-tight text-[#27304f] sm:text-4xl">
-          Una experiencia pensada para acompanar, no saturar
-        </h2>
-        <p className="mt-4 text-base leading-7 text-[#68708b]">
-          Todo el recorrido esta estructurado para que puedas avanzar con
-          suavidad, claridad y continuidad.
-        </p>
-      </motion.div>
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-[0.06] transition-[opacity,transform,filter] duration-1000 ease-out dark:scale-[1.02] dark:opacity-0 dark:blur-[1px]"
+          style={{ backgroundImage: "url('/images/oleo-abstracto.webp')" }}
+        />
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-0 blur-[1px] transition-[opacity,transform,filter] duration-1000 ease-out dark:scale-[1.03] dark:opacity-[0.18] dark:blur-0"
+          style={{ backgroundImage: "url('/images/modo-oscuro.webp')" }}
+        />
+      </div>
 
-      <div className="mt-10 grid gap-4 md:grid-cols-3">
-        {stats.map((item, index) => {
-          const Icon = item.icon;
+      <div className="relative mx-auto w-full max-w-6xl">
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.4 }}
+          className="mx-auto max-w-2xl text-center"
+        >
+          <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#8d73b7] transition-colors duration-700 dark:text-[#f3d795]">
+            Ritmo sostenible
+          </p>
+          <h2 className="mt-3 text-3xl font-semibold leading-tight text-[#27304f] transition-colors duration-700 dark:text-[#fff6dd] sm:text-4xl">
+            Una experiencia pensada para acompanar, no saturar
+          </h2>
+          <p className="mt-4 text-base leading-7 text-[#68708b] transition-colors duration-700 dark:text-[#d9d4ec]">
+            Todo el recorrido esta estructurado para que puedas avanzar con
+            suavidad, claridad y continuidad.
+          </p>
+        </motion.div>
 
-          return (
-            <motion.article
-              key={item.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.5,
-                delay: index * 0.08,
-                ease: "easeOut",
-              }}
-              viewport={{ once: true, amount: 0.3 }}
-              className="relative overflow-hidden rounded-lg border border-white/80 bg-white/72 p-6 shadow-[0_18px_50px_rgba(50,70,116,0.09)] backdrop-blur-xl"
-            >
-              <div
-                className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-[0.08]"
-                style={{ backgroundImage: "url('/images/oleo-celeste.webp')" }}
-              />
-              <div className="relative">
-                <div className="flex items-center justify-between gap-4">
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[#d8c6ff]/70 bg-white/70 text-[#516fae]">
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <div className="flex items-baseline gap-1 text-[#27304f]">
-                    <span className="text-4xl font-semibold">
-                      {counts[index]}
+        <div className="mt-10 grid gap-4 md:grid-cols-3">
+          {stats.map((item, index) => {
+            const Icon = item.icon;
+
+            return (
+              <motion.article
+                key={item.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.08,
+                  ease: "easeOut",
+                }}
+                viewport={{ once: true, amount: 0.3 }}
+                className="relative overflow-hidden rounded-lg border border-white/80 bg-white/72 p-6 shadow-[0_18px_50px_rgba(50,70,116,0.09)] backdrop-blur-xl transition-[background-color,border-color,box-shadow] duration-700 dark:border-[#f3c76b]/22 dark:bg-[#090d1c]/62 dark:shadow-[0_22px_70px_rgba(0,0,0,0.35)]"
+              >
+                <div
+                  className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-[0.1] transition-[opacity,transform,filter] duration-1000 ease-out dark:scale-[1.02] dark:opacity-[0.12] dark:saturate-[0.9] dark:brightness-[0.7]"
+                  style={{ backgroundImage: "url('/images/oleo-abstracto.webp')" }}
+                />
+                <div
+                  className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-0 mix-blend-screen blur-[1px] transition-[opacity,transform,filter] duration-1000 ease-out dark:scale-[1.03] dark:opacity-[0.16] dark:blur-0"
+                  style={{ backgroundImage: "url('/images/modo-oscuro.webp')" }}
+                />
+                <div className="relative">
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[#d8c6ff]/70 bg-white/70 text-[#516fae] transition-colors duration-700 dark:border-[#f3c76b]/25 dark:bg-white/5 dark:text-[#f5cf7d]">
+                      <Icon className="h-5 w-5" />
                     </span>
-                    {item.suffix && (
-                      <span className="text-xl font-semibold">
-                        {item.suffix}
+                    <div className="flex items-baseline gap-1 text-[#27304f] transition-colors duration-700 dark:text-[#fff6dd]">
+                      <span className="text-4xl font-semibold">
+                        {counts[index]}
                       </span>
-                    )}
+                      {item.suffix && (
+                        <span className="text-xl font-semibold">
+                          {item.suffix}
+                        </span>
+                      )}
+                    </div>
                   </div>
+                  <h3 className="mt-6 text-lg font-semibold text-[#27304f] transition-colors duration-700 dark:text-[#fff6dd]">
+                    {item.label}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-[#68708b] transition-colors duration-700 dark:text-[#c9c0df]">
+                    {item.description}
+                  </p>
                 </div>
-                <h3 className="mt-6 text-lg font-semibold text-[#27304f]">
-                  {item.label}
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-[#68708b]">
-                  {item.description}
-                </p>
-              </div>
-            </motion.article>
-          );
-        })}
+              </motion.article>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

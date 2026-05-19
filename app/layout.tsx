@@ -5,7 +5,6 @@ import "./globals.css";
 import ClientProviders from "./ClientProviders";
 import { Navbar } from "@/components/Navbar";
 import { CookieConsent } from "@/components/CookieConsent";
-import { Session } from "@supabase/supabase-js";
 import BotonInstalarPWA from "@/components/BotonInstalarPWA";
 
 export const metadata: Metadata = {
@@ -21,7 +20,6 @@ const geistSans = Geist({
 });
 
 type LayoutProps = {
-  session: Session | null;
   children: React.ReactNode;
 };
 

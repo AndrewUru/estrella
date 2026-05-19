@@ -47,6 +47,7 @@ export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -116,10 +117,16 @@ export function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 12);
+      const scrollTop = window.scrollY;
+      const scrollable =
+        document.documentElement.scrollHeight - window.innerHeight;
+
+      setScrolled(scrollTop > 12);
+      setScrollProgress(scrollable > 0 ? scrollTop / scrollable : 0);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -155,10 +162,16 @@ export function Navbar() {
     return pathname?.startsWith(href) ?? false;
   };
 
-  const headerClasses = `sticky top-0 z-50 w-full border-b transition-all duration-300 ${
+  const headerClasses = `sticky top-0 z-50 w-full px-3 transition-all duration-500 sm:px-4 ${
     scrolled
-      ? "border-[#d8c6ff]/55 bg-[#fffaf2]/90 shadow-[0_16px_48px_rgba(81,111,174,0.13)] backdrop-blur-xl dark:border-purple-900/50 dark:bg-gray-950/90"
-      : "border-transparent bg-[#fffaf2]/40 backdrop-blur-md dark:bg-gray-950/40"
+      ? "py-2"
+      : "py-0"
+  }`;
+
+  const shellClasses = `mx-auto flex max-w-6xl items-center justify-between border px-4 transition-all duration-500 sm:px-6 lg:px-8 ${
+    scrolled
+      ? "h-14 rounded-full border-[#d8c6ff]/65 bg-[#fffaf2]/88 shadow-[0_18px_55px_rgba(39,48,79,0.16)] backdrop-blur-2xl dark:border-[#f3c76b]/24 dark:bg-gray-950/82 dark:shadow-[0_22px_70px_rgba(0,0,0,0.38)] sm:h-16"
+      : "h-16 rounded-none border-transparent bg-[#fffaf2]/44 backdrop-blur-md dark:bg-gray-950/40 sm:h-[4.75rem]"
   }`;
 
   if (isPanelRoute) {
@@ -172,17 +185,24 @@ export function Navbar() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_10%_0%,rgba(216,198,255,0.35),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.72),rgba(255,250,242,0.28))] dark:bg-[radial-gradient(circle_at_10%_0%,rgba(126,87,194,0.28),transparent_36%),linear-gradient(180deg,rgba(17,24,39,0.88),rgba(17,24,39,0.34))]" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#c89a3c]/65 to-transparent" />
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:h-[4.75rem] sm:px-6 lg:px-8">
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_10%_0%,rgba(216,198,255,0.22),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.42),rgba(255,250,242,0.14))] transition-opacity duration-500 dark:bg-[radial-gradient(circle_at_10%_0%,rgba(126,87,194,0.2),transparent_36%),linear-gradient(180deg,rgba(17,24,39,0.58),rgba(17,24,39,0.16))]" />
+      <motion.div
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left bg-gradient-to-r from-[#516fae] via-[#c89a3c] to-[#8d73b7]"
+        style={{ scaleX: scrollProgress }}
+        animate={{ opacity: scrolled ? 0.9 : 0 }}
+        transition={{ duration: 0.25 }}
+      />
+      <div className={shellClasses}>
         <Link
           href="/"
-          className="group flex items-center gap-3 rounded-full border border-transparent px-2 py-1 transition hover:border-[#d8c6ff]/60 hover:bg-white/55 hover:shadow-[0_12px_30px_rgba(81,111,174,0.1)] dark:hover:border-purple-800/60 dark:hover:bg-white/5"
+          className="group flex items-center gap-3 rounded-full border border-transparent px-2 py-1 transition hover:border-[#d8c6ff]/60 hover:bg-white/55 hover:shadow-[0_12px_30px_rgba(81,111,174,0.1)] dark:hover:border-[#f3c76b]/24 dark:hover:bg-white/5"
         >
           <motion.div
             whileHover={{ rotate: 18, scale: 1.04 }}
             transition={{ duration: 0.45, ease: "easeOut" }}
-            className="relative grid h-11 w-11 place-items-center rounded-full bg-white shadow-[0_12px_28px_rgba(81,111,174,0.14)] ring-1 ring-[#d8c6ff]/70 dark:bg-purple-950/70 dark:ring-purple-800/70"
+            className={`relative grid place-items-center rounded-full bg-white shadow-[0_12px_28px_rgba(81,111,174,0.14)] ring-1 ring-[#d8c6ff]/70 transition-all duration-500 dark:bg-purple-950/70 dark:ring-[#f3c76b]/24 ${
+              scrolled ? "h-10 w-10" : "h-11 w-11"
+            }`}
           >
             <span className="absolute inset-0 rounded-full bg-[#c89a3c]/20 blur-md transition group-hover:bg-[#c89a3c]/30" />
             <Image
@@ -194,18 +214,18 @@ export function Navbar() {
               className="relative z-10 rounded-full"
             />
           </motion.div>
-          <div className="flex flex-col text-left">
-            <span className="text-sm font-semibold uppercase tracking-[0.3em] text-[#6f5aa8] dark:text-purple-300/80">
+          <div className="flex flex-col text-left transition-all duration-500">
+            <span className={`font-semibold uppercase tracking-[0.3em] text-[#6f5aa8] transition-all duration-500 dark:text-purple-300/80 ${scrolled ? "text-xs" : "text-sm"}`}>
               Estrella
             </span>
-            <span className="-mt-1 bg-gradient-to-r from-[#516fae] via-[#8d73b7] to-[#c89a3c] bg-clip-text text-sm font-bold text-transparent dark:from-purple-300 dark:via-pink-300 dark:to-indigo-300">
+            <span className={`-mt-1 bg-gradient-to-r from-[#516fae] via-[#8d73b7] to-[#c89a3c] bg-clip-text font-bold text-transparent transition-all duration-500 dark:from-purple-300 dark:via-pink-300 dark:to-indigo-300 ${scrolled ? "text-xs" : "text-sm"}`}>
               del Alba
             </span>
           </div>
         </Link>
 
         <nav className="hidden items-center gap-3 lg:flex">
-          <div className="flex items-center gap-1 rounded-full border border-white/75 bg-white/50 p-1 shadow-[0_14px_36px_rgba(81,111,174,0.08)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5">
+          <div className="flex items-center gap-1 rounded-full border border-white/75 bg-white/50 p-1 shadow-[0_14px_36px_rgba(81,111,174,0.08)] backdrop-blur-xl transition-colors duration-500 dark:border-[#f3c76b]/20 dark:bg-white/5">
           {desktopLinks.map((item) => {
             const isActive = matchPath(item.href);
             const Icon = item.icon;
@@ -222,7 +242,7 @@ export function Navbar() {
                   {isActive && (
                     <motion.span
                       layoutId="nav-pill"
-                      className="absolute inset-0 -z-10 rounded-full bg-white/95 shadow-sm ring-1 ring-[#d8c6ff]/80 dark:bg-purple-950/70 dark:ring-purple-800/70"
+                      className="absolute inset-0 -z-10 rounded-full bg-white/95 shadow-sm ring-1 ring-[#d8c6ff]/80 dark:bg-purple-950/70 dark:ring-[#f3c76b]/24"
                       transition={{
                         type: "spring",
                         stiffness: 320,
@@ -330,7 +350,7 @@ export function Navbar() {
           <motion.button
             onClick={() => setMenuOpen((prev) => !prev)}
             whileTap={{ scale: 0.92 }}
-            className="rounded-full border border-[#d8c6ff]/65 bg-white/60 p-2 text-[#516fae] shadow-sm transition hover:bg-white dark:border-purple-900/60 dark:bg-white/5 dark:text-purple-200 dark:hover:bg-white/10"
+            className="rounded-full border border-[#d8c6ff]/65 bg-white/60 p-2 text-[#516fae] shadow-sm transition hover:bg-white dark:border-[#f3c76b]/24 dark:bg-white/5 dark:text-purple-200 dark:hover:bg-white/10"
             aria-label="Abrir menu principal"
           >
             <AnimatePresence mode="wait" initial={false}>
