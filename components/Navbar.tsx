@@ -165,13 +165,13 @@ export function Navbar() {
   const headerClasses = `fixed left-0 top-0 z-50 w-full px-3 transition-all duration-500 sm:px-4 ${
     scrolled
       ? "py-2"
-      : "py-0"
+      : "py-3"
   }`;
 
-  const shellClasses = `mx-auto flex max-w-6xl items-center justify-between border px-4 transition-all duration-500 sm:px-6 lg:px-8 ${
+  const shellClasses = `relative mx-auto flex w-full max-w-6xl items-center justify-between overflow-hidden border px-4 transition-all duration-500 sm:px-6 lg:px-8 ${
     scrolled
-      ? "h-14 rounded-full border-[#d8c6ff]/65 bg-[#fffaf2]/88 shadow-[0_18px_55px_rgba(39,48,79,0.16)] backdrop-blur-2xl dark:border-[#f3c76b]/24 dark:bg-gray-950/82 dark:shadow-[0_22px_70px_rgba(0,0,0,0.38)] sm:h-16"
-      : "h-16 rounded-none border-transparent bg-[#fffaf2]/44 backdrop-blur-md dark:bg-gray-950/40 sm:h-[4.75rem]"
+      ? "h-14 rounded-full border-[#d8c6ff]/65 bg-[#fffaf2]/90 shadow-[0_18px_55px_rgba(39,48,79,0.16)] backdrop-blur-2xl dark:border-[#f3c76b]/24 dark:bg-gray-950/88 dark:shadow-[0_22px_70px_rgba(0,0,0,0.38)] sm:h-16"
+      : "h-16 rounded-[1.75rem] border-[#d8c6ff]/45 bg-[#fffaf2]/78 shadow-[0_14px_44px_rgba(39,48,79,0.1)] backdrop-blur-xl dark:border-[#f3c76b]/18 dark:bg-gray-950/72 sm:h-[4.75rem]"
   }`;
 
   if (isPanelRoute) {
@@ -186,14 +186,14 @@ export function Navbar() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_10%_0%,rgba(216,198,255,0.22),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.42),rgba(255,250,242,0.14))] transition-opacity duration-500 dark:bg-[radial-gradient(circle_at_10%_0%,rgba(126,87,194,0.2),transparent_36%),linear-gradient(180deg,rgba(17,24,39,0.58),rgba(17,24,39,0.16))]" />
-      <motion.div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left bg-gradient-to-r from-[#516fae] via-[#c89a3c] to-[#8d73b7]"
-        style={{ scaleX: scrollProgress }}
-        animate={{ opacity: scrolled ? 0.9 : 0 }}
-        transition={{ duration: 0.25 }}
-      />
       <div className={shellClasses}>
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_10%_0%,rgba(216,198,255,0.18),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.3),rgba(255,250,242,0.06))] transition-opacity duration-500 dark:bg-[radial-gradient(circle_at_10%_0%,rgba(126,87,194,0.16),transparent_36%),linear-gradient(180deg,rgba(17,24,39,0.42),rgba(17,24,39,0.1))]" />
+        <motion.div
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left bg-gradient-to-r from-[#516fae] via-[#c89a3c] to-[#8d73b7]"
+          style={{ scaleX: scrollProgress }}
+          animate={{ opacity: scrolled ? 0.9 : 0 }}
+          transition={{ duration: 0.25 }}
+        />
         <Link
           href="/"
           className="group flex items-center gap-3 rounded-full border border-transparent px-2 py-1 transition hover:border-[#d8c6ff]/60 hover:bg-white/55 hover:shadow-[0_12px_30px_rgba(81,111,174,0.1)] dark:hover:border-[#f3c76b]/24 dark:hover:bg-white/5"
