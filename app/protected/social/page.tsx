@@ -20,6 +20,7 @@ import { useUserProfile } from "@/lib/hooks/useUserProfile";
 import { Composer } from "@/components/social/Composer";
 import { Feed } from "@/components/social/Feed";
 import { MoodStats } from "@/components/social/MoodStats";
+import { OnlinePresence } from "@/components/social/OnlinePresence";
 import { SidebarRight } from "@/components/social/SidebarRight";
 
 const panelLinks = [
@@ -51,6 +52,11 @@ export default function SocialPage() {
   const router = useRouter();
   const { fullName, loading: loadingProfile } = useUserProfile();
   const [authChecked, setAuthChecked] = useState(false);
+  const [currentUser, setCurrentUser] = useState<{
+    id: string;
+    email: string | null;
+    avatarUrl: string | null;
+  } | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -61,6 +67,17 @@ export default function SocialPage() {
         return;
       }
 
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("avatar_url")
+        .eq("id", data.user.id)
+        .single();
+
+      setCurrentUser({
+        id: data.user.id,
+        email: data.user.email ?? null,
+        avatarUrl: profile?.avatar_url ?? null,
+      });
       setAuthChecked(true);
     };
 
@@ -155,9 +172,15 @@ export default function SocialPage() {
           <div className="rounded-[1.5rem] border border-[#d8c6ff]/55 bg-white/60 p-4 shadow-[0_20px_60px_rgba(81,111,174,0.1)] backdrop-blur-xl dark:border-purple-900/55 dark:bg-white/5 sm:p-5">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8d73b7] dark:text-purple-300">
-                  Panel social
-                </p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8d73b7] dark:text-purple-300">
+                    Panel social
+                  </p>
+                  <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300/50 bg-emerald-50 px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-emerald-700 dark:border-emerald-400/20 dark:bg-emerald-400/10 dark:text-emerald-200">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.9)]" />
+                    En vivo
+                  </span>
+                </div>
                 <h1 className="mt-1 text-2xl font-semibold tracking-normal text-[#27304f] dark:text-white sm:text-3xl">
                   Hola, {firstName}. Comparte y acompana desde aqui.
                 </h1>
@@ -171,6 +194,17 @@ export default function SocialPage() {
               </Link>
             </div>
           </div>
+
+          {currentUser ? (
+            <div className="lg:hidden">
+              <OnlinePresence
+                currentUser={{
+                  ...currentUser,
+                  fullName,
+                }}
+              />
+            </div>
+          ) : null}
 
           <div
             id="composer"
@@ -215,6 +249,14 @@ export default function SocialPage() {
           </div>
 
           <MoodStats />
+          {currentUser ? (
+            <OnlinePresence
+              currentUser={{
+                ...currentUser,
+                fullName,
+              }}
+            />
+          ) : null}
           <SidebarRight />
         </aside>
       </div>
