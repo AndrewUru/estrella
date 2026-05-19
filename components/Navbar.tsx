@@ -226,7 +226,7 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-3 lg:flex">
-          <div className="flex items-center gap-1 rounded-full border border-white/75 bg-white/50 p-1 shadow-[0_14px_36px_rgba(81,111,174,0.08)] backdrop-blur-xl transition-colors duration-500 dark:border-white/10 dark:bg-transparent dark:shadow-none">
+          <div className="flex items-center gap-1 rounded-full border shadow-[0_14px_36px_rgba(81,111,174,0.08)] backdrop-blur-xl transition-colors duration-500 dark:border-white/10 dark:bg-transparent dark:shadow-none">
           {desktopLinks.map((item) => {
             const isActive = matchPath(item.href);
             const Icon = item.icon;
