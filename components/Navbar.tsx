@@ -168,7 +168,7 @@ export function Navbar() {
       : "py-3"
   }`;
 
-  const shellClasses = `relative mx-auto flex w-full max-w-6xl items-center justify-between overflow-hidden border px-4 transition-all duration-500 sm:px-6 lg:px-8 ${
+  const shellClasses = `relative mx-auto flex w-full max-w-6xl items-center justify-between overflow-visible border px-4 transition-all duration-500 sm:px-6 lg:px-8 ${
     scrolled
       ? "h-14 rounded-full border-[#d8c6ff]/65 bg-white/86 shadow-[0_18px_55px_rgba(39,48,79,0.16)] backdrop-blur-2xl dark:border-[#f3c76b]/24 dark:bg-[#070a18]/90 dark:shadow-[0_22px_70px_rgba(0,0,0,0.42)] sm:h-16"
       : "h-16 rounded-[1.75rem] border-[#d8c6ff]/45 bg-white/58 shadow-[0_14px_44px_rgba(39,48,79,0.1)] backdrop-blur-xl dark:border-[#f3c76b]/18 dark:bg-[#070a18]/58 sm:h-[4.75rem]"
@@ -292,7 +292,7 @@ export function Navbar() {
 
               <button
                 onClick={() => setUserMenuOpen((prev) => !prev)}
-                className="rounded-full border border-transparent p-2 text-[#516fae] transition hover:border-[#d8c6ff]/70 hover:bg-white/65 dark:text-purple-200 dark:hover:border-purple-800/60 dark:hover:bg-white/5"
+                className="rounded-full border border-transparent p-2 text-[#516fae] transition hover:border-[#d8c6ff]/70 hover:bg-white/65 dark:text-[#f3d795] dark:hover:border-[#f3c76b]/24 dark:hover:bg-white/5"
                 aria-label="Abrir menu de cuenta"
               >
                 <Cog6ToothIcon className="h-5 w-5" />
@@ -305,17 +305,17 @@ export function Navbar() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -6, scale: 0.98 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute right-0 top-14 w-64 overflow-hidden rounded-2xl border border-[#d8c6ff]/60 bg-[#fffaf2]/95 p-2 shadow-[0_24px_70px_rgba(39,48,79,0.18)] backdrop-blur-xl dark:border-purple-900/60 dark:bg-gray-950/95"
+                    className="absolute right-0 top-14 z-[70] w-64 overflow-hidden rounded-2xl border border-[#d8c6ff]/60 bg-[#fffaf2]/95 p-2 shadow-[0_24px_70px_rgba(39,48,79,0.18)] backdrop-blur-xl dark:border-[#f3c76b]/24 dark:bg-[#070a18]/95 dark:shadow-[0_24px_80px_rgba(0,0,0,0.5)]"
                   >
-                    <div className="rounded-xl border border-white/70 bg-white/65 px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#6f5aa8] dark:border-purple-900/50 dark:bg-white/5 dark:text-purple-200">
+                    <div className="rounded-xl border border-white/70 bg-white/65 px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#6f5aa8] dark:border-[#f3c76b]/18 dark:bg-white/[0.03] dark:text-[#f3d795]">
                       {user.email}
                     </div>
                     <Link
                       href="/protected/profile"
                       onClick={() => setUserMenuOpen(false)}
-                      className="mt-2 flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-[#535b78] transition hover:bg-white/70 hover:text-[#516fae] dark:text-zinc-100 dark:hover:bg-white/5 dark:hover:text-purple-200"
+                      className="mt-2 flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-[#535b78] transition hover:bg-white/70 hover:text-[#516fae] dark:text-[#eee7ff] dark:hover:bg-white/[0.06] dark:hover:text-[#f3d795]"
                     >
-                      <User2 className="h-4 w-4 text-[#8d73b7]" />
+                      <User2 className="h-4 w-4 text-[#8d73b7] dark:text-[#f3d795]" />
                       Ver perfil
                     </Link>
                     <button
