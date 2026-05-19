@@ -42,16 +42,7 @@ const steps: Array<{
 export default function ProcesoSection() {
   return (
     <section className="relative w-full overflow-hidden px-6 py-20 transition-colors duration-1000">
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-[0.07] transition-[opacity,transform,filter] duration-1000 ease-out dark:scale-[1.02] dark:opacity-0 dark:blur-[1px]"
-          style={{ backgroundImage: "url('/images/oleo-abstracto.webp')" }}
-        />
-        <div
-          className="absolute inset-0 scale-100 bg-cover bg-center opacity-0 blur-[1px] transition-[opacity,transform,filter] duration-1000 ease-out dark:scale-[1.03] dark:opacity-[0.22] dark:blur-0"
-          style={{ backgroundImage: "url('/images/modo-oscuro.webp')" }}
-        />
-      </div>
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-white/20 transition-colors duration-700 dark:bg-gray-950/20" />
 
       <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-10">
       <motion.div
@@ -100,10 +91,6 @@ export default function ProcesoSection() {
                   sizes="(min-width: 768px) 33vw, 100vw"
                   className="object-cover transition-[opacity,transform,filter] duration-700 group-hover:scale-[1.03] dark:opacity-85 dark:saturate-[0.9] dark:brightness-[0.72] dark:contrast-[1.08]"
                 />
-                <div
-                  className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-0 mix-blend-screen transition-[opacity,transform] duration-700 group-hover:scale-[1.03] dark:opacity-[0.18]"
-                  style={{ backgroundImage: "url('/images/modo-oscuro.webp')" }}
-                />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#27304f]/45 via-transparent to-white/8 transition-colors duration-700 dark:from-[#02030a]/58 dark:via-[#060816]/8 dark:to-[#f5cf7d]/10" />
                 <span className="absolute left-4 top-4 rounded-full border border-white/65 bg-white/72 px-3 py-1 text-xs font-semibold text-[#516fae] backdrop-blur transition-colors duration-700 dark:border-[#f3c76b]/35 dark:bg-[#070a18]/68 dark:text-[#f3d795]">
                   {step.id}
@@ -132,10 +119,8 @@ export default function ProcesoSection() {
         viewport={{ once: true, amount: 0.3 }}
         className="relative overflow-hidden rounded-lg border border-white/80 bg-white/76 p-6 shadow-[0_22px_70px_rgba(50,70,116,0.12)] backdrop-blur-xl transition-[background-color,border-color,box-shadow] duration-700 dark:border-[#f3c76b]/24 dark:bg-[#090d1c]/66 dark:shadow-[0_28px_90px_rgba(0,0,0,0.42)] sm:p-8"
       >
-        <div
-          className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-[0.12] transition-[opacity,transform,filter] duration-1000 ease-out dark:scale-[1.02] dark:opacity-0 dark:blur-[1px]"
-          style={{ backgroundImage: "url('/images/oleo-abstracto.webp')" }}
-        />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(216,198,255,0.24),transparent_34%),radial-gradient(circle_at_82%_18%,rgba(200,154,60,0.14),transparent_28%)] transition-opacity duration-700 dark:opacity-0" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(141,115,183,0.18),transparent_34%),radial-gradient(circle_at_82%_18%,rgba(200,154,60,0.1),transparent_28%)] opacity-0 transition-opacity duration-700 dark:opacity-100" />
         <div className="relative grid gap-8 md:grid-cols-[minmax(0,1fr)_320px] md:items-center">
           <div className="space-y-5">
             <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#8d73b7] transition-colors duration-700 dark:text-[#f3d795]">

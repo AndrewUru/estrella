@@ -13,14 +13,6 @@ export default function Home() {
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-[linear-gradient(180deg,#fffaf2_0%,#f7f5ff_46%,#fffdf8_100%)] transition-opacity duration-1000 dark:opacity-0" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,#030712_0%,#0a0d1c_46%,#111827_100%)] opacity-0 transition-opacity duration-1000 dark:opacity-100" />
-        <div
-          className="absolute inset-x-0 top-[640px] h-[720px] bg-cover bg-center opacity-[0.08] transition-[opacity,transform,filter] duration-1000 dark:scale-[1.02] dark:opacity-[0.09] dark:saturate-[0.85] dark:brightness-[0.68]"
-          style={{ backgroundImage: "url('/images/oleo-abstracto.webp')" }}
-        />
-        <div
-          className="absolute inset-x-0 top-[640px] h-[720px] bg-cover bg-center opacity-0 mix-blend-screen blur-[1px] transition-[opacity,transform,filter] duration-1000 dark:scale-[1.03] dark:opacity-[0.12] dark:blur-0"
-          style={{ backgroundImage: "url('/images/modo-oscuro.webp')" }}
-        />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(198,154,60,0.16),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(81,111,174,0.12),transparent_32%)] transition-opacity duration-1000 dark:opacity-0" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(200,154,60,0.1),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(141,115,183,0.15),transparent_32%)] opacity-0 transition-opacity duration-1000 dark:opacity-100" />
       </div>
@@ -38,15 +30,8 @@ export default function Home() {
 
         <section className="w-full px-6 py-20 md:py-24">
           <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[2rem] border border-white/80 bg-white/76 shadow-[0_32px_100px_rgba(50,70,116,0.14)] backdrop-blur-xl transition-[background-color,border-color,box-shadow] duration-700 dark:border-[#f3c76b]/24 dark:bg-[#090d1c]/66 dark:shadow-[0_28px_90px_rgba(0,0,0,0.42)]">
-            <div
-              className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-[0.12] transition-[opacity,transform,filter] duration-1000 dark:scale-[1.02] dark:opacity-[0.11] dark:saturate-[0.85] dark:brightness-[0.7]"
-              style={{ backgroundImage: "url('/images/oleo-abstracto.webp')" }}
-            />
-            <div
-              className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-0 mix-blend-screen blur-[1px] transition-[opacity,transform,filter] duration-1000 dark:scale-[1.03] dark:opacity-[0.14] dark:blur-0"
-              style={{ backgroundImage: "url('/images/modo-oscuro.webp')" }}
-            />
-            <div className="pointer-events-none absolute inset-0 bg-white/78 transition-colors duration-700 dark:bg-[#070a18]/70" />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(216,198,255,0.24),transparent_32%),radial-gradient(circle_at_82%_18%,rgba(200,154,60,0.14),transparent_30%)] transition-opacity duration-700 dark:opacity-0" />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(141,115,183,0.18),transparent_32%),radial-gradient(circle_at_82%_18%,rgba(200,154,60,0.1),transparent_30%)] opacity-0 transition-opacity duration-700 dark:opacity-100" />
 
             <div className="relative flex flex-col gap-10 px-8 py-14 md:px-14 lg:flex-row lg:items-center lg:gap-16">
               <div className="mx-auto flex shrink-0 items-center justify-center rounded-[1.5rem] border border-white/80 bg-white/64 p-4 shadow-lg backdrop-blur transition-colors duration-700 dark:border-[#f3c76b]/24 dark:bg-[#090d1c]/62">

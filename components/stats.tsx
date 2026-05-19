@@ -87,16 +87,7 @@ export function Stats() {
       ref={sectionRef}
       className="relative w-full overflow-hidden px-6 py-20 transition-colors duration-1000"
     >
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-[0.06] transition-[opacity,transform,filter] duration-1000 ease-out dark:scale-[1.02] dark:opacity-0 dark:blur-[1px]"
-          style={{ backgroundImage: "url('/images/oleo-abstracto.webp')" }}
-        />
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-0 blur-[1px] transition-[opacity,transform,filter] duration-1000 ease-out dark:scale-[1.03] dark:opacity-[0.18] dark:blur-0"
-          style={{ backgroundImage: "url('/images/modo-oscuro.webp')" }}
-        />
-      </div>
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[#f7f5ff]/40 transition-colors duration-700 dark:bg-[#070a18]/35" />
 
       <div className="relative mx-auto w-full max-w-6xl">
         <motion.div
@@ -135,14 +126,8 @@ export function Stats() {
                 viewport={{ once: true, amount: 0.3 }}
                 className="relative overflow-hidden rounded-lg border border-white/80 bg-white/72 p-6 shadow-[0_18px_50px_rgba(50,70,116,0.09)] backdrop-blur-xl transition-[background-color,border-color,box-shadow] duration-700 dark:border-[#f3c76b]/22 dark:bg-[#090d1c]/62 dark:shadow-[0_22px_70px_rgba(0,0,0,0.35)]"
               >
-                <div
-                  className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-[0.1] transition-[opacity,transform,filter] duration-1000 ease-out dark:scale-[1.02] dark:opacity-[0.12] dark:saturate-[0.9] dark:brightness-[0.7]"
-                  style={{ backgroundImage: "url('/images/oleo-abstracto.webp')" }}
-                />
-                <div
-                  className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-0 mix-blend-screen blur-[1px] transition-[opacity,transform,filter] duration-1000 ease-out dark:scale-[1.03] dark:opacity-[0.16] dark:blur-0"
-                  style={{ backgroundImage: "url('/images/modo-oscuro.webp')" }}
-                />
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(216,198,255,0.22),transparent_34%),radial-gradient(circle_at_82%_18%,rgba(200,154,60,0.12),transparent_30%)] transition-opacity duration-700 dark:opacity-0" />
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(141,115,183,0.18),transparent_34%),radial-gradient(circle_at_82%_18%,rgba(200,154,60,0.1),transparent_30%)] opacity-0 transition-opacity duration-700 dark:opacity-100" />
                 <div className="relative">
                   <div className="flex items-center justify-between gap-4">
                     <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[#d8c6ff]/70 bg-white/70 text-[#516fae] transition-colors duration-700 dark:border-[#f3c76b]/25 dark:bg-white/5 dark:text-[#f5cf7d]">

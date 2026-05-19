@@ -46,16 +46,7 @@ const sampleFeed = [
 export default function SocialLandingSection() {
   return (
     <section className="relative w-full overflow-hidden px-6 py-20 transition-colors duration-1000">
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-[0.06] transition-[opacity,transform,filter] duration-1000 ease-out dark:scale-[1.02] dark:opacity-0 dark:blur-[1px]"
-          style={{ backgroundImage: "url('/images/oleo-abstracto.webp')" }}
-        />
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-0 blur-[1px] transition-[opacity,transform,filter] duration-1000 ease-out dark:scale-[1.03] dark:opacity-[0.18] dark:blur-0"
-          style={{ backgroundImage: "url('/images/modo-oscuro.webp')" }}
-        />
-      </div>
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-white/20 transition-colors duration-700 dark:bg-gray-950/20" />
 
       <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-10">
       <motion.div
@@ -92,14 +83,8 @@ export default function SocialLandingSection() {
           viewport={{ once: true, amount: 0.3 }}
           className="relative overflow-hidden rounded-lg border border-white/80 bg-white/76 p-5 shadow-[0_22px_70px_rgba(50,70,116,0.12)] backdrop-blur-xl transition-[background-color,border-color,box-shadow] duration-700 dark:border-[#f3c76b]/24 dark:bg-[#090d1c]/66 dark:shadow-[0_28px_90px_rgba(0,0,0,0.42)]"
         >
-          <div
-            className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-[0.1] transition-[opacity,transform,filter] duration-1000 ease-out dark:scale-[1.02] dark:opacity-0 dark:blur-[1px]"
-            style={{ backgroundImage: "url('/images/oleo-abstracto.webp')" }}
-          />
-          <div
-            className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-0 blur-[1px] transition-[opacity,transform,filter] duration-1000 ease-out dark:scale-[1.03] dark:opacity-[0.24] dark:blur-0"
-            style={{ backgroundImage: "url('/images/modo-oscuro.webp')" }}
-          />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(216,198,255,0.24),transparent_34%),radial-gradient(circle_at_82%_18%,rgba(200,154,60,0.14),transparent_28%)] transition-opacity duration-700 dark:opacity-0" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(141,115,183,0.18),transparent_34%),radial-gradient(circle_at_82%_18%,rgba(200,154,60,0.1),transparent_28%)] opacity-0 transition-opacity duration-700 dark:opacity-100" />
           <div className="relative space-y-4">
             <div className="flex items-center justify-between gap-4">
               <span className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8d73b7] transition-colors duration-700 dark:text-[#f3d795]">
@@ -190,14 +175,7 @@ export default function SocialLandingSection() {
             alt="Espacio de integracion y comunidad"
             fill
             sizes="(min-width: 768px) 340px, 100vw"
-            className="object-cover transition-[opacity,filter] duration-700 dark:opacity-0 dark:blur-[1px]"
-          />
-          <Image
-            src="/images/modo-oscuro.webp"
-            alt=""
-            fill
-            sizes="(min-width: 768px) 340px, 100vw"
-            className="object-cover opacity-0 blur-[1px] transition-[opacity,filter] duration-700 dark:opacity-100 dark:blur-0"
+            className="object-cover transition-[opacity,filter] duration-700 dark:opacity-85 dark:saturate-[0.9] dark:brightness-[0.72] dark:contrast-[1.08]"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#27304f]/35 to-transparent transition-colors duration-700 dark:from-[#02030a]/78 dark:to-[#f5cf7d]/8" />
         </div>

@@ -39,16 +39,7 @@ const checklist = [
 export function Beneficios() {
   return (
     <section className="relative w-full overflow-hidden px-6 py-20 transition-colors duration-1000">
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-[0.06] transition-[opacity,transform,filter] duration-1000 ease-out dark:scale-[1.02] dark:opacity-0 dark:blur-[1px]"
-          style={{ backgroundImage: "url('/images/oleo-abstracto.webp')" }}
-        />
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-0 blur-[1px] transition-[opacity,transform,filter] duration-1000 ease-out dark:scale-[1.03] dark:opacity-[0.18] dark:blur-0"
-          style={{ backgroundImage: "url('/images/modo-oscuro.webp')" }}
-        />
-      </div>
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[#f7f5ff]/40 transition-colors duration-700 dark:bg-[#070a18]/35" />
 
       <div className="relative mx-auto w-full max-w-6xl">
       <motion.div
@@ -108,14 +99,8 @@ export function Beneficios() {
         viewport={{ once: true, amount: 0.3 }}
         className="relative mt-10 overflow-hidden rounded-lg border border-white/80 bg-white/76 shadow-[0_22px_70px_rgba(50,70,116,0.12)] backdrop-blur-xl transition-[background-color,border-color,box-shadow] duration-700 dark:border-[#f3c76b]/24 dark:bg-[#090d1c]/66 dark:shadow-[0_28px_90px_rgba(0,0,0,0.42)]"
       >
-        <div
-          className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-[0.1] transition-[opacity,transform,filter] duration-1000 ease-out dark:scale-[1.02] dark:opacity-0 dark:blur-[1px]"
-          style={{ backgroundImage: "url('/images/oleo-abstracto.webp')" }}
-        />
-        <div
-          className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-0 blur-[1px] transition-[opacity,transform,filter] duration-1000 ease-out dark:scale-[1.03] dark:opacity-[0.22] dark:blur-0"
-          style={{ backgroundImage: "url('/images/modo-oscuro.webp')" }}
-        />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(216,198,255,0.24),transparent_34%),radial-gradient(circle_at_82%_18%,rgba(200,154,60,0.14),transparent_28%)] transition-opacity duration-700 dark:opacity-0" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(141,115,183,0.18),transparent_34%),radial-gradient(circle_at_82%_18%,rgba(200,154,60,0.1),transparent_28%)] opacity-0 transition-opacity duration-700 dark:opacity-100" />
         <div className="grid gap-8 p-6 sm:p-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
             <p className="relative text-xs font-semibold uppercase tracking-[0.26em] text-[#8d73b7] transition-colors duration-700 dark:text-[#f3d795]">
