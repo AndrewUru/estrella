@@ -162,7 +162,7 @@ export function Navbar() {
     return pathname?.startsWith(href) ?? false;
   };
 
-  const headerClasses = `sticky top-0 z-50 w-full px-3 transition-all duration-500 sm:px-4 ${
+  const headerClasses = `fixed left-0 top-0 z-50 w-full px-3 transition-all duration-500 sm:px-4 ${
     scrolled
       ? "py-2"
       : "py-0"
@@ -179,6 +179,7 @@ export function Navbar() {
   }
 
   return (
+    <>
     <motion.header
       className={headerClasses}
       initial={{ y: -80, opacity: 0 }}
@@ -471,5 +472,7 @@ export function Navbar() {
         )}
       </AnimatePresence>
     </motion.header>
+    <div aria-hidden="true" className="h-16 shrink-0 sm:h-[4.75rem]" />
+    </>
   );
 }
