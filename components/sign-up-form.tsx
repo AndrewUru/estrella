@@ -15,7 +15,11 @@ import Link from "next/link";
 import Image from "next/image";
 
 
-export default function SignUpPage() {
+type SignUpFormProps = {
+  showLoginLink?: boolean;
+};
+
+export default function SignUpPage({ showLoginLink = true }: SignUpFormProps) {
   
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://estrelladelalba.com";
 
@@ -50,7 +54,7 @@ export default function SignUpPage() {
         </Button>
       </CardContent>
       <CardFooter className="flex flex-col gap-2">
-        <p className="text-center text-sm">
+        <p className={`text-center text-sm ${showLoginLink ? "" : "hidden"}`}>
           ¿Ya tienes cuenta?{" "}
           <Link href="/auth/login" className="text-violet-600 hover:underline">
             Inicia sesión

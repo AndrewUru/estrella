@@ -2,6 +2,7 @@
 
 
 import SignUpForm from "@/components/sign-up-form";
+import Link from "next/link";
 
 export default function Page() {
   return (
@@ -45,6 +46,17 @@ export default function Page() {
       </div>
 
       <div className="relative z-10 flex flex-col px-4 py-8 lg:py-12 max-w-7xl mx-auto">
+        <div className="mb-4 flex items-center justify-between rounded-2xl border border-white/50 bg-white/75 px-4 py-3 text-sm shadow-lg backdrop-blur-md dark:border-gray-700/50 dark:bg-gray-900/70 lg:hidden">
+          <span className="font-medium text-slate-700 dark:text-slate-200">
+            Â¿Ya tienes cuenta?
+          </span>
+          <Link
+            href="/auth/login"
+            className="inline-flex min-h-10 items-center justify-center rounded-full bg-slate-950 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-violet-100"
+          >
+            Inicia sesiÃ³n
+          </Link>
+        </div>
         {/* Formulario móvil - Solo visible en móvil */}
         <div className="lg:hidden mb-8">
           {/* Efecto de fondo del formulario */}
@@ -55,7 +67,7 @@ export default function Page() {
           <div className="relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/30 dark:border-gray-700/30">
             <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent dark:from-gray-700/20 rounded-2xl pointer-events-none" />
             <div className="relative">
-              <SignUpForm />
+              <SignUpForm showLoginLink={false} />
             </div>
           </div>
 
