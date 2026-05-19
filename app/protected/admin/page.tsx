@@ -17,11 +17,17 @@ import type { LucideIcon } from "lucide-react";
 import {
   ArrowUpRight,
   BookOpenCheck,
+  CheckCircle2,
+  Clock3,
+  Loader2,
   LogOut,
+  MessageCircle,
   Music3,
   PlusCircle,
+  RefreshCw,
+  ShieldAlert,
+  Sparkles,
   Users,
-  Loader2,
 } from "lucide-react";
 
 type Shortcut = {
@@ -30,46 +36,48 @@ type Shortcut = {
   title: string;
   description: string;
   cta: string;
+  helper: string;
 };
 
 const adminShortcuts: Shortcut[] = [
   {
     href: "/protected/admin/usuarios",
     icon: Users,
-    title: "Gestionar usuarias",
-    description:
-      "Administra perfiles, roles y el acceso seguro de la comunidad.",
-    cta: "Abrir gestion",
+    title: "Ver y ayudar a usuarias",
+    description: "Revisa perfiles, accesos y roles de las integrantes.",
+    cta: "Abrir usuarias",
+    helper: "Para resolver accesos o revisar permisos.",
   },
   {
     href: "/protected/admin/contenido",
     icon: BookOpenCheck,
-    title: "Editar contenido del curso",
-    description:
-      "Actualiza modulos, recursos multimedia y organiza el temario.",
-    cta: "Actualizar contenido",
+    title: "Actualizar curso",
+    description: "Ordena modulos, recursos y materiales del programa.",
+    cta: "Editar curso",
+    helper: "Para cambios en textos, recursos o estructura.",
   },
   {
     href: "/protected/admin/practicas",
     icon: Music3,
-    title: "Ver practicas",
-    description:
-      "Consulta el estado de cada practica y controla su visibilidad.",
-    cta: "Revisar practicas",
+    title: "Revisar audios y ejercicios",
+    description: "Comprueba practicas publicadas y su visibilidad.",
+    cta: "Ver practicas",
+    helper: "Para confirmar que todo esta disponible.",
   },
   {
     href: "/protected/admin/practicas#nueva",
     icon: PlusCircle,
-    title: "Crear nueva practica",
-    description: "Publica ejercicios guiados para acompanar a las integrantes.",
-    cta: "Crear practica",
+    title: "Subir nueva practica",
+    description: "Publica nuevos ejercicios guiados para la comunidad.",
+    cta: "Subir practica",
+    helper: "Para agregar un audio, PDF o ejercicio nuevo.",
   },
 ];
 
 const tips = [
-  "Revisa primero las usuarias con accesos pendientes y resuelve incidencias de inicio de sesion.",
-  "Contrasta el contenido publicado con las sesiones en vivo y las actualizaciones del programa.",
-  "Documenta cada cambio para mantener un historial claro de la evolucion de la plataforma.",
+  "Empieza por comentarios recientes: es donde la comunidad suele necesitar respuesta mas rapido.",
+  "Antes de anunciar una practica, confirma que este visible y con sus recursos correctos.",
+  "Cuando hagas cambios importantes, anota que modificaste para recordarlo despues.",
 ];
 
 type ModerationComment = {
@@ -92,8 +100,8 @@ export default function AdminPage() {
   const [commentsLoading, setCommentsLoading] = useState(false);
   const [commentsError, setCommentsError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
-  // 🔐 Validar admin al cargar
   useEffect(() => {
     async function validarAdmin() {
       const {
@@ -131,7 +139,6 @@ export default function AdminPage() {
     router.refresh();
   };
 
-  // 🗂 Cargar últimos comentarios
   const fetchLatestComments = async () => {
     setCommentsLoading(true);
     setCommentsError(null);
@@ -173,7 +180,6 @@ export default function AdminPage() {
         };
       }) ?? [];
 
-    // 📎 Buscar publicaciones relacionadas
     const updateIds = Array.from(
       new Set(normalized.map((comment) => comment.update_id))
     ).filter(Boolean);
@@ -211,7 +217,6 @@ export default function AdminPage() {
     setCommentsLoading(false);
   };
 
-  // 🧹 Borrar comentario con RPC (seguro para RLS)
   const handleDeleteComment = async (id: string) => {
     setDeletingId(id);
 
@@ -221,9 +226,10 @@ export default function AdminPage() {
 
     if (error) {
       console.error("DELETE error:", error);
-      setCommentsError("No se pudo eliminar el comentario (RLS/permiso).");
+      setCommentsError("No se pudo eliminar el comentario.");
     } else {
       setComments((prev) => prev.filter((c) => c.id !== id));
+      setConfirmDeleteId(null);
     }
 
     setDeletingId(null);
@@ -237,6 +243,41 @@ export default function AdminPage() {
     }).length;
     return { total, last24h };
   }, [comments]);
+
+  const todayTasks = useMemo(
+    () => [
+      {
+        label: "Comentarios recientes",
+        value:
+          commentsSummary.last24h > 0
+            ? `${commentsSummary.last24h} en 24h`
+            : "Sin nuevos",
+        status: commentsSummary.last24h > 0 ? "Revisar" : "Todo bien",
+        icon: MessageCircle,
+        tone:
+          commentsSummary.last24h > 0
+            ? "border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-400/30 dark:bg-amber-950/30 dark:text-amber-200"
+            : "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-400/30 dark:bg-emerald-950/30 dark:text-emerald-200",
+      },
+      {
+        label: "Curso y practicas",
+        value: "Contenido activo",
+        status: "Revisar antes de publicar",
+        icon: BookOpenCheck,
+        tone:
+          "border-[#d8c6ff]/70 bg-white/70 text-[#516fae] dark:border-[#f3c76b]/25 dark:bg-white/5 dark:text-[#f3d795]",
+      },
+      {
+        label: "Accesos de usuarias",
+        value: "Gestion manual",
+        status: "Ver si hay incidencias",
+        icon: Users,
+        tone:
+          "border-[#d8c6ff]/70 bg-white/70 text-[#516fae] dark:border-[#f3c76b]/25 dark:bg-white/5 dark:text-[#f3d795]",
+      },
+    ],
+    [commentsSummary.last24h]
+  );
 
   const formatRelativeTime = (input: string) => {
     const date = new Date(input);
@@ -255,8 +296,11 @@ export default function AdminPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background text-primary">
-        Cargando panel de administracion...
+      <div className="flex min-h-screen items-center justify-center bg-[#fffaf2] text-[#516fae] dark:bg-gray-950 dark:text-[#f3d795]">
+        <div className="flex items-center gap-3 rounded-2xl border border-[#d8c6ff]/60 bg-white/70 px-5 py-4 shadow-sm backdrop-blur dark:border-[#f3c76b]/20 dark:bg-white/5">
+          <Loader2 className="h-5 w-5 animate-spin" />
+          Cargando panel de administracion...
+        </div>
       </div>
     );
   }
@@ -264,62 +308,108 @@ export default function AdminPage() {
   if (!authorized) return null;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-background via-background to-secondary/30">
-      <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-10 px-4 py-10 sm:px-6 lg:px-8">
-        {/* 🔹 Header */}
-        <header className="rounded-3xl border border-border/80 bg-card/80 shadow-sm backdrop-blur">
-          <div className="flex flex-col gap-6 p-8 sm:p-10 lg:flex-row lg:items-center lg:justify-between">
+    <main className="relative min-h-screen overflow-hidden bg-[#fffaf2] text-[#27304f] transition-colors duration-700 dark:bg-gray-950 dark:text-[#fff6dd]">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_8%,rgba(216,198,255,0.34),transparent_30%),radial-gradient(circle_at_88%_18%,rgba(200,154,60,0.15),transparent_28%)] dark:bg-[radial-gradient(circle_at_12%_8%,rgba(141,115,183,0.16),transparent_30%),radial-gradient(circle_at_88%_18%,rgba(200,154,60,0.08),transparent_28%)]" />
+
+      <div className="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-8 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+        <header className="overflow-hidden rounded-[1.5rem] border border-[#d8c6ff]/60 bg-white/72 shadow-[0_24px_80px_rgba(50,70,116,0.12)] backdrop-blur-xl dark:border-[#f3c76b]/20 dark:bg-white/5 dark:shadow-[0_28px_90px_rgba(0,0,0,0.36)]">
+          <div className="flex flex-col gap-7 p-5 sm:p-7 lg:flex-row lg:items-center lg:justify-between">
             <div className="space-y-5">
-              <Badge variant="secondary" className="w-fit">
-                Panel administrativo
+              <Badge className="w-fit border border-[#d8c6ff]/70 bg-white/80 text-[#6f5aa8] dark:border-[#f3c76b]/25 dark:bg-white/5 dark:text-[#f3d795]">
+                Panel de cuidado
               </Badge>
-              <div className="space-y-3 text-foreground">
+              <div className="space-y-3">
                 <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-                  Bienvenida, {userName}
+                  Hola, {userName}. Esto necesita tu atencion.
                 </h1>
-                <p className="max-w-2xl text-base text-muted-foreground">
-                  Administra la experiencia de la comunidad y guia cada proceso
-                  con claridad y orden.
+                <p className="max-w-2xl text-base leading-7 text-[#5f6680] dark:text-[#c9c0df]">
+                  Una vista simple para revisar comunidad, actualizar practicas
+                  y resolver accesos sin perderte entre opciones tecnicas.
                 </p>
               </div>
             </div>
-            <Button
-              variant="outline"
-              onClick={handleLogout}
-              className="gap-2 self-start text-foreground sm:self-end"
-            >
-              <LogOut className="h-4 w-4" />
-              Cerrar sesion
-            </Button>
+
+            <div className="flex flex-col gap-3 sm:flex-row lg:flex-col lg:items-end">
+              <Link
+                href="/protected/admin/practicas#nueva"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#516fae] px-5 py-3 text-sm font-semibold text-white shadow-[0_16px_40px_rgba(81,111,174,0.22)] transition hover:bg-[#405c98] dark:bg-[#f0c86b] dark:text-[#15101f] dark:hover:bg-[#ffe09a]"
+              >
+                <PlusCircle className="h-4 w-4" />
+                Subir practica
+              </Link>
+              <Button
+                variant="outline"
+                onClick={handleLogout}
+                className="gap-2 rounded-full border-[#d8c6ff]/70 bg-white/60 text-[#535b78] hover:bg-white dark:border-[#f3c76b]/20 dark:bg-white/5 dark:text-[#eee7ff] dark:hover:bg-white/10"
+              >
+                <LogOut className="h-4 w-4" />
+                Cerrar sesion
+              </Button>
+            </div>
           </div>
         </header>
 
-        {/* 🔹 Atajos */}
+        <section className="grid gap-4 md:grid-cols-3">
+          {todayTasks.map(({ label, value, status, icon: Icon, tone }) => (
+            <Card
+              key={label}
+              className="border-[#d8c6ff]/55 bg-white/72 shadow-[0_18px_50px_rgba(50,70,116,0.08)] backdrop-blur-xl dark:border-[#f3c76b]/18 dark:bg-white/5"
+            >
+              <CardContent className="flex items-start gap-4 p-5">
+                <span
+                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border ${tone}`}
+                >
+                  <Icon className="h-5 w-5" />
+                </span>
+                <div>
+                  <p className="text-sm font-semibold text-[#27304f] dark:text-[#fff6dd]">
+                    {label}
+                  </p>
+                  <p className="mt-1 text-2xl font-semibold">{value}</p>
+                  <p className="mt-1 text-xs font-medium text-[#777088] dark:text-[#b6accf]">
+                    {status}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </section>
+
         <section className="grid gap-8 lg:grid-cols-[2fr,1fr]">
           <div className="space-y-6">
-            <h2 className="text-xl font-semibold text-foreground">
-              Accesos rapidos
-            </h2>
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-semibold">Acciones principales</h2>
+                <p className="mt-1 text-sm text-[#777088] dark:text-[#b6accf]">
+                  Los lugares que mas vas a usar, con nombres claros.
+                </p>
+              </div>
+              <Sparkles className="hidden h-5 w-5 text-[#c89a3c] sm:block" />
+            </div>
+
             <div className="grid gap-6 sm:grid-cols-2">
               {adminShortcuts.map(
-                ({ href, icon: Icon, title, description, cta }) => (
+                ({ href, icon: Icon, title, description, cta, helper }) => (
                   <Link key={href} href={href} className="group h-full">
-                    <Card className="flex h-full flex-col justify-between border-border/70 bg-card/90 transition-all duration-200 group-hover:-translate-y-1 group-hover:border-primary/50 group-hover:shadow-lg">
+                    <Card className="flex h-full flex-col justify-between border-[#d8c6ff]/55 bg-white/74 shadow-[0_18px_50px_rgba(50,70,116,0.08)] backdrop-blur-xl transition-all duration-200 group-hover:-translate-y-1 group-hover:border-[#516fae]/45 group-hover:shadow-[0_24px_70px_rgba(81,111,174,0.14)] dark:border-[#f3c76b]/18 dark:bg-white/5 dark:group-hover:border-[#f3c76b]/35">
                       <CardHeader className="space-y-4 pb-4">
-                        <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/15 transition-all group-hover:bg-primary group-hover:text-primary-foreground">
+                        <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#d8c6ff]/70 bg-white/70 text-[#516fae] transition-all group-hover:bg-[#516fae] group-hover:text-white dark:border-[#f3c76b]/20 dark:bg-white/5 dark:text-[#f3d795]">
                           <Icon className="h-5 w-5" />
                         </span>
                         <div className="space-y-2">
-                          <CardTitle className="text-lg text-foreground">
+                          <CardTitle className="text-lg text-[#27304f] dark:text-[#fff6dd]">
                             {title}
                           </CardTitle>
-                          <CardDescription className="text-sm leading-relaxed">
+                          <CardDescription className="text-sm leading-relaxed text-[#5f6680] dark:text-[#c9c0df]">
                             {description}
                           </CardDescription>
+                          <p className="text-xs font-medium text-[#8d73b7] dark:text-[#f3d795]">
+                            {helper}
+                          </p>
                         </div>
                       </CardHeader>
                       <CardContent className="pt-0">
-                        <span className="inline-flex items-center gap-2 text-sm font-semibold text-primary transition group-hover:text-primary-foreground">
+                        <span className="inline-flex items-center gap-2 text-sm font-semibold text-[#516fae] transition dark:text-[#f3d795]">
                           {cta}
                           <ArrowUpRight className="h-4 w-4" />
                         </span>
@@ -331,19 +421,22 @@ export default function AdminPage() {
             </div>
           </div>
 
-          <Card className="border-dashed border-border/70 bg-muted/40 backdrop-blur">
+          <Card className="border-dashed border-[#d8c6ff]/70 bg-white/54 backdrop-blur-xl dark:border-[#f3c76b]/20 dark:bg-white/5">
             <CardHeader>
-              <CardTitle className="text-lg text-foreground">
-                Recomendaciones rapidas
+              <CardTitle className="flex items-center gap-2 text-lg text-[#27304f] dark:text-[#fff6dd]">
+                <CheckCircle2 className="h-5 w-5 text-[#c89a3c]" />
+                Que hacer hoy
               </CardTitle>
-              <CardDescription>
-                Organiza tu jornada con claridad y ritmo.
+              <CardDescription className="text-[#5f6680] dark:text-[#c9c0df]">
+                Una rutina breve para revisar el panel sin agobio.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-5 text-sm text-muted-foreground">
+            <CardContent className="space-y-5 text-sm text-[#5f6680] dark:text-[#c9c0df]">
               {tips.map((tip) => (
                 <div key={tip} className="flex items-start gap-3">
-                  <span className="mt-1 h-2.5 w-2.5 rounded-full bg-primary/70" />
+                  <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#516fae]/10 text-[#516fae] dark:bg-[#f0c86b]/10 dark:text-[#f3d795]">
+                    <Clock3 className="h-3 w-3" />
+                  </span>
                   <p>{tip}</p>
                 </div>
               ))}
@@ -351,27 +444,29 @@ export default function AdminPage() {
           </Card>
         </section>
 
-        {/* 🔹 Moderación */}
         <section className="space-y-6">
           <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h2 className="text-xl font-semibold text-foreground">
-                Moderacion de comentarios
+              <h2 className="flex items-center gap-2 text-xl font-semibold">
+                <ShieldAlert className="h-5 w-5 text-[#c89a3c]" />
+                Comentarios recientes
               </h2>
-              <p className="text-sm text-muted-foreground">
-                Revisa y elimina mensajes reportados por la comunidad.
+              <p className="mt-1 text-sm text-[#777088] dark:text-[#b6accf]">
+                Revisa conversaciones de la comunidad. Eliminar pide
+                confirmacion.
               </p>
             </div>
-            <div className="flex items-center gap-3 text-sm text-muted-foreground">
+
+            <div className="flex flex-wrap items-center gap-3 text-sm text-[#777088] dark:text-[#b6accf]">
               <span>
                 Total:{" "}
-                <strong className="text-foreground">
+                <strong className="text-[#27304f] dark:text-[#fff6dd]">
                   {commentsSummary.total}
                 </strong>
               </span>
               <span>
                 Ultimas 24h:{" "}
-                <strong className="text-foreground">
+                <strong className="text-[#27304f] dark:text-[#fff6dd]">
                   {commentsSummary.last24h}
                 </strong>
               </span>
@@ -379,7 +474,7 @@ export default function AdminPage() {
                 type="button"
                 variant="outline"
                 size="sm"
-                className="gap-2"
+                className="gap-2 rounded-full border-[#d8c6ff]/70 bg-white/60 dark:border-[#f3c76b]/20 dark:bg-white/5"
                 onClick={fetchLatestComments}
                 disabled={commentsLoading}
               >
@@ -389,14 +484,19 @@ export default function AdminPage() {
                     Actualizando...
                   </>
                 ) : (
-                  "Refrescar"
+                  <>
+                    <RefreshCw className="h-3.5 w-3.5" />
+                    Refrescar
+                  </>
                 )}
               </Button>
             </div>
           </div>
 
           {commentsError && (
-            <p className="text-sm text-destructive">{commentsError}</p>
+            <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-400/30 dark:bg-red-950/30 dark:text-red-200">
+              {commentsError}
+            </p>
           )}
 
           <div className="grid gap-4 md:grid-cols-2">
@@ -404,7 +504,7 @@ export default function AdminPage() {
               Array.from({ length: 4 }).map((_, index) => (
                 <Card
                   key={`skeleton-${index}`}
-                  className="border-border/60 bg-card/80"
+                  className="border-[#d8c6ff]/55 bg-white/70 dark:border-[#f3c76b]/18 dark:bg-white/5"
                 >
                   <CardContent className="space-y-3 p-5">
                     <div className="h-3 w-28 animate-pulse rounded bg-muted" />
@@ -414,8 +514,8 @@ export default function AdminPage() {
                 </Card>
               ))
             ) : comments.length === 0 ? (
-              <Card className="border-dashed border-border/70 bg-card/80 md:col-span-2">
-                <CardContent className="p-8 text-center text-sm text-muted-foreground">
+              <Card className="border-dashed border-[#d8c6ff]/70 bg-white/70 md:col-span-2 dark:border-[#f3c76b]/20 dark:bg-white/5">
+                <CardContent className="p-8 text-center text-sm text-[#777088] dark:text-[#b6accf]">
                   No hay comentarios recientes para moderar.
                 </CardContent>
               </Card>
@@ -423,46 +523,71 @@ export default function AdminPage() {
               comments.map((comment) => (
                 <Card
                   key={comment.id}
-                  className="border-border/70 bg-card/90 transition hover:border-primary/40"
+                  className="border-[#d8c6ff]/55 bg-white/76 shadow-sm backdrop-blur-xl transition hover:border-[#516fae]/45 dark:border-[#f3c76b]/18 dark:bg-white/5 dark:hover:border-[#f3c76b]/35"
                 >
                   <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between gap-3">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <div>
-                        <CardTitle className="text-base text-foreground">
+                        <CardTitle className="text-base text-[#27304f] dark:text-[#fff6dd]">
                           {comment.author_name ?? "Integrante anonima"}
                         </CardTitle>
-                        <CardDescription>
+                        <CardDescription className="text-[#777088] dark:text-[#b6accf]">
                           {formatRelativeTime(comment.created_at)}
                         </CardDescription>
                       </div>
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="sm"
-                        className="gap-2"
-                        onClick={() => handleDeleteComment(comment.id)}
-                        disabled={deletingId === comment.id}
-                      >
-                        {deletingId === comment.id ? (
-                          <>
-                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                            Eliminando...
-                          </>
-                        ) : (
-                          "Eliminar"
-                        )}
-                      </Button>
+
+                      {confirmDeleteId === comment.id ? (
+                        <div className="flex shrink-0 items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="sm"
+                            className="gap-2 rounded-full"
+                            onClick={() => handleDeleteComment(comment.id)}
+                            disabled={deletingId === comment.id}
+                          >
+                            {deletingId === comment.id ? (
+                              <>
+                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                Eliminando...
+                              </>
+                            ) : (
+                              "Confirmar"
+                            )}
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="rounded-full"
+                            onClick={() => setConfirmDeleteId(null)}
+                            disabled={deletingId === comment.id}
+                          >
+                            Cancelar
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="w-fit rounded-full border-red-200 text-red-600 hover:bg-red-50 dark:border-red-400/30 dark:text-red-300 dark:hover:bg-red-950/30"
+                          onClick={() => setConfirmDeleteId(comment.id)}
+                        >
+                          Eliminar
+                        </Button>
+                      )}
                     </div>
                   </CardHeader>
-                  <CardContent className="space-y-3 text-sm text-muted-foreground">
-                    <p className="rounded-2xl border border-border/60 bg-background/60 p-3 text-foreground">
+                  <CardContent className="space-y-3 text-sm text-[#5f6680] dark:text-[#c9c0df]">
+                    <p className="rounded-2xl border border-[#d8c6ff]/55 bg-[#fffaf2]/70 p-3 text-[#27304f] dark:border-[#f3c76b]/18 dark:bg-gray-950/50 dark:text-[#fff6dd]">
                       {comment.content}
                     </p>
-                    <div className="rounded-2xl border border-border/50 bg-background/40 p-3 text-xs">
-                      <p className="font-semibold text-muted-foreground">
+                    <div className="rounded-2xl border border-[#d8c6ff]/45 bg-white/54 p-3 text-xs dark:border-[#f3c76b]/14 dark:bg-gray-950/35">
+                      <p className="font-semibold text-[#777088] dark:text-[#b6accf]">
                         Comentario en:
                       </p>
-                      <p className="mt-1 text-foreground/90">
+                      <p className="mt-1 text-[#27304f]/90 dark:text-[#fff6dd]/90">
                         {comment.update_excerpt
                           ? `"${comment.update_excerpt.slice(0, 140)}${
                               comment.update_excerpt.length > 140 ? "..." : ""
